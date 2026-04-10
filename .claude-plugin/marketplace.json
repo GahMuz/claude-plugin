@@ -1,0 +1,29 @@
+{
+  "name": "sdd-marketplace",
+  "metadata": {
+    "description": "SDD — Spec Driven Development plugins for Claude Code",
+    "author": {
+      "name": "vincent-bailly"
+    }
+  },
+  "plugins": [
+    {
+      "name": "sdd-spec",
+      "source": "./plugins/sdd-spec",
+      "description": "Spec-driven development workflow — structured phases from requirements to tested, reviewed code",
+      "version": "0.1.0",
+      "author": { "name": "vincent-bailly" },
+      "keywords": ["spec", "tdd", "workflow", "requirements", "design", "code-review", "agents"],
+      "category": "development"
+    },
+    {
+      "name": "sdd-roi",
+      "source": "./plugins/sdd-roi",
+      "description": "ROI measurement — track time saved, cost efficiency, and profitability of spec-driven development",
+      "version": "0.1.0",
+      "author": { "name": "vincent-bailly" },
+      "keywords": ["roi", "metrics", "efficiency", "reporting"],
+      "category": "productivity"
+    }
+  ]
+}

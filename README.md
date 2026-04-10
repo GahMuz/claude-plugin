@@ -1,11 +1,23 @@
 # SDD — Spec Driven Development
 
-Plugin Claude Code pour le développement spec-driven — un workflow structuré de l'idée au code testé et revu.
+Marketplace Claude Code pour le développement spec-driven — un workflow structuré de l'idée au code testé et revu.
+
+## Plugins
+
+| Plugin | Description |
+|--------|-------------|
+| **sdd-spec** | Workflow complet : exigences → conception → worktree → planification → implémentation → finalisation |
+| **sdd-roi** | Mesure du ROI : temps gagné, rentabilité, efficacité du workflow |
 
 ## Installation
 
 ```bash
-claude --plugin-dir /chemin/vers/sdd
+# Ajouter le marketplace (une fois)
+/plugin marketplace add vincent-bailly/claude-plugin
+
+# Installer les plugins
+/plugin install sdd-spec@sdd-marketplace
+/plugin install sdd-roi@sdd-marketplace
 ```
 
 ## Workflow
@@ -36,7 +48,6 @@ claude --plugin-dir /chemin/vers/sdd
 | `/continue` | Détecter la prochaine action à effectuer |
 | `/document-codebase [module]` | Générer des docs module (économie 80-90% tokens) |
 | `/evolve <action>` | Faire évoluer la configuration .claude/ |
-| `/roi [--from] [--to]` | Rapport ROI : temps gagné, rentabilité du workflow |
 
 ## Principes
 

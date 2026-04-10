@@ -1,0 +1,9 @@
+{
+  "name": "sdd-roi",
+  "version": "0.1.0",
+  "description": "ROI measurement for spec-driven development — track time saved, cost efficiency, and profitability.",
+  "author": {
+    "name": "vincent-bailly"
+  },
+  "keywords": ["roi", "metrics", "efficiency", "reporting"]
+}
