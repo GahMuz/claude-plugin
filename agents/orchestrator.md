@@ -76,12 +76,11 @@ Agent({
 
 1. **Module docs**: Check `.specs/docs/module-<name>.md` — if cached doc exists for the target module, include it instead of raw file exploration
 2. **Project skills**: Scan `.claude/skills/*/SKILL.md` descriptions. Include only skills matching the subtask content (e.g., form-related subtask → include form skill, API subtask → include API skill)
-3. **Rules**: Load rules conditionally based on subtask type:
-   - All subtasks: include `rules.md` core rules
-   - Database/entity subtasks: include DB-specific rules if they exist
-   - Controller/API subtasks: include security/auth rules if they exist
-   - Test subtasks: include testing conventions if they exist
-4. **Never load all rules upfront** — only what the specific subtask needs
+3. **Rules**: Read the index table in `.claude/skills/rules-references/SKILL.md` to determine which `rules-*.md` files exist and when to load each. Then for each subtask:
+   - Always include `rules.md` (cross-cutting)
+   - Match subtask domain against the index's "Charger quand" column
+   - Load only matching `rules-*.md` files (e.g., controller subtask → `rules-controller.md`)
+4. **Never load all rules upfront** — the index enables targeted loading per subtask
 
 Update plan.md: `[ ]` → `[~]` for all dispatched subtasks.
 

@@ -64,5 +64,56 @@ git branch -D spec/<spec-id>
 ### Step 5: Update State
 Set currentPhase to `"completed"`.
 
-### Step 6: Cleanup (optional)
+### Step 6: Retrospective — Learning from this Spec
+
+Extract learnings and propose .claude/ improvements.
+**Separate branch and PR** — never mix config evolution with spec code.
+
+**6a — Extract Learnings**
+Analyze: log.md (decisions, workarounds), reviews/ (recurring issues), state.json changelog (conventions emerged), baseline-tests.json (breaking change patterns).
+
+**6b — Categorize Proposals by Domain**
+Each proposed rule goes to a domain-scoped file (not a single rules.md):
+- Controller rules → `rules-controller.md`
+- Service rules → `rules-service.md`
+- Entity/model rules → `rules-entity.md`
+- Test rules → `rules-test.md`
+- API rules → `rules-api.md`
+- Security rules → `rules-security.md`
+- Cross-cutting rules only → `rules.md`
+
+Create the `rules-*.md` file if it doesn't exist yet. This enables lazy loading — orchestrator loads only the rules file relevant to each subtask's domain.
+
+Also categorize documentation updates: coding-standards.md, architecture.md, testing.md, module docs.
+
+**6c — Present Proposals (in French)**
+
+```
+## Rétrospective : <titre du spec>
+
+### Nouvelles règles proposées
+- [ ] rules-controller.md : "<règle>" — découverte lors de <contexte>
+- [ ] rules-service.md : "<règle>" — flaggée X fois dans les revues
+- [ ] rules-test.md (nouveau) : "<règle>" — pattern de test récurrent
+
+### Documentation à mettre à jour
+- [ ] coding-standards.md : ajouter <pattern>
+- [ ] architecture.md : documenter <décision>
+```
+
+"Voulez-vous appliquer ces améliorations ? (oui/non/sélectionner)"
+
+**6d — Apply on Separate Branch**
+If user approves:
+1. Create branch `claude/learn-<spec-id>` from base branch
+2. Create/update `rules-*.md` files in `.claude/skills/rules-references/references/`
+3. Update documentation files
+4. Update SKILL.md references list if new `rules-*.md` files were created
+5. Commit: `chore(claude): apprentissages du spec <titre>`
+6. Create PR: `gh pr create --title "chore(claude): apprentissages — <titre>"`
+7. Log: "Rétrospective : X règles ajoutées dans Y fichiers. PR séparée créée."
+
+If declined: skip.
+
+### Step 7: Cleanup (optional)
 "Conserver les fichiers spec dans `.specs/<spec-id>/` pour référence, ou les supprimer ?"

@@ -49,6 +49,8 @@ Verify configuration quality:
 - **Lazy loading respected**: skills should reference large content in `references/`, not inline
 - **No bloated rules**: individual rules files should be < 200 lines
 - **No duplication across rules**: same rule shouldn't appear in multiple files
+- **Rules index in sync**: verify the index table in `.claude/skills/rules-references/SKILL.md` matches the actual `rules-*.md` files on disk. Flag missing entries or stale references.
+- **Domain scoping**: detect rules in `rules.md` that are domain-specific and should be split into `rules-*.md` (e.g., controller-only rules sitting in the cross-cutting file)
 - Report issues and suggest fixes
 
 ### Step 5: Present Plan
@@ -56,6 +58,7 @@ Based on the action:
 
 **For `add`:**
 - Propose: skill name, directory location, SKILL.md content outline, references needed
+- If adding a rules file (`rules-*.md`): also update the index table in `.claude/skills/rules-references/SKILL.md` with file name, domain, and "Charger quand" condition
 - Check for naming conflicts
 - Estimate token impact
 
@@ -63,6 +66,8 @@ Based on the action:
 - Identify oversized skills (> 3000 words in SKILL.md)
 - Identify rules that could be lazily loaded
 - Identify unused or redundant skills
+- Detect domain-specific rules stuck in `rules.md` → propose extracting to `rules-*.md`
+- Verify rules index is in sync with actual files
 - Propose specific optimizations with token savings estimate
 
 **For `audit`:**
@@ -81,7 +86,8 @@ Present the plan. "Voulez-vous appliquer ces modifications ?"
 ### Step 7: Execute
 After approval:
 - Create/modify files as planned
-- Update any cross-references
+- If `rules-*.md` files were created or renamed: update the index table in rules-references SKILL.md
+- Update any other cross-references
 - Report: "Modifications appliquées : <summary>."
 
 ### Step 8: Validate

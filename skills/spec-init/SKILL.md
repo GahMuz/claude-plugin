@@ -91,25 +91,31 @@ description: This skill should be used when checking "project rules", "coding co
 
 Ce skill est activement vérifié à chaque étape du workflow spec-driven :
 - **Planification** : les règles sont intégrées dans le plan
-- **Implémentation** : les agents lisent les règles avant de coder
+- **Implémentation** : les agents ne chargent que les fichiers pertinents pour la sous-tâche
 - **Revue de code** : le réviseur vérifie chaque règle, violations = CRITIQUE
 
-## Fichiers de référence
+## Index des références (index vivant — maintenir à jour)
 
-- **`references/rules.md`** — Règles vérifiables du projet (checklist active)
-- **`references/coding-standards.md`** — Style de code, nommage, patterns
-- **`references/architecture.md`** — Décisions d'architecture, limites
-- **`references/testing.md`** — Conventions de test, couverture requise
+Cet index permet le chargement paresseux : les agents lisent cette liste pour déterminer quel fichier charger selon le contexte de la sous-tâche.
 
-Ajouter des fichiers markdown dans `references/` pour enrichir les règles.
+| Fichier | Domaine | Charger quand |
+|---------|---------|---------------|
+| `references/rules.md` | Transversal | Toujours (règles de base) |
+
+Cet index s'enrichit automatiquement via la rétrospective à la fin de chaque spec.
+Exemples de fichiers ajoutés au fil du temps :
+- `rules-controller.md` — Règles contrôleurs/routes → charger pour sous-tâches contrôleur
+- `rules-service.md` — Règles services → charger pour sous-tâches service
+- `rules-entity.md` — Règles entités/modèles → charger pour sous-tâches entité
+- `rules-test.md` — Règles tests → charger pour sous-tâches test
+- `rules-security.md` — Règles sécurité → charger pour sous-tâches auth/sécurité
 ```
 
 Write `.claude/skills/rules-references/references/rules.md`:
 ```markdown
-# Règles projet (vérifiables)
+# Règles transversales (vérifiables)
 
-Chaque règle ci-dessous est vérifiable par grep, glob ou revue de code.
-Les agents vérifient ces règles avant d'implémenter et le réviseur les contrôle après chaque lot.
+Chaque règle est vérifiable par grep, glob ou revue de code.
 
 ## Règles non-négociables
 
@@ -135,13 +141,10 @@ Les agents vérifient ces règles avant d'implémenter et le réviseur les contr
 - [ ] Séparation des couches respectée
 - [ ] Appels API via la couche service
 
-À personnaliser par l'équipe selon le projet.
+À personnaliser par l'équipe.
 ```
 
-Create documentation placeholders:
-- `references/coding-standards.md` → "# Standards de code\n\nÀ compléter par l'équipe."
-- `references/architecture.md` → "# Architecture\n\nÀ compléter par l'équipe."
-- `references/testing.md` → "# Tests\n\nÀ compléter par l'équipe."
+No placeholder files created — `rules-*.md` domain files are created organically by the retrospective step as the team learns from each spec.
 
 ### Step 9: Suggest Guard Skills
 Explain the guard skills pattern (in French):
