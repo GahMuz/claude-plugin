@@ -35,7 +35,29 @@ If breaking changes exist, list them with test name and reason. Include in PR bo
 
 "Quelle option choisissez-vous ?"
 
-### Step 4: Execute Choice
+### Step 4: Generate Commit Message
+Before any action, generate a rich commit message including all context:
+
+```
+feat(<spec-id>): <titre du spec>
+
+<résumé des exigences principales>
+
+Conception :
+- <approche choisie et justification>
+
+Changements :
+- <fichiers créés/modifiés principaux>
+
+Changements cassants :
+- <liste depuis baseline-tests.json, ou "Aucun">
+
+Refs : <REQ-xxx, DES-xxx>
+```
+
+Present the commit message for approval before executing.
+
+### Step 5: Execute Choice
 
 #### Fusionner
 ```bash
@@ -45,34 +67,35 @@ git worktree remove .worktrees/<spec-id>
 git branch -d spec/<spec-id>
 ```
 
-#### Pull Request
+#### Pousser (pour PR)
 ```bash
 git push -u origin spec/<spec-id>
-gh pr create --title "<titre>" --body "<résumé depuis requirement.md + design.md>"
 ```
+"Branche poussée. Créez la PR via votre outil habituel."
 
 #### Garder
 "Branche et worktree conservés pour travail manuel."
 
 #### Abandonner
 **Double confirmation** : "Êtes-vous sûr ? Cette action supprimera tous les changements."
+Check for uncommitted changes first. If found: "Des modifications non commitées existent. Les abandonner aussi ?"
 ```bash
-git worktree remove .worktrees/<spec-id>
+git worktree remove --force .worktrees/<spec-id>
 git branch -D spec/<spec-id>
 ```
 
-### Step 5: Update State
+### Step 6: Update State
 Set currentPhase to `"completed"`.
 
-### Step 6: Retrospective — Learning from this Spec
+### Step 7: Retrospective — Learning from this Spec
 
 Extract learnings and propose .claude/ improvements.
 **Separate branch and PR** — never mix config evolution with spec code.
 
-**6a — Extract Learnings**
+**7a — Extract Learnings**
 Analyze: log.md (decisions, workarounds), reviews/ (recurring issues), state.json changelog (conventions emerged), baseline-tests.json (breaking change patterns).
 
-**6b — Categorize Proposals by Domain**
+**7b — Categorize Proposals by Domain**
 Each proposed rule goes to a domain-scoped file (not a single rules.md):
 - Controller rules → `rules-controller.md`
 - Service rules → `rules-service.md`
@@ -86,7 +109,7 @@ Create the `rules-*.md` file if it doesn't exist yet. This enables lazy loading 
 
 Also categorize documentation updates: coding-standards.md, architecture.md, testing.md, module docs.
 
-**6c — Present Proposals (in French)**
+**7c — Present Proposals (in French)**
 
 ```
 ## Rétrospective : <titre du spec>
@@ -103,17 +126,19 @@ Also categorize documentation updates: coding-standards.md, architecture.md, tes
 
 "Voulez-vous appliquer ces améliorations ? (oui/non/sélectionner)"
 
-**6d — Apply on Separate Branch**
+**7d — Apply on Separate Branch**
 If user approves:
 1. Create branch `claude/learn-<spec-id>` from base branch
-2. Create/update `rules-*.md` files in `.claude/skills/rules-references/references/`
-3. Update documentation files
-4. Update SKILL.md references list if new `rules-*.md` files were created
-5. Commit: `chore(claude): apprentissages du spec <titre>`
-6. Create PR: `gh pr create --title "chore(claude): apprentissages — <titre>"`
-7. Log: "Rétrospective : X règles ajoutées dans Y fichiers. PR séparée créée."
+2. **Deduplicate**: before adding a rule, check if it already exists in the target `rules-*.md` or in `rules.md`. Skip duplicates.
+3. Create/update `rules-*.md` files in `.claude/skills/rules-references/references/`
+4. Update the index table in `.claude/skills/rules-references/SKILL.md` for any new `rules-*.md` file (add row with file, domain, "Charger quand")
+5. Update documentation files if needed
+6. Commit: `chore(claude): apprentissages du spec <titre>`
+7. Push branch: `git push -u origin claude/learn-<spec-id>`
+8. "Branche poussée. Créez la PR via votre outil habituel."
+9. Log: "Rétrospective : X règles ajoutées dans Y fichiers. Branche poussée."
 
 If declined: skip.
 
-### Step 7: Cleanup (optional)
+### Step 8: Cleanup (optional)
 "Conserver les fichiers spec dans `.specs/<spec-id>/` pour référence, ou les supprimer ?"

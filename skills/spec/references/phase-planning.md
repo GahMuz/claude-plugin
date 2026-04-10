@@ -59,6 +59,7 @@ Present plan.md:
 
 ### Step 8: Save
 Write plan.md using template. Update state.json.
+Append log.md entry: date, "Phase planification", X tâches et Y sous-tâches créées, dépendances identifiées.
 
 ### Step 9: Await Approval
 "Le plan est prêt. X tâches, Y sous-tâches. Lancez `/spec approve` pour démarrer l'implémentation."

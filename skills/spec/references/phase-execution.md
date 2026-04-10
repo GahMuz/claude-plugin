@@ -10,13 +10,11 @@ From `.specs/config.json`:
 - `pipelineReviews`: overlap reviews with next batch
 - `models`: model assignments per agent
 
-### Step 2: Capture Baseline Tests
-Before any implementation, run the full test suite in the worktree and save results:
-- Execute the project's test command (detect from package.json/pom.xml/composer.json)
-- Record: total tests, passed, failed, skipped
-- Save to `.specs/<spec-id>/baseline-tests.json`
-- If tests already fail: warn user "Attention : X tests échouent déjà dans la baseline. Les échecs existants ne seront pas comptés comme changements cassants."
-- Create initial `log.md` entry: "Phase d'implémentation démarrée. Baseline : X tests passent."
+### Step 2: Verify Baseline Exists
+Check that `.specs/<spec-id>/baseline-tests.json` exists (captured during worktree phase).
+- If missing: capture now (run test suite, save results)
+- If exists: read and report "Baseline existante : X tests."
+- Append log.md entry: "Phase d'implémentation démarrée."
 
 ### Step 3: Dispatch Orchestrator
 Delegate all wave execution to the orchestrator agent:

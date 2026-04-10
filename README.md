@@ -37,9 +37,16 @@ claude --plugin-dir /chemin/vers/spec-driven-dev
 - **Parallélisation** — Sous-tâches indépendantes exécutées en parallèle
 - **Feedback** — Le développeur sait ce qui se passe à tout moment
 
+## Commandes utilitaires
+
+| Commande | Description |
+|----------|-------------|
+| `/sync <spec-id>` | Synchroniser et corriger le drift spec/code |
+| `/continue` | Détecter la prochaine action à effectuer |
+| `/document-codebase [module]` | Générer des docs module (économie 80-90% tokens) |
+| `/evolve <action>` | Faire évoluer la configuration .claude/ |
+
 ## Configuration projet
 
-Après `/spec-init`, compléter les règles dans `.claude/skills/rules-references/references/` :
-- `coding-standards.md` — Standards de code
-- `architecture.md` — Décisions d'architecture
-- `testing.md` — Conventions de test
+Après `/spec-init`, personnaliser les règles dans `.claude/skills/rules-references/references/rules.md`.
+Les fichiers `rules-*.md` par domaine (controller, service, entity, test...) sont créés automatiquement par la rétrospective à la fin de chaque spec.

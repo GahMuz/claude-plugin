@@ -54,12 +54,19 @@ You are the orchestrator for spec-driven development. You coordinate implementat
 - Read `.specs/config.json` — for parallelTaskLimit, pipelineReviews, models
 - Read `.claude/skills/rules-references/references/rules.md` — for agent injection (if exists)
 
-### Step 2: Build Waves
-Analyze subtask dependencies:
-- Wave 1: all subtasks with no unresolved dependencies
-- Wave 2: subtasks whose dependencies are in Wave 1
+### Step 2: Build Waves (with resume awareness)
+Read all subtask statuses from plan.md:
+- **Skip** subtasks marked `[x]` (already completed)
+- **Re-dispatch** subtasks marked `[~]` or `[!]` (in-progress or failed — needs retry)
+- **Queue** subtasks marked `[ ]` (pending)
+
+Then analyze dependencies among remaining subtasks:
+- Wave 1: all pending/retry subtasks with no unresolved dependencies
+- Wave 2: subtasks whose dependencies are all `[x]`
 - Continue until all subtasks are assigned
 - Respect `parallelTaskLimit` (0 = unlimited per wave)
+
+This enables transparent resume: if orchestrator is re-dispatched after suspension, it picks up where it left off.
 
 ### Step 3: Execute Wave
 For each subtask in current wave, dispatch in parallel:

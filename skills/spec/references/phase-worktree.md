@@ -24,11 +24,13 @@ In the worktree directory, run setup based on detected project files:
 - `pom.xml` → `mvn install -DskipTests`
 - `build.gradle` → `./gradlew build -x test`
 
-### Step 4: Verify Test Baseline
-Run project test suite:
-- All tests must pass
-- Record baseline count
+### Step 4: Capture Test Baseline
+Run project test suite and save results:
+- Execute the project's test command (detect from package.json/pom.xml/composer.json)
+- All tests must pass for baseline to be valid
+- Save to `.specs/<spec-id>/baseline-tests.json`: total, passed, failed, skipped
 - If tests fail: report in French, do NOT proceed to planning
+- Append log.md entry: "Worktree créé. Baseline capturée : X tests passent."
 
 ### Step 5: Update State
 ```json

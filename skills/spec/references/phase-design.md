@@ -12,6 +12,13 @@ Search for `.claude/skills/rules-references/SKILL.md`:
 - Found → read and apply project rules during design
 - Not found → proceed without project-specific constraints
 
+### Step 2b: Deep Investigation (if needed)
+If the design involves complex existing architecture, unclear performance implications, or security trade-offs, dispatch the deep-dive agent:
+```
+Agent({ subagent_type: "spec-driven-dev:deep-dive", prompt: "<question to investigate>" })
+```
+Use findings to inform design decisions. Optional — skip for straightforward features.
+
 ### Step 3: Design Each Requirement Group
 For each logical group of related requirements:
 1. Assign DES-xxx ID
@@ -70,6 +77,7 @@ Add a "Couverture des exigences" table at the end of design.md:
 
 ### Step 9: Save
 Write design.md using template. Update state.json.
+Append log.md entry: date, "Phase conception", DES sections créées, décisions SOLID, conflits résolus.
 
 ### Step 10: Await Approval
 "La conception est prête pour relecture. Lancez `/spec approve` pour passer à la planification."

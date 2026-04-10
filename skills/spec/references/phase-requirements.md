@@ -60,6 +60,7 @@ Present complete requirement.md to user (in French):
 ### Step 5: Save
 Write requirement.md to `.specs/<spec-id>/requirement.md` using template from spec-format skill.
 Update state.json: requirements → in-progress.
+Append log.md entry: date, "Phase exigences", actions (X exigences rédigées), decisions prises.
 
 ### Step 6: Await Approval
 "Les exigences sont prêtes pour relecture. Quand vous êtes satisfait, lancez `/spec approve` pour passer à la conception."
