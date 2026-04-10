@@ -18,6 +18,8 @@ Marketplace Claude Code pour le développement spec-driven — un workflow struc
 # Installer les plugins
 /plugin install sdd-spec@sdd-marketplace
 /plugin install sdd-roi@sdd-marketplace
+
+use option "Install for you (user scope)"
 ```
 
 ## Workflow
