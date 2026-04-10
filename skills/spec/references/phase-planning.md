@@ -37,22 +37,28 @@ Build dependency graph:
 - Circular dependencies = error, restructure
 - Draw ASCII dependency graph
 
-### Step 5: Verify Coverage
+### Step 5: Embed Project Rules
+Read `.claude/skills/rules-references/references/rules.md` if it exists.
+Include a "Règles projet" checklist section at the top of plan.md with all verifiable rules from rules.md. These checkboxes are verified post-implementation.
+
+Verify plan doesn't violate any rules (e.g., a task modifying a generated file when rules say "pas de modification de fichiers générés"). Report conflicts in French.
+
+### Step 6: Verify Coverage
 - Every DES → >= 1 TASK
 - Every REQ → >= 1 TASK (via DES)
 - Every TASK → >= 1 subtask
 - No orphan references
 - Report gaps (in French)
 
-### Step 6: Present Plan (in French)
+### Step 7: Present Plan (in French)
 Present plan.md:
 - Task list with subtasks, dependencies, status icons
 - Dependency graph
 - Totals: "X tâches, Y sous-tâches, Z parallélisables dans le premier lot"
 - "Relisez le plan. Des tâches à ajuster ?"
 
-### Step 7: Save
+### Step 8: Save
 Write plan.md using template. Update state.json.
 
-### Step 8: Await Approval
+### Step 9: Await Approval
 "Le plan est prêt. X tâches, Y sous-tâches. Lancez `/spec approve` pour démarrer l'implémentation."

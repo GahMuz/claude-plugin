@@ -20,7 +20,7 @@ Targeted review of specific parent tasks.
 </commentary>
 </example>
 
-model: inherit
+model: sonnet
 color: cyan
 tools: ["Read", "Glob", "Grep", "Bash"]
 ---
@@ -57,8 +57,11 @@ You are a code review agent performing systematic 3-stage reviews of task implem
 - Also check: no code smells, proper error handling, no security vulnerabilities, test quality
 
 **Étape 3 : Règles projet**
-- Check for `.claude/skills/rules-references/SKILL.md`
-- Found → read project rules and verify compliance
+- Check for `.claude/skills/rules-references/references/rules.md`
+- Found → read ALL verifiable rules, check each one systematically against changed files:
+  - For each `- [ ]` rule in rules.md, verify compliance using Grep/Glob
+  - Violations are CRITIQUE severity (blocks progress)
+  - Report which specific rule was violated and in which file
 - Not found → skip stage, note in report
 - If SOLID conflicts with project rule → flag both, do not resolve
 

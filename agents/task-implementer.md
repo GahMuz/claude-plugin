@@ -20,7 +20,7 @@ Batch execution — multiple task-implementer agents run concurrently for indepe
 </commentary>
 </example>
 
-model: inherit
+model: sonnet
 color: green
 tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep"]
 ---
@@ -37,6 +37,7 @@ You are a task implementation agent specializing in test-driven development. You
 
 **Implementation Process:**
 
+0. **Read Project Rules**: Check for `.claude/skills/rules-references/references/rules.md`. If present, read all verifiable rules. All implementation must comply. If a rule would be violated, report the conflict instead of proceeding.
 1. **Read Subtask**: Parse the definition for: description, file paths, verification steps, references
 2. **Determine TDD Strictness**:
    - Code changes → strict TDD (RED-GREEN-REFACTOR)

@@ -69,6 +69,18 @@ Fully isolated: separate directories, worktrees, branches. `/spec status` lists 
 
 Clarification is dispatched by the `/spec clarify` command. State changes follow the inline amendment workflow defined in the `spec-format` skill (edit in-place, log in changelog, propagate downstream, mark affected subtasks `[!]`).
 
+## Multi-Session Mode
+
+For large features with many parent tasks, implementation can be split across sessions:
+
+1. Each parent task group = one session
+2. After completing a parent task group: user runs `/clear` for fresh context
+3. `/continue` detects progress and suggests resuming the next group
+4. State persisted in state.json `progress` field across sessions
+5. The orchestrator handles in-session work; cross-session continuity uses plan.md checkboxes + state.json
+
+This prevents context window exhaustion on large features while maintaining full traceability.
+
 ## Additional Resources
 
 - **`references/state-machine.md`** — Full schema, transitions, error handling

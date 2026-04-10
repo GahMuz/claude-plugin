@@ -36,6 +36,53 @@ All document content is in French. JSON keys remain in English.
 ...
 ```
 
+## requirement.md (format enrichi, richRequirements: true)
+
+```markdown
+# Exigences : <Titre du Spec>
+
+> Spec ID : <spec-id>
+> Créé le : <ISO-8601>
+> Statut : brouillon | approuvé | modifié
+> Format : enrichi
+
+## Contexte
+
+<Contexte du problème ou de l'opportunité à traiter>
+
+## Exigences
+
+### REQ-001 : <Titre court>
+
+**Priorité :** obligatoire | souhaitable | optionnel
+**Statut :** brouillon | approuvé | modifié
+
+#### Scénarios utilisateur
+
+**US-1 : <Titre du scénario>**
+**Étant donné** <contexte initial>
+**Quand** <action utilisateur>
+**Alors** <résultat attendu>
+**Critères d'acceptation :**
+- [ ] <Condition testable 1>
+- [ ] <Condition testable 2>
+
+#### Exigences fonctionnelles
+
+- **FR-001 [OBLIGATOIRE]** : <exigence concrète>
+- **FR-002 [SOUHAITABLE]** : <exigence concrète>
+
+#### Critères de succès
+
+- **SC-001** : <résultat mesurable>
+
+---
+
+### REQ-002 : <Titre court>
+
+...
+```
+
 ## design.md
 
 ```markdown
@@ -187,6 +234,29 @@ All document content is in French. JSON keys remain in English.
   "changelog": []
 }
 ```
+
+### config.json schema (project-level)
+
+```json
+{
+  "languages": ["php", "node-typescript", "java"],
+  "pipelineReviews": true,
+  "parallelTaskLimit": 0,
+  "models": {
+    "orchestrator": "opus",
+    "task-implementer": "sonnet",
+    "code-reviewer": "sonnet",
+    "deep-dive": "opus"
+  },
+  "richRequirements": false,
+  "createdAt": "2026-04-10T12:00:00Z"
+}
+```
+
+- `parallelTaskLimit`: 0 = unlimited, >0 = max concurrent agents per wave
+- `pipelineReviews`: true = review batch N while implementing N+1
+- `models`: model per agent (opus, sonnet, haiku). Orchestrator dispatches with configured model.
+- `richRequirements`: true = BDD scenarios + FRs + SCs format (opt-in)
 
 ### changelog entry
 

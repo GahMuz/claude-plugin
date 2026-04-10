@@ -2,6 +2,7 @@
 name: spec
 description: "This skill should be used when the user invokes '/spec' to manage spec-driven development workflow. Handles 'new spec', 'resume spec', 'approve phase', 'clarify requirements', 'suspend spec', 'discard spec', or 'spec status'. Orchestrates the full lifecycle from requirements through tested, reviewed code."
 argument-hint: "new <titre> | resume [titre] | status | clarify | approve | suspend | discard"
+context: fork
 allowed-tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep", "Agent"]
 ---
 
@@ -99,5 +100,12 @@ Extract subcommand from user input:
 | Design | `references/phase-design.md` |
 | Worktree | `references/phase-worktree.md` |
 | Planning | `references/phase-planning.md` |
-| Implementation | `references/phase-execution.md` |
+| Implementation | `references/phase-execution.md` (delegates to orchestrator agent) |
 | Finishing | `references/phase-finish.md` |
+
+## Related Skills
+
+| Skill | Purpose |
+|-------|---------|
+| `/analyze <spec-id>` | Audit cohérence spec/code (complétions fantômes, couverture, violations règles) |
+| `/continue [spec-id]` | Détecter l'état courant et suggérer la prochaine action |

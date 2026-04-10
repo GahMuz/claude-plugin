@@ -18,12 +18,38 @@ Do not assume requirements. Ask specific questions:
 Ask 3-5 questions at a time. Iterate.
 
 ### Step 3: Draft Requirements
+Check `.specs/config.json` for `richRequirements` setting.
+
+**Standard format** (default, `richRequirements: false`):
 For each identified requirement:
 1. Assign next REQ-xxx ID
 2. Write user story in French: "En tant que <rôle>, je veux <capacité> afin de <bénéfice>"
 3. Write acceptance criteria: specific, testable conditions (in French)
 4. Assign priority: obligatoire / souhaitable / optionnel
 5. Set status to "brouillon"
+
+**Rich format** (opt-in, `richRequirements: true`):
+Organize requirements in three layers:
+1. **Scénarios utilisateur (BDD)** — US-1, US-2, etc.:
+   ```
+   ### US-1 : <Titre du scénario>
+   **Étant donné** <contexte initial>
+   **Quand** <action utilisateur>
+   **Alors** <résultat attendu>
+   **Critères d'acceptation :**
+   - [ ] <condition testable>
+   ```
+2. **Exigences fonctionnelles** — FR-001, FR-002, etc.:
+   ```
+   **FR-001 [OBLIGATOIRE]** : <exigence concrète>
+   **FR-002 [SOUHAITABLE]** : <exigence concrète>
+   ```
+3. **Critères de succès** — SC-001, SC-002, etc.:
+   ```
+   **SC-001** : <résultat mesurable>
+   ```
+
+In rich mode, REQ-xxx IDs still apply. US/FR/SC are sub-items within each REQ.
 
 ### Step 4: Present for Review
 Present complete requirement.md to user (in French):
