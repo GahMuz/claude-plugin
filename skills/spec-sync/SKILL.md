@@ -1,6 +1,6 @@
 ---
-name: sync
-description: "This skill should be used when the user invokes '/sync' to synchronize spec artifacts, detect and repair drift, fix phantom completions, update coverage links, check project rule violations, or audit spec-vs-code consistency. Fixes by default, --no-fix for read-only."
+name: spec-sync
+description: "This skill should be used when the user invokes '/spec-sync' to synchronize spec artifacts, detect and repair drift, fix phantom completions, update coverage links, check project rule violations, or audit spec-vs-code consistency. Fixes by default, --no-fix for read-only."
 argument-hint: "[spec-id] [--no-fix]"
 context: fork
 allowed-tools: ["Read", "Grep", "Glob", "Edit"]

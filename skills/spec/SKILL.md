@@ -108,7 +108,7 @@ Extract subcommand from user input:
 
 | Skill | Purpose |
 |-------|---------|
-| `/sync <spec-id>` | Synchroniser les artefacts spec (corrige le drift, complétions fantômes, couverture) |
+| `/spec-sync <spec-id>` | Synchroniser les artefacts spec (corrige le drift, complétions fantômes, couverture) |
 | `/continue [spec-id]` | Détecter l'état courant et suggérer la prochaine action |
 | `/document-codebase [module]` | Générer des docs module pour réduire la consommation de tokens (80-90%) |
 | `/evolve <action>` | Faire évoluer la configuration .claude/ (ajouter, optimiser, auditer) |
