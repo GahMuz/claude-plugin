@@ -112,3 +112,4 @@ Extract subcommand from user input:
 | `/continue [spec-id]` | Détecter l'état courant et suggérer la prochaine action |
 | `/document-codebase [module]` | Générer des docs module pour réduire la consommation de tokens (80-90%) |
 | `/evolve <action>` | Faire évoluer la configuration .claude/ (ajouter, optimiser, auditer) |
+| `/roi [--from] [--to]` | Rapport ROI : temps gagné, tests ajoutés, efficacité du workflow |
