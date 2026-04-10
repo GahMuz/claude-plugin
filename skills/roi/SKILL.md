@@ -69,12 +69,19 @@ Example calibration:
 - Complex integration with multiple deps: ~45-60 min
 - Comprehensive test suite: ~25-40 min
 
-### Step 4: Calculate Efficiency
+### Step 4: Calculate Efficiency and Profitability
 Per spec:
 - `tempsEstiméSansClaude` = sum of per-subtask estimates
 - `tempsRéel` = elapsed duration from state.json
 - `gainTemps` = tempsEstiméSansClaude - tempsRéel
 - `gainPourcentage` = gainTemps / tempsEstiméSansClaude × 100
+
+Global profitability (prorated to the analyzed period):
+- Coût Claude Code = 125€/mois, proraté sur la période (ex: 15 jours = 125 × 15/30 = 62.50€)
+- Coût développeur = 45 000€/an minimum (charges comprises), soit ~21.63€/h (basé sur 1607h/an)
+- Temps économisé total = somme des gainTemps de tous les specs
+- Valeur du temps économisé = tempsÉconomiséHeures × 21.63€
+- ROI = (valeur temps économisé - coût Claude proraté) / coût Claude proraté × 100
 
 ### Step 5: Generate Report
 
@@ -100,7 +107,17 @@ Per spec:
 |----------|--------|
 | Temps estimé sans Claude | Xh XXmin |
 | Temps réel avec Claude | Yh YYmin |
-| Gain estimé | ~ZZ% |
+| Gain de temps estimé | ~ZZ% |
+
+## Rentabilité
+
+| Métrique | Valeur |
+|----------|--------|
+| Coût Claude Code (proraté période) | XX.XX€ |
+| Coût horaire développeur (base 45k€/an) | 21.63€/h |
+| Temps économisé | Xh XXmin |
+| Valeur du temps économisé | XXX.XX€ |
+| **ROI** | **+XXX%** |
 
 ## Détail par spec
 
