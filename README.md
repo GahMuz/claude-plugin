@@ -13,7 +13,7 @@ Marketplace Claude Code pour le développement spec-driven — un workflow struc
 
 ```bash
 # Ajouter le marketplace (une fois)
-/plugin marketplace add vincent-bailly/claude-plugin
+/plugin marketplace add https://github.com/GahMuz/claude-plugin.git
 
 # Installer les plugins
 /plugin install sdd-spec@sdd-marketplace
