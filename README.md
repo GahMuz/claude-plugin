@@ -1,1 +1,45 @@
-# claude-plugin
+# spec-driven-dev
+
+Plugin Claude Code pour le développement spec-driven — un workflow structuré de l'idée au code testé et revu.
+
+## Installation
+
+```bash
+claude --plugin-dir /chemin/vers/spec-driven-dev
+```
+
+## Workflow
+
+1. `/spec-init` — Initialiser le projet (langages, LSP, configuration)
+2. `/spec new <titre>` — Démarrer un nouveau spec
+3. Phases séquentielles : Exigences → Conception → Worktree → Planification → Implémentation → Finalisation
+4. `/spec approve` — Approuver chaque phase et passer à la suivante
+
+## Commandes
+
+| Commande | Description |
+|----------|-------------|
+| `/spec-init` | Configurer le projet pour le dev spec-driven |
+| `/spec new <titre>` | Démarrer un nouveau spec |
+| `/spec resume [titre]` | Reprendre un spec suspendu |
+| `/spec status` | Voir l'état de tous les specs |
+| `/spec approve` | Approuver la phase courante |
+| `/spec clarify` | Ajouter une clarification (met à jour les documents en place) |
+| `/spec suspend` | Suspendre le spec courant |
+| `/spec discard` | Abandonner un spec (destructif) |
+
+## Principes
+
+- **TDD** — Tests d'abord, toujours
+- **SOLID** — Principes de conception respectés et validés
+- **Systématique** — Processus structuré, pas d'improvisation
+- **Preuves** — Vérifier avant de déclarer succès
+- **Parallélisation** — Sous-tâches indépendantes exécutées en parallèle
+- **Feedback** — Le développeur sait ce qui se passe à tout moment
+
+## Configuration projet
+
+Après `/spec-init`, compléter les règles dans `.claude/skills/rules-references/references/` :
+- `coding-standards.md` — Standards de code
+- `architecture.md` — Décisions d'architecture
+- `testing.md` — Conventions de test

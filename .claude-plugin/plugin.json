@@ -1,0 +1,9 @@
+{
+  "name": "spec-driven-dev",
+  "version": "0.1.0",
+  "description": "Spec-driven development workflow for Claude Code — structured phases from requirements to tested, reviewed code",
+  "author": {
+    "name": "vincent-bailly"
+  },
+  "keywords": ["spec", "tdd", "workflow", "requirements", "design", "code-review", "agents"]
+}
