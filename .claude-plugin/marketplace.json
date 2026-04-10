@@ -1,5 +1,9 @@
 {
   "name": "sdd-marketplace",
+  "owner": {
+    "name": "vincent-bailly",
+    "email": "vin.bailly@gmail.com"
+  },
   "metadata": {
     "description": "SDD — Spec Driven Development plugins for Claude Code",
     "author": {
