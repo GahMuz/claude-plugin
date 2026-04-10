@@ -1,7 +1,7 @@
 {
-  "name": "spec-driven-dev",
+  "name": "sdd",
   "version": "0.1.0",
-  "description": "Spec-driven development workflow for Claude Code — structured phases from requirements to tested, reviewed code",
+  "description": "SDD — Spec Driven Development workflow for Claude Code. Structured phases from requirements to tested, reviewed code.",
   "author": {
     "name": "vincent-bailly"
   },

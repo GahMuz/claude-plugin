@@ -1,11 +1,11 @@
-# spec-driven-dev
+# SDD — Spec Driven Development
 
 Plugin Claude Code pour le développement spec-driven — un workflow structuré de l'idée au code testé et revu.
 
 ## Installation
 
 ```bash
-claude --plugin-dir /chemin/vers/spec-driven-dev
+claude --plugin-dir /chemin/vers/sdd
 ```
 
 ## Workflow
@@ -15,11 +15,11 @@ claude --plugin-dir /chemin/vers/spec-driven-dev
 3. Phases séquentielles : Exigences → Conception → Worktree → Planification → Implémentation → Finalisation
 4. `/spec approve` — Approuver chaque phase et passer à la suivante
 
-## Commandes
+## Commandes principales
 
 | Commande | Description |
 |----------|-------------|
-| `/spec-init` | Configurer le projet pour le dev spec-driven |
+| `/spec-init` | Configurer le projet pour le SDD |
 | `/spec new <titre>` | Démarrer un nouveau spec |
 | `/spec resume [titre]` | Reprendre un spec suspendu |
 | `/spec status` | Voir l'état de tous les specs |
@@ -27,6 +27,16 @@ claude --plugin-dir /chemin/vers/spec-driven-dev
 | `/spec clarify` | Ajouter une clarification (met à jour les documents en place) |
 | `/spec suspend` | Suspendre le spec courant |
 | `/spec discard` | Abandonner un spec (destructif) |
+
+## Commandes utilitaires
+
+| Commande | Description |
+|----------|-------------|
+| `/spec-sync <spec-id>` | Synchroniser et corriger le drift spec/code |
+| `/continue` | Détecter la prochaine action à effectuer |
+| `/document-codebase [module]` | Générer des docs module (économie 80-90% tokens) |
+| `/evolve <action>` | Faire évoluer la configuration .claude/ |
+| `/roi [--from] [--to]` | Rapport ROI : temps gagné, rentabilité du workflow |
 
 ## Principes
 
@@ -36,15 +46,7 @@ claude --plugin-dir /chemin/vers/spec-driven-dev
 - **Preuves** — Vérifier avant de déclarer succès
 - **Parallélisation** — Sous-tâches indépendantes exécutées en parallèle
 - **Feedback** — Le développeur sait ce qui se passe à tout moment
-
-## Commandes utilitaires
-
-| Commande | Description |
-|----------|-------------|
-| `/sync <spec-id>` | Synchroniser et corriger le drift spec/code |
-| `/continue` | Détecter la prochaine action à effectuer |
-| `/document-codebase [module]` | Générer des docs module (économie 80-90% tokens) |
-| `/evolve <action>` | Faire évoluer la configuration .claude/ |
+- **Apprentissage** — Chaque spec enrichit les règles projet via la rétrospective
 
 ## Configuration projet
 
