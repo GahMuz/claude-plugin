@@ -72,7 +72,16 @@ Agent({
 })
 ```
 
-**Skill injection:** Before dispatching, scan the subtask's file paths and description. Check `.claude/skills/*/SKILL.md` descriptions to find relevant project skills. Include only matching skill references in the agent prompt. This keeps token usage minimal.
+**Skill injection (conditional lazy loading):** Before dispatching, analyze the subtask's file paths and description to determine what context to include:
+
+1. **Module docs**: Check `.specs/docs/module-<name>.md` — if cached doc exists for the target module, include it instead of raw file exploration
+2. **Project skills**: Scan `.claude/skills/*/SKILL.md` descriptions. Include only skills matching the subtask content (e.g., form-related subtask → include form skill, API subtask → include API skill)
+3. **Rules**: Load rules conditionally based on subtask type:
+   - All subtasks: include `rules.md` core rules
+   - Database/entity subtasks: include DB-specific rules if they exist
+   - Controller/API subtasks: include security/auth rules if they exist
+   - Test subtasks: include testing conventions if they exist
+4. **Never load all rules upfront** — only what the specific subtask needs
 
 Update plan.md: `[ ]` → `[~]` for all dispatched subtasks.
 
@@ -81,7 +90,8 @@ For each completed subtask:
 1. Use **Edit** to change `[~]` → `[x]` in plan.md (or `[!]` if failed)
 2. **Phantom check**: Extract file paths from subtask definition. Use Glob to verify each file exists. If missing → revert to `[ ]`, report "Complétion fantôme détectée"
 3. Update state.json progress (completedSubtasks, currentBatch)
-4. Report in French: "Wave N terminée : TASK-xxx.1, TASK-xxx.2. Checkboxes mises à jour : ✅ (X/Y sous-tâches au total). Suivant : Wave N+1."
+4. **Append log.md entry**: date, wave number, completed subtasks, phantom detections, issues
+5. Report in French: "Wave N terminée : TASK-xxx.1, TASK-xxx.2. Checkboxes mises à jour : ✅ (X/Y sous-tâches au total). Suivant : Wave N+1."
 
 ### Step 5: Parent Task Review
 When ALL subtasks of a parent task are `[x]`:

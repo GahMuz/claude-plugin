@@ -10,7 +10,15 @@ From `.specs/config.json`:
 - `pipelineReviews`: overlap reviews with next batch
 - `models`: model assignments per agent
 
-### Step 2: Dispatch Orchestrator
+### Step 2: Capture Baseline Tests
+Before any implementation, run the full test suite in the worktree and save results:
+- Execute the project's test command (detect from package.json/pom.xml/composer.json)
+- Record: total tests, passed, failed, skipped
+- Save to `.specs/<spec-id>/baseline-tests.json`
+- If tests already fail: warn user "Attention : X tests échouent déjà dans la baseline. Les échecs existants ne seront pas comptés comme changements cassants."
+- Create initial `log.md` entry: "Phase d'implémentation démarrée. Baseline : X tests passent."
+
+### Step 3: Dispatch Orchestrator
 Delegate all wave execution to the orchestrator agent:
 
 ```
@@ -31,12 +39,17 @@ Agent({
 
 The orchestrator handles all internal steps: wave building, parallel agent dispatch, checkpoint verification, phantom detection, code review, progress reporting. See `agents/orchestrator.md` for the full process.
 
-### Step 3: Monitor and Report
+### Step 4: Monitor and Report
 After orchestrator completes:
 - Read updated plan.md to confirm all subtasks are `[x]`
 - Read state.json progress for final counts
 - Run full test suite in worktree
-- Report: "Toutes les sous-tâches terminées. Suite de tests : X tests passent."
+- **Breaking change detection**: Compare results against `baseline-tests.json`. Tests that passed in baseline but now fail = potential breaking changes. For each:
+  - Ask user: "Le test `<name>` passait avant l'implémentation et échoue maintenant. Bug ou changement cassant intentionnel ?"
+  - If breaking change: record in `baseline-tests.json` `breakingChanges` array with test name, file, reason, taskId
+  - If bug: report for fix before finishing
+- Append log.md entry: "Implémentation terminée. X/Y sous-tâches complétées. Z changements cassants documentés."
+- Report: "Toutes les sous-tâches terminées. Suite de tests : X tests passent. Y changements cassants documentés."
 - Transition to finishing phase
 
 ### Error Handling

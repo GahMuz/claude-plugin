@@ -21,7 +21,10 @@ Tâches : X/X terminées
 Sous-tâches : Y/Y terminées
 Tests : Z passent
 Fichiers modifiés : N
+Changements cassants : K (voir baseline-tests.json)
 ```
+
+If breaking changes exist, list them with test name and reason. Include in PR body and commit message.
 
 ### Step 3: Present Options
 

@@ -123,6 +123,17 @@ All document content is in French. JSON keys remain in English.
 **Implémente :** [REQ-003]
 
 ...
+
+## Couverture des exigences
+
+| REQ | DES | Couvert |
+|-----|-----|---------|
+| REQ-001 | DES-001 | ✅ |
+| REQ-002 | DES-001 | ✅ |
+| REQ-003 | DES-002 | ✅ |
+| REQ-004 | — | ❌ À traiter |
+
+Cette matrice permet de repérer les exigences non couvertes d'un coup d'œil.
 ```
 
 ## plan.md
@@ -257,6 +268,69 @@ All document content is in French. JSON keys remain in English.
 - `pipelineReviews`: true = review batch N while implementing N+1
 - `models`: model per agent (opus, sonnet, haiku). Orchestrator dispatches with configured model.
 - `richRequirements`: true = BDD scenarios + FRs + SCs format (opt-in)
+
+## log.md
+
+```markdown
+# Journal : <Titre du Spec>
+
+> Spec ID : <spec-id>
+
+## Entrées
+
+### <ISO-8601> — <Phase>
+
+**Actions :**
+- <action effectuée>
+
+**Décisions :**
+- <décision prise et justification>
+
+**Mises à jour spec :**
+- <documents modifiés et IDs affectés>
+
+**Bloquants :**
+- <bloquant ou "Aucun">
+
+**Prochaines étapes :**
+- <ce qui vient ensuite>
+
+---
+
+### <ISO-8601> — <Phase>
+
+...
+```
+
+## baseline-tests.json
+
+Captured before implementation begins. Used to detect breaking changes.
+
+```json
+{
+  "capturedAt": "2026-04-10T13:00:00Z",
+  "command": "npm test",
+  "total": 142,
+  "passed": 142,
+  "failed": 0,
+  "skipped": 0,
+  "breakingChanges": []
+}
+```
+
+After implementation, `breakingChanges` is populated with tests that newly fail:
+```json
+{
+  "breakingChanges": [
+    {
+      "test": "UserService.should return user by id",
+      "file": "tests/UserService.test.ts",
+      "reason": "API response shape changed — documented breaking change",
+      "taskId": "TASK-001.3"
+    }
+  ]
+}
+```
 
 ### changelog entry
 

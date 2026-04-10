@@ -34,7 +34,8 @@ Extract subcommand from user input:
 2. Convert title to kebab-case for directory name.
 3. Create `.specs/<kebab-titre>/` and `reviews/` subdirectory.
 4. Write initial state.json (currentPhase: "requirements", all phases pending).
-5. Enter requirements phase — read and follow `references/phase-requirements.md`.
+5. Write initial log.md with creation entry: date, title, "Spec créé".
+6. Enter requirements phase — read and follow `references/phase-requirements.md`.
 
 ## APPROVE
 
@@ -107,5 +108,7 @@ Extract subcommand from user input:
 
 | Skill | Purpose |
 |-------|---------|
-| `/analyze <spec-id>` | Audit cohérence spec/code (complétions fantômes, couverture, violations règles) |
+| `/sync <spec-id>` | Synchroniser les artefacts spec (corrige le drift, complétions fantômes, couverture) |
 | `/continue [spec-id]` | Détecter l'état courant et suggérer la prochaine action |
+| `/document-codebase [module]` | Générer des docs module pour réduire la consommation de tokens (80-90%) |
+| `/evolve <action>` | Faire évoluer la configuration .claude/ (ajouter, optimiser, auditer) |

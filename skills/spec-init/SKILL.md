@@ -143,7 +143,19 @@ Create documentation placeholders:
 - `references/architecture.md` → "# Architecture\n\nÀ compléter par l'équipe."
 - `references/testing.md` → "# Tests\n\nÀ compléter par l'équipe."
 
-### Step 9: Report
+### Step 9: Suggest Guard Skills
+Explain the guard skills pattern (in French):
+"Les 'guard skills' sont des skills de validation dédiés aux invariants critiques du projet. Exemples :
+- `guard-security` — audit de sécurité (authentification, autorisation, injection)
+- `guard-data-isolation` — isolation des données (multi-tenant, RGPD)
+- `guard-api-contract` — conformité des contrats API
+
+Créez-les dans `.claude/skills/guard-<nom>/SKILL.md` avec `allowed-tools: [Read, Grep, Glob]` (lecture seule).
+Le réviseur de code les invoquera automatiquement lors des revues."
+
+Ask: "Voulez-vous créer un guard skill maintenant ? (non par défaut)"
+
+### Step 10: Report
 "Projet initialisé pour le développement spec-driven :
 - Langages : <liste>
 - Statut LSP : <statut par langage>

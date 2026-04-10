@@ -61,13 +61,21 @@ Present complete design.md (in French):
 - SOLID compliance notes
 - "Cette conception vous convient-elle ? Des sections à revoir ?"
 
-### Step 8: Save
+### Step 8: Generate Coverage Mapping
+Add a "Couverture des exigences" table at the end of design.md:
+- List every REQ-xxx
+- Map to which DES-xxx covers it
+- Mark ✅ if covered, ❌ if not
+- Any ❌ must be addressed before approval
+
+### Step 9: Save
 Write design.md using template. Update state.json.
 
-### Step 9: Await Approval
+### Step 10: Await Approval
 "La conception est prête pour relecture. Lancez `/spec approve` pour passer à la planification."
 
 ## Quality Criteria
+- Coverage mapping table complete (no ❌)
 - Every REQ addressed by >= 1 DES
 - SOLID principles respected (or exceptions justified)
 - Alternatives genuinely considered

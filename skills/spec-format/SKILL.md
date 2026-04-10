@@ -19,6 +19,8 @@ Define the structure, file formats, ID system, and conventions for `.specs/` doc
 │   ├── requirement.md           # User stories and acceptance criteria
 │   ├── design.md                # Technical design decisions
 │   ├── plan.md                  # Implementation tasks and subtasks
+│   ├── log.md                   # Audit trail (decisions, actions, blockers)
+│   ├── baseline-tests.json      # Test baseline captured before implementation
 │   └── reviews/                 # Code review reports
 │       └── TASK-001-review.md
 └── another-feature/
@@ -62,6 +64,12 @@ Status icons prefix each line:
 - `[ ]` pending — `[~]` in-progress — `[x]` completed — `[!]` failed/blocked
 
 Subtasks = unit of agent dispatch. Parent tasks = unit of review.
+
+### log.md
+Audit trail per spec (in French). Dated entries tracking: actions taken, decisions made, spec updates, task completions, blockers encountered. Updated by orchestrator after every wave, during clarifications, and on resume. Essential for multi-session work and team handoffs.
+
+### baseline-tests.json
+Test baseline captured before implementation begins. Records: total tests, passed, failed, test names. Used to detect breaking changes — if previously passing tests fail after implementation, it's either a bug or a documented breaking change.
 
 ### state.json
 Workflow state. Keys in English. See `references/templates.md` for schema.

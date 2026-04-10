@@ -68,4 +68,4 @@ If uncommitted changes: "Attention : des modifications non commitées détectée
 
 ### Step 3: Suggest Quality Checks
 If in implementation or later:
-- "Lancez `/analyze <spec-id>` pour vérifier la cohérence spec/code."
+- "Lancez `/sync <spec-id>` pour synchroniser et vérifier la cohérence spec/code."
