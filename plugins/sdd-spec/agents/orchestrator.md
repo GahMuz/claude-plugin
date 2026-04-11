@@ -81,7 +81,7 @@ Agent({
 
 **Skill injection (conditional lazy loading):** Before dispatching, analyze the subtask's file paths and description to determine what context to include:
 
-1. **Module docs**: Check `.specs/docs/module-<name>.md` — if cached doc exists for the target module, include it instead of raw file exploration
+1. **Module docs**: Check `.specs/doc/modules/<name>/module-<name>.md` — if cached doc exists for the target module, include it instead of raw file exploration. Also check for feature docs in the same directory for more targeted context injection.
 2. **Project skills**: Scan `.claude/skills/*/SKILL.md` descriptions. Include only skills matching the subtask content (e.g., form-related subtask → include form skill, API subtask → include API skill)
 3. **Rules**: Read the index table in `.claude/skills/rules-references/SKILL.md` to determine which `rules-*.md` files exist and when to load each. Then for each subtask:
    - Always include `rules.md` (cross-cutting)

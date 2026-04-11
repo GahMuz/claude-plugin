@@ -48,7 +48,8 @@ use option "Install for you (user scope)"
 |----------|-------------|
 | `/spec-sync <spec-id>` | Synchroniser et corriger le drift spec/code |
 | `/continue` | Détecter la prochaine action à effectuer |
-| `/document-codebase [module]` | Générer des docs module (économie 80-90% tokens) |
+| `/doc <module \| --all \| update \| analyse \| status>` | Documenter et analyser le codebase (économie 80-90% tokens) |
+| `/commit [context]` | Commit structuré avec analyse de risque et ruptures |
 | `/evolve <action>` | Faire évoluer la configuration .claude/ |
 
 ## Principes

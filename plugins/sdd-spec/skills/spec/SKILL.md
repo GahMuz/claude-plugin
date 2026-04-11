@@ -110,6 +110,6 @@ Extract subcommand from user input:
 |-------|---------|
 | `/spec-sync <spec-id>` | Synchroniser les artefacts spec (corrige le drift, complétions fantômes, couverture) |
 | `/continue [spec-id]` | Détecter l'état courant et suggérer la prochaine action |
-| `/document-codebase [module]` | Générer des docs module pour réduire la consommation de tokens (80-90%) |
+| `/doc <module \| --all \| update \| analyse \| status>` | Documenter, analyser et maintenir la doc codebase (économie 80-90% tokens) |
 | `/evolve <action>` | Faire évoluer la configuration .claude/ (ajouter, optimiser, auditer) |
 | `/roi [--from] [--to]` | Rapport ROI : temps gagné, tests ajoutés, efficacité du workflow |
