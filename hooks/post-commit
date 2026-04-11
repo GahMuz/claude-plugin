@@ -1,0 +1,11 @@
+#!/bin/bash
+# Auto-tag commit with the current version
+
+SDD_SPEC="$(git rev-parse --show-toplevel)/plugins/sdd-spec/.claude-plugin/plugin.json"
+
+VERSION=$(grep -oP '"version": "\K[0-9]+\.[0-9]+\.[0-9]+' "$SDD_SPEC" | head -1)
+
+if [ -n "$VERSION" ]; then
+  git tag -f "v$VERSION" HEAD >/dev/null 2>&1
+  echo "Tagged: v$VERSION"
+fi

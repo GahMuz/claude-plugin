@@ -22,6 +22,18 @@ Marketplace Claude Code pour le développement spec-driven — un workflow struc
 use option "Install for you (user scope)"
 ```
 
+## Développement (contributeurs)
+
+Après le clone, activer les hooks git :
+
+```bash
+git config core.hooksPath hooks
+```
+
+Cela active :
+- **pre-commit** : bump automatique de la version mineure dans tous les `plugin.json` et `marketplace.json`
+- **post-commit** : tag automatique `vX.Y.Z` sur chaque commit
+
 ## Workflow
 
 1. `/spec-init` — Initialiser le projet (langages, LSP, configuration)

@@ -1,0 +1,32 @@
+#!/bin/bash
+# Auto-bump minor version on every commit
+# Updates all 4 version locations in the plugin project
+
+MARKETPLACE="$(git rev-parse --show-toplevel)/.claude-plugin/marketplace.json"
+SDD_SPEC="$(git rev-parse --show-toplevel)/plugins/sdd-spec/.claude-plugin/plugin.json"
+SDD_ROI="$(git rev-parse --show-toplevel)/plugins/sdd-roi/.claude-plugin/plugin.json"
+
+# Read current version from sdd-spec plugin.json
+CURRENT=$(grep -oP '"version": "\K[0-9]+\.[0-9]+\.[0-9]+' "$SDD_SPEC" | head -1)
+
+if [ -z "$CURRENT" ]; then
+  echo "Warning: Could not read current version, skipping bump"
+  exit 0
+fi
+
+# Parse and bump minor
+MAJOR=$(echo "$CURRENT" | cut -d. -f1)
+MINOR=$(echo "$CURRENT" | cut -d. -f2)
+PATCH=$(echo "$CURRENT" | cut -d. -f3)
+NEW_MINOR=$((MINOR + 1))
+NEW_VERSION="$MAJOR.$NEW_MINOR.$PATCH"
+
+# Update all files
+for FILE in "$MARKETPLACE" "$SDD_SPEC" "$SDD_ROI"; do
+  if [ -f "$FILE" ]; then
+    sed -i "s/\"version\": \"$CURRENT\"/\"version\": \"$NEW_VERSION\"/g" "$FILE"
+    git add "$FILE"
+  fi
+done
+
+echo "Version bumped: $CURRENT → $NEW_VERSION"
