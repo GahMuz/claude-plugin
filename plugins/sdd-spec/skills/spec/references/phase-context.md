@@ -64,15 +64,9 @@ type: project
 
 La spec active est trackée en **mémoire de conversation** uniquement — pas dans un fichier partagé. Plusieurs terminaux peuvent travailler sur des specs différentes simultanément sans conflit : chaque session a son propre contexte de conversation, et les fichiers `context.md` sont séparés par spec.
 
-## OPEN
+## Chargement du contexte (utilisé par RESUME)
 
-### Step 1 : Identifier la spec
-Argument `<name>` fourni → rechercher dans `.sdd/specs/registry.md`.
-Pas d'argument → lister les specs non terminées et demander.
-
-### Step 2 : Établir la spec active dans la conversation
-Mémoriser en interne : "La spec active dans cette session est `YYYY/MM/<spec-id>`."
-Aucun fichier écrit — le tracking est local à cette conversation.
+Appelé par `/spec resume` après identification de la spec. Établit la spec comme active dans la session (conversation-level) puis présente le contexte avant de reprendre le workflow.
 
 ### Step 3 : Charger le contexte (priorité décroissante)
 
@@ -137,12 +131,12 @@ Spec fermée — rouvrez avec `/spec open <spec-id>`.
 
 ## SWITCH
 
-1. Si une spec est active dans cette session : exécuter CLOSE complet
-2. Exécuter OPEN sur la spec demandée
+1. Si une spec est active dans cette session : exécuter CLOSE complet (sauvegarde contexte)
+2. Exécuter RESUME sur la spec demandée (charge contexte + reprend le workflow)
 
 ```
 Fermeture de <spec-ancienne>... context.md et memory mis à jour.
-Ouverture de <spec-nouvelle>...
+Reprise de <spec-nouvelle>...
 <afficher contexte restauré>
 ```
 

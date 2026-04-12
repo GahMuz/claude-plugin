@@ -36,7 +36,7 @@ use option "Install for you (user scope)"
 | `/spec-init` | Configurer le projet pour le SDD |
 | `/spec new <titre>` | Démarrer un nouveau spec |
 | `/spec approve` | Approuver la phase courante et passer à la suivante |
-| `/spec resume [titre]` | Reprendre un spec suspendu ou en cours |
+| `/spec resume [titre]` | Reprendre une spec : restaure le contexte (context.md / memory) puis reprend le workflow |
 | `/spec status` | Voir l'état de tous les specs |
 | `/spec clarify` | Ajouter une clarification (met à jour les documents en place) |
 | `/spec suspend` | Suspendre le spec courant |
@@ -48,9 +48,9 @@ Plusieurs specs peuvent être en cours simultanément — y compris dans des ter
 
 | Commande | Description |
 |----------|-------------|
-| `/spec open <titre>` | Activer une spec dans cette session et restaurer son contexte depuis la mémoire |
+| `/spec recap` | Briefing complet : spec active, phase, décisions clés, questions ouvertes, prochaine action |
 | `/spec close` | Sauvegarder le contexte de la session dans la mémoire et désactiver la spec |
-| `/spec switch <titre>` | Fermer la spec active (sauvegarde) et ouvrir une autre (restauration) |
+| `/spec switch <titre>` | Fermer la spec active (sauvegarde contexte) et reprendre une autre |
 
 Le contexte de chaque spec (décisions clés, fichiers identifiés, questions ouvertes) est persisté sur deux niveaux :
 - **`context.md`** dans le répertoire de la spec — commité dans le repo, partagé entre développeurs

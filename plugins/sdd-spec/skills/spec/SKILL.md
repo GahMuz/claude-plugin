@@ -1,7 +1,7 @@
 ---
 name: spec
-description: "This skill should be used when the user invokes '/spec' to manage spec-driven development workflow. Handles 'new spec', 'resume spec', 'approve phase', 'clarify requirements', 'suspend spec', 'discard spec', 'split spec', 'open spec', 'close spec', 'switch spec', or 'spec status'. Orchestrates the full lifecycle from requirements through tested, reviewed code."
-argument-hint: "new <titre> | resume [titre] | status | clarify | approve | suspend | discard | split [<new-titre>] | open <titre> | close | switch <titre>"
+description: "This skill should be used when the user invokes '/spec' to manage spec-driven development workflow. Handles 'new spec', 'resume spec' (loads context + resumes workflow), 'recap', 'approve phase', 'clarify requirements', 'suspend spec', 'discard spec', 'split spec', 'close spec', 'switch spec', or 'spec status'. Orchestrates the full lifecycle from requirements through tested, reviewed code."
+argument-hint: "new <titre> | resume [titre] | recap | status | clarify | approve | suspend | discard | split [<new-titre>] | close | switch <titre>"
 context: fork
 allowed-tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep", "Agent"]
 ---
@@ -21,9 +21,9 @@ Extract subcommand from user input:
 - `suspend` → SUSPEND
 - `discard` → DISCARD
 - `split [<new-titre>]` → SPLIT
-- `open [<titre>]` → OPEN
 - `close` → CLOSE
 - `switch <titre>` → SWITCH
+- `recap` → RECAP
 - no args → CHECK_STATE
 
 ## CHECK_STATE
@@ -61,8 +61,10 @@ Extract subcommand from user input:
 ## RESUME
 
 1. Read `.sdd/specs/registry.md`. Title given → find matching row. No title → list non-completed rows, let user choose.
-2. Read state.json from the spec path. If suspended → restore phase. If in implementation → follow resume protocol.
-3. Report state (in French) and resume.
+2. Establish the spec as active in this session (conversation-level tracking).
+3. Load context following priority order from `references/phase-context.md` section **OPEN Step 3** — present the briefing before resuming.
+4. Read state.json. If suspended → restore phase. If in implementation → follow resume protocol.
+5. Report state (in French) and resume.
 
 ## CLARIFY
 
@@ -96,9 +98,36 @@ Extract subcommand from user input:
 
 Read and follow `references/phase-split.md`.
 
-## OPEN
+## RECAP
 
-Read and follow `references/phase-context.md` section **OPEN**.
+1. Identifier la spec active : session courante → sinon `.sdd/specs/registry.md` (spec non terminée la plus récente) → sinon demander.
+2. Lire dans cet ordre : `context.md` (si présent), puis `state.json`, puis `plan.md` (si implementation).
+3. Présenter un briefing complet en français :
+
+```
+## Récap — <titre du spec>
+
+**Phase :** <phase>  **Progression :** <X/Y sous-tâches> (si implementation)
+
+### Objectif
+<1-2 phrases>
+
+### Où on en est
+<résumé de la phase courante — ce qui a été fait, ce qui reste>
+
+### Décisions clés
+- <DES-xxx> : <décision et justification courte>
+- ...
+
+### Questions ouvertes
+- [ ] <question bloquante ou importante>
+- ...
+
+### Prochaine action
+<commande concrète à lancer + pourquoi>
+```
+
+Différence avec `/continue` : recap charge le contexte (`context.md`) pour un briefing complet incluant les décisions et questions ouvertes — pas seulement la prochaine commande.
 
 ## CLOSE
 
@@ -106,7 +135,8 @@ Read and follow `references/phase-context.md` section **CLOSE**.
 
 ## SWITCH
 
-Read and follow `references/phase-context.md` section **SWITCH**.
+1. If a spec is active in this session: execute CLOSE (save context).
+2. Execute RESUME on the requested spec (loads context + resumes workflow).
 
 ## Key Principles
 
@@ -129,7 +159,7 @@ Read and follow `references/phase-context.md` section **SWITCH**.
 | Implementation | `references/phase-execution.md` (delegates to orchestrator agent) |
 | Finishing | `references/phase-finish.md` |
 | Split | `references/phase-split.md` |
-| Open / Close / Switch | `references/phase-context.md` |
+| Close / Switch | `references/phase-context.md` |
 
 ## Related Skills
 
