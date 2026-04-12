@@ -39,22 +39,31 @@ Pour chaque exigence identifiée, créer une section REQ-xxx suivant **exactemen
 ```markdown
 ### REQ-001 : <Titre court de l'exigence>
 
-**Récit utilisateur :** En tant que <rôle>, je veux <capacité> afin de <bénéfice>.
+**Récit utilisateur :**
+En tant que <rôle>, je veux <capacité> afin de <bénéfice>.
 
 **Critères d'acceptation :**
-- [ ] <Condition testable 1>
-- [ ] <Condition testable 2>
-- [ ] <Condition testable 3>
+
+1. LE <Système/Composant> DOIT <action>
+2. QUAND <condition> ALORS LE <Système> DOIT <action>
+3. QUAND <condition> ALORS LE <Système> NE DOIT PAS <action>
+4. LE <Système> DEVRAIT <action souhaitée>
 
 **Priorité :** obligatoire | souhaitable | optionnel
 
 **Statut :** brouillon
 ```
 
+Mots-clés pour les critères d'acceptation :
+- `DOIT` — exigence absolue (SHALL / MUST)
+- `NE DOIT PAS` — interdiction absolue (SHALL NOT / MUST NOT)
+- `DEVRAIT` — exigence souhaitée (SHOULD)
+- `QUAND … ALORS` — condition + conséquence (WHEN … THEN)
+
 Règles :
 - IDs séquentiels, zéro-paddés à 3 chiffres : REQ-001, REQ-002, …
 - Récit utilisateur obligatoire sur chaque REQ, même pour des exigences techniques
-- Critères d'acceptation : conditions testables, pas des descriptions d'implémentation
+- Critères d'acceptation : liste numérotée, une condition par ligne, verbe modal obligatoire
 - Une seule préoccupation par REQ
 
 ### Step 4: Present for Review
@@ -109,3 +118,9 @@ Append log.md entry: date, "Phase exigences", actions (X exigences rédigées), 
 - No architecture, code, or SQL in requirement.md
 - Scope is bounded — explicit about exclusions
 - Each REQ addresses a single concern
+
+## Formatting Rules (apply when writing requirement.md)
+- Maximum line length : 200 characters — wrap longer lines
+- Never use comma-separated inline lists with more than 2 items :
+  convert to bullet points
+- Each acceptance criterion on its own line

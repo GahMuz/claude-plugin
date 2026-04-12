@@ -8,6 +8,7 @@ All document content is in French. JSON keys remain in English.
 # Exigences : <Titre du Spec>
 
 > Spec ID : <spec-id>
+> Auteur : <git user.name>
 > Créé le : <ISO-8601>
 > Statut : brouillon | approuvé | modifié
 
@@ -19,11 +20,14 @@ All document content is in French. JSON keys remain in English.
 
 ### REQ-001 : <Titre court>
 
-**Récit utilisateur :** En tant que <rôle>, je veux <capacité> afin de <bénéfice>.
+**Récit utilisateur :**
+En tant que <rôle>, je veux <capacité> afin de <bénéfice>.
 
 **Critères d'acceptation :**
-- [ ] <Condition testable 1>
-- [ ] <Condition testable 2>
+
+1. LE <Système/Composant> DOIT <action>
+2. QUAND <condition> ALORS LE <Système> DOIT <action>
+3. QUAND <condition> ALORS LE <Système> NE DOIT PAS <action>
 
 **Priorité :** obligatoire | souhaitable | optionnel
 
@@ -32,6 +36,20 @@ All document content is in French. JSON keys remain in English.
 ---
 
 ### REQ-002 : <Titre court>
+
+**Récit utilisateur :**
+En tant que <rôle>, je veux <capacité> afin de <bénéfice>.
+
+**Critères d'acceptation :**
+
+1. LE <Système/Composant> DOIT <action>
+2. QUAND <condition> ALORS LE <Système> DOIT <action>
+3. QUAND <condition> ALORS LE <Système> NE DOIT PAS <action>
+4. LE <Système> DEVRAIT <action souhaitée>
+
+**Priorité :** obligatoire | souhaitable | optionnel
+
+**Statut :** brouillon | approuvé | modifié
 
 ...
 ```

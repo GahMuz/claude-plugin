@@ -109,3 +109,8 @@ Append log.md entry: date, "Phase conception", DES sections créées, décisions
 - Tradeoffs honestly stated
 - Implementable in small tasks
 - Project rules respected (conflicts resolved with user)
+
+## Formatting Rules (apply when writing design.md)
+- Maximum line length : 200 characters — wrap longer lines
+- Never use comma-separated inline lists with more than 2 items :
+  convert to bullet points
