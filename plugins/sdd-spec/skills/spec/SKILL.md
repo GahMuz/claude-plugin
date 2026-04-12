@@ -62,7 +62,7 @@ Extract subcommand from user input:
 
 1. Read `.sdd/specs/registry.md`. Title given → find matching row. No title → list non-completed rows, let user choose.
 2. Establish the spec as active in this session (conversation-level tracking).
-3. Load context following priority order from `references/phase-context.md` section **OPEN Step 3** — present the briefing before resuming.
+3. Load context following priority order from `references/phase-context.md` section **Chargement du contexte**, Step 3 — present the briefing before resuming.
 4. Read state.json. If suspended → restore phase. If in implementation → follow resume protocol.
 5. Report state (in French) and resume.
 
