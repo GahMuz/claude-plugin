@@ -32,6 +32,7 @@ Define the structure, file formats, ID system, and conventions for `.sdd/` docum
         ├── design.md                # Technical design decisions
         ├── plan.md                  # Implementation tasks and subtasks
         ├── log.md                   # Audit trail (decisions, actions, blockers)
+        ├── context.md               # Working context snapshot (shared via git, updated on /spec close)
         ├── baseline-tests.json      # Test baseline captured before implementation
         └── reviews/                 # Code review reports
             └── TASK-001-review.md

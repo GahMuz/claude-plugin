@@ -75,6 +75,17 @@ Souhaitez-vous séparer B dans une spec dédiée ? (`/spec split` — je ferai l
 Ou continuer avec tout dans cette spec ?
 ```
 
+**Avant de proposer un split**, évaluer si les deux préoccupations ont des dépendances mutuelles.
+Si oui, signaler immédiatement qu'un découpage A/B naïf créerait un cycle, et proposer directement un découpage en 3 :
+
+```
+💡 Ces deux préoccupations sont interdépendantes — un split direct créerait un cycle.
+Découpage recommandé en 3 specs :
+- A : <domaine sans la partie partagée>
+- B-générique : <système autonome sans dépendance>
+- B-intégration : <déploiement de B-générique sur A> (dépend de A et B-générique)
+```
+
 This is advisory only — never block the user. If they choose to continue, do not raise the concern again unless new conflicting requirements are added.
 
 ### Step 5: Save

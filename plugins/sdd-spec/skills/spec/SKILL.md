@@ -1,7 +1,7 @@
 ---
 name: spec
-description: "This skill should be used when the user invokes '/spec' to manage spec-driven development workflow. Handles 'new spec', 'resume spec', 'approve phase', 'clarify requirements', 'suspend spec', 'discard spec', 'split spec', or 'spec status'. Orchestrates the full lifecycle from requirements through tested, reviewed code."
-argument-hint: "new <titre> | resume [titre] | status | clarify | approve | suspend | discard | split [<new-titre>]"
+description: "This skill should be used when the user invokes '/spec' to manage spec-driven development workflow. Handles 'new spec', 'resume spec', 'approve phase', 'clarify requirements', 'suspend spec', 'discard spec', 'split spec', 'open spec', 'close spec', 'switch spec', or 'spec status'. Orchestrates the full lifecycle from requirements through tested, reviewed code."
+argument-hint: "new <titre> | resume [titre] | status | clarify | approve | suspend | discard | split [<new-titre>] | open <titre> | close | switch <titre>"
 context: fork
 allowed-tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep", "Agent"]
 ---
@@ -21,13 +21,17 @@ Extract subcommand from user input:
 - `suspend` → SUSPEND
 - `discard` → DISCARD
 - `split [<new-titre>]` → SPLIT
+- `open [<titre>]` → OPEN
+- `close` → CLOSE
+- `switch <titre>` → SWITCH
 - no args → CHECK_STATE
 
 ## CHECK_STATE
 
 1. Check `.sdd/config.json` exists. If not: "Lancez `/spec-init` d'abord pour configurer le projet."
-2. Read `.sdd/specs/registry.md` for active specs.
-3. Active specs exist → show status table. None → suggest `/spec new <titre>`.
+2. If a spec was opened earlier in this session, show it prominently as active.
+3. Read `.sdd/specs/registry.md` for all specs.
+4. Active specs exist → show status table. None → suggest `/spec new <titre>`.
 
 ## START_NEW
 
@@ -92,6 +96,18 @@ Extract subcommand from user input:
 
 Read and follow `references/phase-split.md`.
 
+## OPEN
+
+Read and follow `references/phase-context.md` section **OPEN**.
+
+## CLOSE
+
+Read and follow `references/phase-context.md` section **CLOSE**.
+
+## SWITCH
+
+Read and follow `references/phase-context.md` section **SWITCH**.
+
 ## Key Principles
 
 **Feedback:** Always tell the user (in French) what phase they're in, what happened, what comes next. During implementation: show subtask progress X/Y.
@@ -113,6 +129,7 @@ Read and follow `references/phase-split.md`.
 | Implementation | `references/phase-execution.md` (delegates to orchestrator agent) |
 | Finishing | `references/phase-finish.md` |
 | Split | `references/phase-split.md` |
+| Open / Close / Switch | `references/phase-context.md` |
 
 ## Related Skills
 

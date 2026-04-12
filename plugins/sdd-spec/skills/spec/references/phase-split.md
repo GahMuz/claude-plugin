@@ -49,7 +49,60 @@ Cette séparation vous convient-elle ? Souhaitez-vous ajuster la répartition ?
 
 Allow the user to move items between groups before proceeding.
 
-### Step 4: Name the New Spec
+### Step 3b: Dependency Cycle Detection (mandatory before proceeding)
+
+Analyse the proposed groups for cross-dependencies **in both directions**.
+
+For each item in group A: does it reference (REQ, DES, or TASK) an item in group B?
+For each item in group B: does it reference an item in group A?
+
+**If A→B AND B→A** : cycle detected — the split is invalid as proposed.
+
+Present the situation clearly:
+
+```
+⛔ Dépendances cycliques détectées — ce découpage n'est pas viable :
+
+→ Préoccupation A dépend de B :
+  - DES-002 (A) implémente REQ-004 (B)
+
+→ Préoccupation B dépend de A :
+  - REQ-004 (B) requiert le refactoring de REQ-001 (A) pour fonctionner
+
+Un découpage A/B crée une dépendance mutuelle : ni l'une ni l'autre ne peut
+être livrée indépendamment.
+```
+
+Then present **two resolution options** :
+
+**Option 1 — Annuler le split**
+Conserver tout dans la spec originale et reprendre la définition des exigences.
+
+**Option 2 — Découpage en 3 specs**
+Extraire la partie partagée (le "système générique") en une spec autonome sans dépendance amont.
+
+```
+Découpage suggéré en 3 specs :
+
+Spec 1 : <original> — <domaine A sans la partie partagée>
+  REQ-001, REQ-002 (refactoring pur, sans référence à B)
+
+Spec 2 : <nouveau-générique> — <système générique autonome>
+  REQ-003 (système générique, aucune dépendance vers A ou B)
+
+Spec 3 : <nouveau-intégration> — <déploiement sur le domaine A>
+  REQ-004 (intègre Spec 2 sur Spec 1 — dépend de 1 et 2, mais 1 et 2 ne dépendent pas d'elle)
+
+Ordre de livraison : Spec 1 ∥ Spec 2 → Spec 3
+```
+
+Si l'utilisateur choisit l'option 2 avec plusieurs specs : appliquer le Step 4 et suivants
+pour chaque nouvelle spec à créer, dans l'ordre (la plus indépendante d'abord).
+
+**Règle fondamentale :** Le graphe de dépendances entre specs doit être un DAG
+(Directed Acyclic Graph) — aucun cycle n'est acceptable.
+
+### Step 4: Name the New Spec(s)
 If `<new-title>` was provided as argument, use it. Otherwise ask:
 "Quel titre pour la nouvelle spec ? (kebab-case généré automatiquement)"
 
@@ -124,6 +177,9 @@ Préoccupation `<concern B label>` extraite vers la spec `<new-spec-id>`.
 ### Step 8: Update Registry
 Add a new row to `.sdd/specs/registry.md` for the new spec with its phase and doc links.
 Update the original spec row's `Statut` if it changed.
+
+### Step 8b: Split Memory Entry
+Follow the **Impact sur SPLIT** section in `references/phase-context.md` to distribute the memory entry between the two specs.
 
 ### Step 9: Confirm
 ```
