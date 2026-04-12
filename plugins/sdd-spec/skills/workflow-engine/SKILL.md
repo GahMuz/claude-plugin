@@ -50,7 +50,8 @@ Present summary (in French). Options: merge, PR, keep, discard.
 
 ## State Management
 
-Track in `.specs/<spec-id>/state.json`. Update after every transition.
+Track in `.sdd/specs/YYYY/MM/<spec-id>/state.json`. Update after every transition.
+Also update `Statut` column in `.sdd/specs/registry.md` on every transition.
 
 See `references/state-machine.md` for full schema and valid transitions.
 

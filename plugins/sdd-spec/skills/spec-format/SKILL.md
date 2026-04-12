@@ -1,33 +1,62 @@
 ---
 name: Spec Format
-description: This skill should be used when working with ".specs/" directory, "spec documents", "requirement.md", "design.md", "plan.md", "state.json", "spec IDs" (REQ-xxx, DES-xxx, TASK-xxx), or when creating, reading, or amending spec files. Provides canonical structure and conventions for spec-driven development documents.
+description: This skill should be used when working with ".sdd/" directory, "spec documents", "requirement.md", "design.md", "plan.md", "state.json", "spec IDs" (REQ-xxx, DES-xxx, TASK-xxx), "registry.md", or when creating, reading, or amending spec files. Provides canonical structure and conventions for spec-driven development documents.
 ---
 
 # Spec Format
 
-Define the structure, file formats, ID system, and conventions for `.specs/` documents.
+Define the structure, file formats, ID system, and conventions for `.sdd/` documents.
 
 **Language rule:** All user-facing spec documents and output must be written in French. Internal fields (state.json keys, config keys) remain in English.
 
 ## Directory Layout
 
 ```
-.specs/
+.sdd/
 ├── config.json                  # Project config (from /spec-init)
-├── feature-name/                # One directory per spec (kebab-case)
-│   ├── state.json               # Workflow state and progress
-│   ├── requirement.md           # User stories and acceptance criteria
-│   ├── design.md                # Technical design decisions
-│   ├── plan.md                  # Implementation tasks and subtasks
-│   ├── log.md                   # Audit trail (decisions, actions, blockers)
-│   ├── baseline-tests.json      # Test baseline captured before implementation
-│   └── reviews/                 # Code review reports
-│       └── TASK-001-review.md
-└── another-feature/
-    └── ...
+├── docs/                        # Generated documentation (from /doc)
+│   ├── manifest.json
+│   ├── index.md
+│   └── modules/
+│       └── <module>/
+│           ├── module-<module>.md
+│           ├── feature-<feature>.md
+│           ├── analyse-<module>.md
+│           ├── improvement-<module>.md
+│           └── missing-rules-<module>.md
+└── specs/
+    ├── registry.md              # Flat index of all specs (past and active)
+    └── YYYY/MM/feature-name/   # One directory per spec (kebab-case, dated)
+        ├── state.json               # Workflow state and progress
+        ├── requirement.md           # User stories and acceptance criteria
+        ├── design.md                # Technical design decisions
+        ├── plan.md                  # Implementation tasks and subtasks
+        ├── log.md                   # Audit trail (decisions, actions, blockers)
+        ├── baseline-tests.json      # Test baseline captured before implementation
+        └── reviews/                 # Code review reports
+            └── TASK-001-review.md
 ```
 
-Each spec directory is named in kebab-case derived from the spec title.
+Each spec directory is named in kebab-case derived from the spec title. The path prefix `YYYY/MM/` uses the creation date.
+
+## Registry File (`.sdd/specs/registry.md`)
+
+Flat index of all specs — lets the agent discover and load any spec without scanning the full date tree.
+
+```markdown
+# Registre des specs
+
+| Identifiant | Titre | Période | Statut | Requirement | Design | Plan |
+|-------------|-------|---------|--------|-------------|--------|------|
+| feature-name | Titre de la spec | 2026/04 | completed | [REQ](2026/04/feature-name/requirement.md) | [DES](2026/04/feature-name/design.md) | [PLAN](2026/04/feature-name/plan.md) |
+```
+
+**Statut values:** `requirements` · `design` · `planning` · `implementation` · `finishing` · `suspended` · `completed` · `discarded`
+
+**Maintenance rules:**
+- Add a row on `START_NEW`
+- Update `Statut` column on every phase transition (APPROVE, SUSPEND, FINISH)
+- Remove row on `DISCARD`
 
 ## ID System
 
@@ -75,7 +104,7 @@ Test baseline captured before implementation begins. Records: total tests, passe
 Workflow state. Keys in English. See `references/templates.md` for schema.
 
 ### config.json (project-level)
-At `.specs/config.json`. `parallelTaskLimit` (0=unlimited), `pipelineReviews` (bool).
+At `.sdd/config.json`. Champs : `schemaVersion` (version du schéma de données, utilisée pour les migrations et la fraîcheur de la doc), `parallelTaskLimit` (0=unlimited), `pipelineReviews` (bool).
 
 ## Inline Amendments
 

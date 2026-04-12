@@ -3,7 +3,7 @@
 ## Detecting Work to Resume
 
 On `/spec resume`:
-1. Scan `.specs/*/state.json`
+1. Read `.sdd/specs/registry.md` to find all specs and their paths
 2. Filter: `currentPhase` is `"suspended"` or any non-`"completed"` phase
 3. Multiple candidates → list with phase and last updated, ask user (in French)
 4. Single candidate → resume directly

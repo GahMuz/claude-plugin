@@ -4,14 +4,14 @@ Procédure pour la sous-commande UPDATE.
 
 ## Step 1 : Lire le manifest
 
-- Lire `.specs/doc/manifest.json`
+- Lire `.sdd/docs/manifest.json`
 - Si absent : "Aucune documentation existante. Lancez `/doc --all` d'abord."
 
 ## Step 2 : Évaluer la fraîcheur
 
 Pour chaque module et chaque feature dans le manifest, appliquer les règles de fraîcheur :
 
-1. **Version différente** : `skill_version` du doc != version courante (1.0.0)
+1. **Version différente** : `skill_version` du doc != `schemaVersion` dans `.sdd/config.json`
 2. **Âge > 30 jours** : `generated_at` date de plus de 30 jours
 3. **Code modifié** : `git log <last_commit>..HEAD -- <path>` retourne des commits
 4. **Commit introuvable** : `last_commit` absent du git (rebase) → obsolète
@@ -27,7 +27,7 @@ Afficher un tableau trié par priorité :
 
 | Priorité | Module | Feature | Raison | Dernière génération |
 |----------|--------|---------|--------|---------------------|
-| HAUTE | domain-base | role | Version différente (0.9.0 → 1.0.0) | 2026-03-01 |
+| HAUTE | domain-base | role | Version différente (0.3.0 → 0.4.0) | 2026-03-01 |
 | HAUTE | domain-user | auth | Code modifié (5 commits) | 2026-03-15 |
 | MOYENNE | domain-tox | — | > 30 jours | 2026-02-28 |
 | MOYENNE | domain-base | earning | > 30 jours | 2026-03-05 |

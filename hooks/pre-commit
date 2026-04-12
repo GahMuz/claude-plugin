@@ -30,3 +30,37 @@ for FILE in "$MARKETPLACE" "$SDD_SPEC" "$SDD_ROI"; do
 done
 
 echo "Version bumped: $CURRENT → $NEW_VERSION"
+
+# Check if schema-related files changed and a migration file is needed
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+MIGRATIONS_DIR="$REPO_ROOT/plugins/sdd-spec/skills/spec-migrate/migrations"
+MIGRATION_FILE="$MIGRATIONS_DIR/v${NEW_VERSION}.md"
+
+SCHEMA_CHANGED=$(git diff --cached --name-only | grep -E \
+  "plugins/sdd-spec/skills/(spec-format|spec-init)/SKILL\.md|plugins/sdd-spec/skills/doc/SKILL\.md")
+
+if [ -n "$SCHEMA_CHANGED" ] && [ ! -f "$MIGRATION_FILE" ]; then
+  echo "Schema changes detected, generating migration file v${NEW_VERSION}.md..."
+
+  DIFF=$(git diff --cached -- \
+    "plugins/sdd-spec/skills/spec-format/SKILL.md" \
+    "plugins/sdd-spec/skills/spec-init/SKILL.md" \
+    "plugins/sdd-spec/skills/doc/SKILL.md")
+
+  PROMPT="Tu es un expert du plugin sdd-spec (spec-driven development pour Claude Code).
+Génère le contenu du fichier de migration v${NEW_VERSION}.md pour migrer les projets utilisateurs depuis la version précédente.
+
+Règles :
+- Décris uniquement les opérations sur les fichiers de données utilisateur (.sdd/, .specs/)
+- Étapes en bash concrètes si nécessaire
+- En français
+- Format : '# v${NEW_VERSION} — <titre concis>' suivi de Steps numérotés
+- Si aucune action utilisateur requise : écrire uniquement '# v${NEW_VERSION}\n\nAucune migration nécessaire.'
+
+Diff des fichiers de schéma :
+${DIFF}"
+
+  claude --print "$PROMPT" > "$MIGRATION_FILE"
+  git add "$MIGRATION_FILE"
+  echo "Migration file generated and staged: v${NEW_VERSION}.md"
+fi

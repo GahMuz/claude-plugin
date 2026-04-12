@@ -4,9 +4,10 @@ Procédure pour les sous-commandes GENERATE_MODULE et GENERATE_ALL.
 
 ## Step 1 : Lire ou créer le manifest
 
-- Lire `.specs/doc/manifest.json` si existant
-- Sinon créer un manifest vide : `{ "skill_version": "1.0.0", "modules": {} }`
-- Créer le répertoire `.specs/doc/modules/` si nécessaire
+- Lire `schemaVersion` dans `.sdd/config.json` — c'est la version de référence à stocker dans le manifest
+- Lire `.sdd/docs/manifest.json` si existant
+- Sinon créer un manifest vide : `{ "skill_version": "<schemaVersion>", "modules": {} }`
+- Créer le répertoire `.sdd/docs/modules/` si nécessaire
 
 ## Step 2 : Identifier les cibles
 
@@ -51,7 +52,7 @@ Agent({
     Module : <nom>
     Chemin : <path>
     Features détectées : <liste des features avec chemins>
-    Répertoire de sortie : .specs/doc/modules/<nom>/
+    Répertoire de sortie : .sdd/docs/modules/<nom>/
     
     Générer :
     1. module-<nom>.md (template module de references/templates.md)
@@ -75,7 +76,7 @@ Agent({
         Feature : <feature>
         Module : <nom>
         Chemin : <feature_path>
-        Répertoire de sortie : .specs/doc/modules/<nom>/
+        Répertoire de sortie : .sdd/docs/modules/<nom>/
         
         Générer : feature-<feature>.md (template feature)
         Retourner : file_count, last_commit.
@@ -93,7 +94,7 @@ Après réception des résultats de chaque agent :
 
 ## Step 7 : Générer/mettre à jour l'index
 
-Écrire `.specs/doc/index.md` en suivant le template index de `references/templates.md`.
+Écrire `.sdd/docs/index.md` en suivant le template index de `references/templates.md`.
 Inclure tous les modules du manifest avec leur état de fraîcheur.
 
 ## Step 8 : Reporter
@@ -104,6 +105,6 @@ Documentation générée :
 - Features : <count total>
 - Fichiers documentés : <count total>
 - Ignorées (inchangées) : <count>
-- Répertoire : `.specs/doc/`
+- Répertoire : `.sdd/docs/`
 - Tokens économisés : ~80-90% sur les tâches futures de ces modules.
 ```

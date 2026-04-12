@@ -14,12 +14,12 @@ Default: **fix mode** — repair detected issues. With `--no-fix`: read-only aud
 ## Process
 
 ### Step 0: Identify Spec
-If argument provided, use it. Otherwise scan `.specs/*/state.json`, list specs with non-completed phases, ask user which to sync.
+If argument provided, look it up in `.sdd/specs/registry.md` to resolve the full path. Otherwise read registry.md, list specs with non-completed phases, ask user which to sync.
 
 ### Step 1: Parse Spec Documents
-- Read `.specs/<spec-id>/requirement.md` — extract all REQ-xxx items with acceptance criteria
-- Read `.specs/<spec-id>/design.md` — extract all DES-xxx items with references
-- Read `.specs/<spec-id>/plan.md` — extract all TASK-xxx and subtask items with statuses and file paths
+- Read `.sdd/specs/YYYY/MM/<spec-id>/requirement.md` — extract all REQ-xxx items with acceptance criteria
+- Read `.sdd/specs/YYYY/MM/<spec-id>/design.md` — extract all DES-xxx items with references
+- Read `.sdd/specs/YYYY/MM/<spec-id>/plan.md` — extract all TASK-xxx and subtask items with statuses and file paths
 
 ### Step 2: Cross-Check (6 categories)
 

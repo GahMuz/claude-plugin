@@ -5,7 +5,7 @@ All output in French.
 ## Process
 
 ### Step 1: Read Requirements
-Load `.specs/<spec-id>/requirement.md`. Understand all REQ items and acceptance criteria.
+Load `.sdd/specs/<spec-path>/requirement.md`. Understand all REQ items and acceptance criteria.
 
 ### Step 2: Check Project Rules
 Search for `.claude/skills/rules-references/SKILL.md`:
@@ -67,6 +67,25 @@ Present complete design.md (in French):
 - Cross-references to REQs
 - SOLID compliance notes
 - "Cette conception vous convient-elle ? Des sections à revoir ?"
+
+### Step 7b: Concern Detection
+After presenting the design, evaluate whether the DES sections reveal distinct architectural concerns that would benefit from separate specs:
+- Sections with no shared dependencies or interfaces
+- Sections with very different technology stacks or delivery timelines
+- A section that introduces a reusable generic system alongside a domain-specific feature
+
+**If detected**, add a non-blocking advisory:
+
+```
+💡 La conception révèle deux préoccupations architecturales distinctes :
+- A : <label> — DES-001, DES-002 (spécifique au domaine)
+- B : <label> — DES-003 (système générique réutilisable)
+
+Séparer B dans une spec dédiée permettrait de la livrer et réutiliser indépendamment.
+Souhaitez-vous faire un `/spec split` maintenant ?
+```
+
+Advisory only — if the user declines, proceed without raising it again.
 
 ### Step 8: Generate Coverage Mapping
 Add a "Couverture des exigences" table at the end of design.md:

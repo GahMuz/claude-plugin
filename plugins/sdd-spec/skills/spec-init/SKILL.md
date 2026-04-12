@@ -1,6 +1,6 @@
 ---
 name: spec-init
-description: "This skill should be used when the user invokes '/spec-init' to initialize a project for spec-driven development, set up '.specs/' directory, configure project languages, check LSP servers, or scaffold rules-references skill."
+description: "This skill should be used when the user invokes '/spec-init' to initialize a project for spec-driven development, set up '.sdd/' directory, configure project languages, check LSP servers, or scaffold rules-references skill."
 argument-hint: ""
 allowed-tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep"]
 ---
@@ -12,7 +12,7 @@ All communication with user in French.
 ## Process
 
 ### Step 1: Check Existing Config
-Check if `.specs/config.json` exists:
+Check if `.sdd/config.json` exists:
 - Exists → show config, ask: "Reconfigurer ou garder la configuration existante ?"
 - Missing → proceed
 
@@ -51,14 +51,23 @@ If non, let user customize each.
 
 - "Format d'exigences enrichi ? (scénarios BDD + exigences fonctionnelles + critères de succès)" → default non
 
-### Step 6: Create .specs/
+### Step 6: Create .sdd/
 ```bash
-mkdir -p .specs
+mkdir -p .sdd/specs .sdd/docs
 ```
 
-Write `.specs/config.json`:
+Initialize `.sdd/specs/registry.md`:
+```markdown
+# Registre des specs
+
+| Identifiant | Titre | Période | Statut | Requirement | Design | Plan |
+|-------------|-------|---------|--------|-------------|--------|------|
+```
+
+Write `.sdd/config.json`:
 ```json
 {
+  "schemaVersion": "<version cible du plugin — fichier migrations/v*.md le plus élevé>",
   "languages": ["<selected>"],
   "pipelineReviews": true,
   "parallelTaskLimit": 0,
@@ -75,7 +84,7 @@ Write `.specs/config.json`:
 
 ### Step 7: Update .gitignore
 Add `.worktrees/` to `.gitignore` if not present.
-Do NOT gitignore `.specs/`.
+Do NOT gitignore `.sdd/`.
 
 ### Step 8: Scaffold Rules-References Skill
 Create skeleton in `.claude/skills/rules-references/`:
@@ -163,7 +172,7 @@ Ask: "Voulez-vous créer un guard skill maintenant ? (non par défaut)"
 - Langages : <liste>
 - Statut LSP : <statut par langage>
 - Modèles : orchestrateur=<model>, implémenteur=<model>, réviseur=<model>, investigation=<model>
-- Configuration : `.specs/config.json`
+- Configuration : `.sdd/config.json`
 - Règles projet : `.claude/skills/rules-references/`
 
 Prochaine étape : personnalisez les règles dans `.claude/skills/rules-references/references/rules.md`, puis lancez `/spec new <titre>`."

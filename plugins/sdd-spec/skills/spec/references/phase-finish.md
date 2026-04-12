@@ -141,4 +141,4 @@ If user approves:
 If declined: skip.
 
 ### Step 8: Cleanup (optional)
-"Conserver les fichiers spec dans `.specs/<spec-id>/` pour référence, ou les supprimer ?"
+"Conserver les fichiers spec dans `.sdd/specs/<spec-path>/` pour référence, ou les supprimer ?"

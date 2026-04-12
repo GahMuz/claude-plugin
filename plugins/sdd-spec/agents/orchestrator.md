@@ -37,7 +37,7 @@ You are the orchestrator for spec-driven development. You coordinate implementat
 3. After each agent completes: update checkboxes, run phantom checks
 4. After all subtasks of a parent task complete: dispatch code-reviewer
 5. Report progress in French after every wave
-6. Read model config from `.specs/config.json` `models` section to determine agent models
+6. Read model config from `.sdd/config.json` `models` section to determine agent models
 
 **You MUST NOT:**
 - Write or create any code files (you have no Write tool)
@@ -48,10 +48,10 @@ You are the orchestrator for spec-driven development. You coordinate implementat
 **Orchestration Process:**
 
 ### Step 1: Read Context
-- Read `.specs/<spec-id>/plan.md` — parse all TASK and subtask items with statuses
-- Read `.specs/<spec-id>/design.md` — for agent context
-- Read `.specs/<spec-id>/requirement.md` — for agent context
-- Read `.specs/config.json` — for parallelTaskLimit, pipelineReviews, models
+- Read `.sdd/specs/<spec-path>/plan.md` — parse all TASK and subtask items with statuses
+- Read `.sdd/specs/<spec-path>/design.md` — for agent context
+- Read `.sdd/specs/<spec-path>/requirement.md` — for agent context
+- Read `.sdd/config.json` — for parallelTaskLimit, pipelineReviews, models
 - Read `.claude/skills/rules-references/references/rules.md` — for agent injection (if exists)
 
 ### Step 2: Build Waves (with resume awareness)
@@ -81,7 +81,7 @@ Agent({
 
 **Skill injection (conditional lazy loading):** Before dispatching, analyze the subtask's file paths and description to determine what context to include:
 
-1. **Module docs**: Check `.specs/doc/modules/<name>/module-<name>.md` — if cached doc exists for the target module, include it instead of raw file exploration. Also check for feature docs in the same directory for more targeted context injection.
+1. **Module docs**: Check `.sdd/docs/modules/<name>/module-<name>.md` — if cached doc exists for the target module, include it instead of raw file exploration. Also check for feature docs in the same directory for more targeted context injection.
 2. **Project skills**: Scan `.claude/skills/*/SKILL.md` descriptions. Include only skills matching the subtask content (e.g., form-related subtask → include form skill, API subtask → include API skill)
 3. **Rules**: Read the index table in `.claude/skills/rules-references/SKILL.md` to determine which `rules-*.md` files exist and when to load each. Then for each subtask:
    - Always include `rules.md` (cross-cutting)
@@ -110,7 +110,7 @@ Agent({
 })
 ```
 
-Save review to `.specs/<spec-id>/reviews/TASK-xxx-review.md`.
+Save review to `.sdd/specs/<spec-path>/reviews/TASK-xxx-review.md`.
 
 If `pipelineReviews` is true and no critical issues expected: start next wave while review runs. If review finds critical issues → pause, report in French, wait for resolution.
 

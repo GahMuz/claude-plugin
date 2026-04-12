@@ -18,7 +18,7 @@ Do not assume requirements. Ask specific questions:
 Ask 3-5 questions at a time. Iterate.
 
 ### Step 3: Draft Requirements
-Check `.specs/config.json` for `richRequirements` setting.
+Check `.sdd/config.json` for `richRequirements` setting.
 
 **Standard format** (default, `richRequirements: false`):
 For each identified requirement:
@@ -57,8 +57,28 @@ Present complete requirement.md to user (in French):
 - Ask: "Ces exigences couvrent-elles bien votre besoin ? Quelque chose à ajouter, modifier ou retirer ?"
 - Iterate until satisfied
 
+### Step 4b: Concern Detection (after each iteration)
+After each round of user input, silently evaluate whether multiple distinct concerns are mixed:
+- Different domains (e.g., refactoring existing code + building a new generic system)
+- Items that could ship independently with no dependency between them
+- Different stakeholders or risk profiles
+- "While we're at it" additions that feel like scope creep
+
+**If mixing detected**, add a non-blocking advisory after the requirements list:
+
+```
+💡 Ces exigences semblent couvrir deux préoccupations distinctes :
+- A : <label> — REQ-001, REQ-002 (refactoring du module existant)
+- B : <label> — REQ-003, REQ-004 (nouveau système générique)
+
+Souhaitez-vous séparer B dans une spec dédiée ? (`/spec split` — je ferai la répartition pour vous)
+Ou continuer avec tout dans cette spec ?
+```
+
+This is advisory only — never block the user. If they choose to continue, do not raise the concern again unless new conflicting requirements are added.
+
 ### Step 5: Save
-Write requirement.md to `.specs/<spec-id>/requirement.md` using template from spec-format skill.
+Write requirement.md to `.sdd/specs/<spec-path>/requirement.md` using template from spec-format skill.
 Update state.json: requirements → in-progress.
 Append log.md entry: date, "Phase exigences", actions (X exigences rédigées), decisions prises.
 

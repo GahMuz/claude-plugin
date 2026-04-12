@@ -5,7 +5,7 @@ All output in French.
 ## Process
 
 ### Step 1: Analyze Design
-Read `.specs/<spec-id>/design.md`. For each DES item, identify:
+Read `.sdd/specs/<spec-path>/design.md`. For each DES item, identify:
 - Code changes needed
 - Files to create/modify
 - Tests to write

@@ -24,7 +24,7 @@ Agent({
   prompt: "
     Module : <nom>
     Chemin : <path>
-    Répertoire de sortie : .specs/doc/modules/<nom>/
+    Répertoire de sortie : .sdd/docs/modules/<nom>/
     
     Règles projet :
     <contenu de rules.md et règles spécifiques, ou 'Aucune règle projet configurée'>
@@ -52,7 +52,7 @@ Après réception du résultat :
 
 ## Step 5 : Mettre à jour l'index
 
-Regénérer `.specs/doc/index.md` — la section "Analyses disponibles" reflète les nouvelles données.
+Regénérer `.sdd/docs/index.md` — la section "Analyses disponibles" reflète les nouvelles données.
 
 ## Step 6 : Reporter
 
@@ -68,7 +68,7 @@ Analyse terminée : <module>
 - Score : S/100
 
 ## Fichiers générés
-- .specs/doc/modules/<nom>/analyse-<nom>.md
-- .specs/doc/modules/<nom>/improvement-<nom>.md
-- .specs/doc/modules/<nom>/missing-rules-<nom>.md (si applicable)
+- .sdd/docs/modules/<nom>/analyse-<nom>.md
+- .sdd/docs/modules/<nom>/improvement-<nom>.md
+- .sdd/docs/modules/<nom>/missing-rules-<nom>.md (si applicable)
 ```

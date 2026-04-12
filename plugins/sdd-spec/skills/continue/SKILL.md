@@ -12,7 +12,7 @@ All output in French. Read current state and suggest the exact next command.
 ## Process
 
 ### Step 0: Identify Specs
-Scan `.specs/*/state.json`. Build a summary of all specs:
+Read `.sdd/specs/registry.md`. For each row, read its state.json via the stored path. Build a summary of all specs:
 
 | Spec | Phase | Progression | Dernière MAJ |
 |------|-------|-------------|--------------|

@@ -28,7 +28,7 @@ In the worktree directory, run setup based on detected project files:
 Run project test suite and save results:
 - Execute the project's test command (detect from package.json/pom.xml/composer.json)
 - All tests must pass for baseline to be valid
-- Save to `.specs/<spec-id>/baseline-tests.json`: total, passed, failed, skipped
+- Save to `.sdd/specs/<spec-path>/baseline-tests.json`: total, passed, failed, skipped
 - If tests fail: report in French, do NOT proceed to planning
 - Append log.md entry: "Worktree créé. Baseline capturée : X tests passent."
 

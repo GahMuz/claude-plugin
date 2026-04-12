@@ -193,7 +193,7 @@ Haute priorité : X | Moyenne : Y | Basse : Z
 
 ```json
 {
-  "skill_version": "1.0.0",
+  "skill_version": "<schemaVersion depuis .sdd/config.json>",
   "modules": {
     "<module-name>": {
       "path": "<chemin relatif au projet>",

@@ -5,13 +5,13 @@ Report all progress in French.
 ## Process
 
 ### Step 1: Read Configuration
-From `.specs/config.json`:
+From `.sdd/config.json`:
 - `parallelTaskLimit`: max concurrent agents (0 = unlimited)
 - `pipelineReviews`: overlap reviews with next batch
 - `models`: model assignments per agent
 
 ### Step 2: Verify Baseline Exists
-Check that `.specs/<spec-id>/baseline-tests.json` exists (captured during worktree phase).
+Check that `.sdd/specs/<spec-path>/baseline-tests.json` exists (captured during worktree phase).
 - If missing: capture now (run test suite, save results)
 - If exists: read and report "Baseline existante : X tests."
 - Append log.md entry: "Phase d'implémentation démarrée."
@@ -25,10 +25,10 @@ Agent({
   subagent_type: "spec-driven-dev:orchestrator",
   model: <from config.models.orchestrator, default "opus">,
   prompt: "Spec: <spec-id>
-    Plan: .specs/<spec-id>/plan.md
-    Design: .specs/<spec-id>/design.md
-    Requirements: .specs/<spec-id>/requirement.md
-    Config: .specs/config.json
+    Plan: .sdd/specs/<spec-path>/plan.md
+    Design: .sdd/specs/<spec-path>/design.md
+    Requirements: .sdd/specs/<spec-path>/requirement.md
+    Config: .sdd/config.json
     Worktree: .worktrees/<spec-id>
     Rules: .claude/skills/rules-references/references/rules.md (if exists)
     Execute all waves, update checkboxes, run phantom checks, dispatch reviews."

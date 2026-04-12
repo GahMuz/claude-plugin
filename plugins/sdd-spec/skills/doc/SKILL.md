@@ -7,14 +7,14 @@ allowed-tools: ["Read", "Write", "Glob", "Grep", "Bash", "Agent"]
 
 # Documentation et analyse du codebase
 
-> Version : 1.0.0
+> Version : voir `schemaVersion` dans `.sdd/config.json`
 
 Générer de la documentation structurée par module et feature pour réduire la consommation de tokens de 80-90%. Toute sortie en **français**.
 
 ## Répertoire de sortie
 
 ```
-.specs/doc/
+.sdd/docs/
 ├── manifest.json
 ├── index.md
 ├── modules/
@@ -54,14 +54,16 @@ Heuristique : un répertoire contenant au moins 2 fichiers source constitue une 
 
 ## Règles de fraîcheur
 
+Avant toute vérification, lire `schemaVersion` dans `.sdd/config.json` — c'est la version de référence courante.
+
 Un document est **obsolète** quand :
-1. `skill_version` du doc != version courante du skill (1.0.0)
+1. `skill_version` du doc != `schemaVersion` du config (schéma migré depuis la dernière génération)
 2. `generated_at` date de plus de 30 jours
 3. `git log <last_commit>..HEAD -- <path>` contient des commits (code modifié)
 
 ## Manifest
 
-Fichier : `.specs/doc/manifest.json`
+Fichier : `.sdd/docs/manifest.json`
 Schema : voir `references/templates.md` section "Schema : manifest.json"
 
 Lire le manifest existant ou en créer un nouveau. Mettre à jour après chaque génération.
@@ -93,6 +95,6 @@ Lire et suivre `references/status.md`.
 ## Utilisation par les autres skills
 
 Pendant l'implémentation, l'orchestrateur et le task-implementer doivent :
-1. Vérifier si `.specs/doc/modules/<name>/module-<name>.md` existe pour le module cible
+1. Vérifier si `.sdd/docs/modules/<name>/module-<name>.md` existe pour le module cible
 2. Si oui : lire la doc cached au lieu d'explorer les fichiers bruts
 3. Si non : explorer normalement et suggérer `/doc <module>` après

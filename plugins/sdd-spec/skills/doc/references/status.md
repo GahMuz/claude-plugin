@@ -4,7 +4,7 @@ Procédure pour la sous-commande STATUS.
 
 ## Step 1 : Lire le manifest
 
-- Lire `.specs/doc/manifest.json`
+- Lire `.sdd/docs/manifest.json`
 - Si absent : "Aucune documentation existante. Lancez `/doc --all` pour démarrer."
 
 ## Step 2 : Évaluer la fraîcheur
@@ -17,8 +17,8 @@ Marquer chaque item comme **frais** ou **obsolète** avec la raison.
 ```
 # Statut de la documentation
 
-> Version skill : 1.0.0
-> Manifest : .specs/doc/manifest.json
+> Version skill : <schemaVersion depuis .sdd/config.json>
+> Manifest : .sdd/docs/manifest.json
 
 ## Modules
 
