@@ -22,6 +22,12 @@ Le fichier `requirement.md` contient **uniquement** des user stories structurée
 ### Step 1: Understand Context
 Read the spec title and any description. Identify domain, likely scope, users/stakeholders.
 
+### Step 1b: Identify Glossary Terms
+
+Avant de poser les questions, identifier les termes métier ou techniques
+qui pourraient être ambigus dans le contexte de cette spec.
+Les lister pour les inclure dans le glossaire du document final.
+
 ### Step 2: Ask Clarifying Questions (in French)
 Do not assume requirements. Ask specific questions:
 - "Que doit-il se passer quand X ?"
@@ -31,6 +37,14 @@ Do not assume requirements. Ask specific questions:
 - "Qu'est-ce qui ne devrait PAS être dans le périmètre ?"
 
 Ask 3-5 questions at a time. Iterate.
+
+### Step 2b: Define Scope
+
+Après les questions de clarification, définir explicitement :
+- **Dans le périmètre** : ce qui sera implémenté dans cette spec
+- **Hors périmètre** : ce qui est exclu et pourquoi (différé, autre spec, hors domaine)
+
+Inclure ces tableaux dans le document final — ils évitent les dérives de périmètre.
 
 ### Step 3: Draft Requirements
 
@@ -58,13 +72,28 @@ Mots-clés pour les critères d'acceptation :
 - `DOIT` — exigence absolue (SHALL / MUST)
 - `NE DOIT PAS` — interdiction absolue (SHALL NOT / MUST NOT)
 - `DEVRAIT` — exigence souhaitée (SHOULD)
+- `PEUT` — comportement optionnel permis (MAY / COULD)
 - `QUAND … ALORS` — condition + conséquence (WHEN … THEN)
 
 Règles :
 - IDs séquentiels, zéro-paddés à 3 chiffres : REQ-001, REQ-002, …
+- Exigences non fonctionnelles : préfixe REQ-NF-xxx (performance, sécurité, scalabilité…)
 - Récit utilisateur obligatoire sur chaque REQ, même pour des exigences techniques
 - Critères d'acceptation : liste numérotée, une condition par ligne, verbe modal obligatoire
 - Une seule préoccupation par REQ
+
+### Step 3b: Draft Non-Functional Requirements
+
+Identifier les exigences non fonctionnelles pertinentes :
+- **Performance** : temps de réponse, débit, latence
+- **Sécurité** : authentification, autorisation, chiffrement
+- **Scalabilité** : volumétrie, charge concurrente
+- **Disponibilité** : SLA, tolérance aux pannes
+- **Maintenabilité** : observabilité, logs, alertes
+
+Créer des REQ-NF-xxx pour chaque contrainte identifiée.
+Les critères d'acceptation doivent être **mesurables et chiffrés**
+(ex. "DOIT répondre en moins de 200ms au 95e percentile").
 
 ### Step 4: Present for Review
 Present complete requirement.md to user (in French):
@@ -115,8 +144,10 @@ Append log.md entry: date, "Phase exigences", actions (X exigences rédigées), 
 ## Quality Criteria
 - Every REQ has a clear user story in French ("En tant que...")
 - Acceptance criteria are testable conditions, not implementation descriptions
+- Non-functional requirements covered with REQ-NF-xxx and measurable thresholds
+- Glossaire présent pour tout terme ambigu ou spécifique au domaine
+- Périmètre explicite : tableaux "dans" et "hors" périmètre remplis
 - No architecture, code, or SQL in requirement.md
-- Scope is bounded — explicit about exclusions
 - Each REQ addresses a single concern
 
 ## Formatting Rules (apply when writing requirement.md)

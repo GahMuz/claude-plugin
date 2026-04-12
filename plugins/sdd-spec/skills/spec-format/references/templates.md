@@ -14,9 +14,30 @@ All document content is in French. JSON keys remain in English.
 
 ## Contexte
 
-<Contexte du problème ou de l'opportunité à traiter>
+<2-3 phrases : problème métier, opportunité, ou besoin à couvrir.
+Pas d'architecture ni de solution technique.>
 
-## Exigences
+## Glossaire
+
+| Terme | Définition |
+|-------|------------|
+| <Terme> | <Définition courte dans le contexte de cette spec> |
+
+## Périmètre
+
+### Dans le périmètre
+
+| Composant / Fonctionnalité | Description |
+|----------------------------|-------------|
+| <Élément> | <Ce qui est inclus et pourquoi> |
+
+### Hors périmètre
+
+| Composant / Fonctionnalité | Motif d'exclusion |
+|----------------------------|-------------------|
+| <Élément> | <Pourquoi exclu — différé, autre spec, hors domaine> |
+
+## Exigences fonctionnelles
 
 ### REQ-001 : <Titre court>
 
@@ -28,6 +49,8 @@ En tant que <rôle>, je veux <capacité> afin de <bénéfice>.
 1. LE <Système/Composant> DOIT <action>
 2. QUAND <condition> ALORS LE <Système> DOIT <action>
 3. QUAND <condition> ALORS LE <Système> NE DOIT PAS <action>
+4. LE <Système> DEVRAIT <action souhaitée>
+5. LE <Système> PEUT <comportement optionnel permis>
 
 **Priorité :** obligatoire | souhaitable | optionnel
 
@@ -44,8 +67,21 @@ En tant que <rôle>, je veux <capacité> afin de <bénéfice>.
 
 1. LE <Système/Composant> DOIT <action>
 2. QUAND <condition> ALORS LE <Système> DOIT <action>
-3. QUAND <condition> ALORS LE <Système> NE DOIT PAS <action>
-4. LE <Système> DEVRAIT <action souhaitée>
+
+**Priorité :** obligatoire | souhaitable | optionnel
+
+**Statut :** brouillon | approuvé | modifié
+
+---
+
+## Exigences non fonctionnelles
+
+### REQ-NF-001 : <Titre court — Performance | Sécurité | Scalabilité | …>
+
+**Critères d'acceptation :**
+
+1. LE <Système> DOIT <action mesurable avec seuil chiffré>
+2. QUAND <condition de charge / contexte> ALORS LE <Système> DOIT <garantie>
 
 **Priorité :** obligatoire | souhaitable | optionnel
 
