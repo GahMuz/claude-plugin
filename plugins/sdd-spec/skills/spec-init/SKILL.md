@@ -49,8 +49,6 @@ Present default model assignments per agent:
 "Garder les valeurs par défaut ? (oui/non)"
 If non, let user customize each.
 
-- "Format d'exigences enrichi ? (scénarios BDD + exigences fonctionnelles + critères de succès)" → default non
-
 ### Step 6: Create .sdd/
 ```bash
 mkdir -p .sdd/specs .sdd/docs
@@ -77,7 +75,6 @@ Write `.sdd/config.json`:
     "code-reviewer": "sonnet",
     "deep-dive": "opus"
   },
-  "richRequirements": false,
   "createdAt": "<ISO-8601>"
 }
 ```

@@ -2,6 +2,21 @@
 
 All questions and output in French.
 
+## ⚠️ Règle absolue de format
+
+Le fichier `requirement.md` contient **uniquement** des user stories structurées REQ-xxx.
+
+**INTERDIT dans requirement.md :**
+- Spécifications techniques libres (code, SQL, annotations, architecture)
+- Détails d'implémentation (noms de classes, schémas de BDD, configurations)
+- Critères d'acceptation regroupés en fin de document sans REQ-xxx
+
+**Ces éléments appartiennent à `design.md`** — pas à `requirement.md`.
+
+**Si l'utilisateur fournit d'emblée une description technique détaillée** : extraire les besoins utilisateur sous-jacents et les traduire en user stories REQ-xxx. Les détails techniques seront capturés en phase design.
+
+---
+
 ## Process
 
 ### Step 1: Understand Context
@@ -18,38 +33,29 @@ Do not assume requirements. Ask specific questions:
 Ask 3-5 questions at a time. Iterate.
 
 ### Step 3: Draft Requirements
-Check `.sdd/config.json` for `richRequirements` setting.
 
-**Standard format** (default, `richRequirements: false`):
-For each identified requirement:
-1. Assign next REQ-xxx ID
-2. Write user story in French: "En tant que <rôle>, je veux <capacité> afin de <bénéfice>"
-3. Write acceptance criteria: specific, testable conditions (in French)
-4. Assign priority: obligatoire / souhaitable / optionnel
-5. Set status to "brouillon"
+Pour chaque exigence identifiée, créer une section REQ-xxx suivant **exactement** ce format :
 
-**Rich format** (opt-in, `richRequirements: true`):
-Organize requirements in three layers:
-1. **Scénarios utilisateur (BDD)** — US-1, US-2, etc.:
-   ```
-   ### US-1 : <Titre du scénario>
-   **Étant donné** <contexte initial>
-   **Quand** <action utilisateur>
-   **Alors** <résultat attendu>
-   **Critères d'acceptation :**
-   - [ ] <condition testable>
-   ```
-2. **Exigences fonctionnelles** — FR-001, FR-002, etc.:
-   ```
-   **FR-001 [OBLIGATOIRE]** : <exigence concrète>
-   **FR-002 [SOUHAITABLE]** : <exigence concrète>
-   ```
-3. **Critères de succès** — SC-001, SC-002, etc.:
-   ```
-   **SC-001** : <résultat mesurable>
-   ```
+```markdown
+### REQ-001 : <Titre court de l'exigence>
 
-In rich mode, REQ-xxx IDs still apply. US/FR/SC are sub-items within each REQ.
+**Récit utilisateur :** En tant que <rôle>, je veux <capacité> afin de <bénéfice>.
+
+**Critères d'acceptation :**
+- [ ] <Condition testable 1>
+- [ ] <Condition testable 2>
+- [ ] <Condition testable 3>
+
+**Priorité :** obligatoire | souhaitable | optionnel
+
+**Statut :** brouillon
+```
+
+Règles :
+- IDs séquentiels, zéro-paddés à 3 chiffres : REQ-001, REQ-002, …
+- Récit utilisateur obligatoire sur chaque REQ, même pour des exigences techniques
+- Critères d'acceptation : conditions testables, pas des descriptions d'implémentation
+- Une seule préoccupation par REQ
 
 ### Step 4: Present for Review
 Present complete requirement.md to user (in French):
@@ -89,7 +95,8 @@ Découpage recommandé en 3 specs :
 This is advisory only — never block the user. If they choose to continue, do not raise the concern again unless new conflicting requirements are added.
 
 ### Step 5: Save
-Write requirement.md to `.sdd/specs/<spec-path>/requirement.md` using template from spec-format skill.
+
+Write `requirement.md` using the template from `references/templates.md` section `requirement.md`.
 Update state.json: requirements → in-progress.
 Append log.md entry: date, "Phase exigences", actions (X exigences rédigées), decisions prises.
 
@@ -97,8 +104,8 @@ Append log.md entry: date, "Phase exigences", actions (X exigences rédigées), 
 "Les exigences sont prêtes pour relecture. Quand vous êtes satisfait, lancez `/spec approve` pour passer à la conception."
 
 ## Quality Criteria
-- Every requirement has a clear user story (in French)
-- Acceptance criteria are testable
-- No ambiguous language
+- Every REQ has a clear user story in French ("En tant que...")
+- Acceptance criteria are testable conditions, not implementation descriptions
+- No architecture, code, or SQL in requirement.md
 - Scope is bounded — explicit about exclusions
 - Each REQ addresses a single concern
