@@ -63,6 +63,7 @@ Dispatcher spec-planner pour vérification automatique de couverture et structur
 Agent({
   description: "Vérifier le plan <spec-id>",
   subagent_type: "sdd-spec:spec-planner",
+  model: <from config.models.planner, default "haiku">,
   prompt: "Spec path: <spec-path>"
 })
 ```

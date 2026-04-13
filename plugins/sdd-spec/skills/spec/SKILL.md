@@ -1,6 +1,6 @@
 ---
 name: spec
-description: "This skill should be used when the user invokes '/spec' to manage spec-driven development workflow. Handles 'new spec', 'open spec' (loads context + resumes workflow), 'recap' (briefing complet avec contexte), 'approve phase', 'clarify requirements', 'discard spec', 'split spec', 'close spec', 'switch spec'. Orchestrates the full lifecycle from requirements through tested, reviewed code."
+description: "This skill should be used when the user invokes '/spec' to manage spec-driven development workflow. Handles 'new spec', 'open spec' (loads context + resumes workflow), 'recap' (briefing complet avec contexte), 'approve phase', 'clarify spec documents (requirements, design, or plan)', 'discard spec', 'split spec', 'close spec', 'switch spec'. Orchestrates the full lifecycle from requirements through tested, reviewed code."
 argument-hint: "new <titre> | open [titre] | recap | clarify | approve | discard | split [<new-titre>] | close | switch <titre>"
 context: fork
 allowed-tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep", "Agent"]

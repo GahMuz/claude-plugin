@@ -21,6 +21,7 @@ Procédure pour la sous-commande ANALYSE.
 Agent({
   description: "Analyser le module <nom>",
   subagent_type: "sdd-spec:doc-analyser",
+  model: <from config.models.doc-analyser, default "sonnet">,
   prompt: "
     Module : <nom>
     Chemin : <path>

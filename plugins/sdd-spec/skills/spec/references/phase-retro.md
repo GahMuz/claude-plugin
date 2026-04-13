@@ -23,6 +23,7 @@ Pour chaque module ayant une doc existante dans `.sdd/docs/modules/<module>/` :
 ```
 Agent({
   subagent_type: "sdd-spec:doc-generator",
+  model: <from config.models.doc-generator, default "haiku">,
   prompt: "Mettre à jour la doc du module <module>. Chemin source: <path>. Doc existante: .sdd/docs/modules/<module>/module-<module>.md"
 })
 ```

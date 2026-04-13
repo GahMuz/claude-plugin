@@ -100,6 +100,7 @@ Dispatcher l'agent de validation pour vérification automatique règles + testab
 Agent({
   description: "Valider design <spec-id>",
   subagent_type: "sdd-spec:spec-design-validator",
+  model: <from config.models.design-validator, default "sonnet">,
   prompt: "Spec path: <spec-path>"
 })
 ```

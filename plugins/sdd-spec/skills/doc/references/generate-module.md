@@ -48,6 +48,7 @@ Pour chaque module, dispatcher en parallèle :
 Agent({
   description: "Documenter le module <nom>",
   subagent_type: "sdd-spec:doc-generator",
+  model: <from config.models.doc-generator, default "haiku">,
   prompt: "
     Module : <nom>
     Chemin : <path>
@@ -72,6 +73,7 @@ Agent({
     Agent({
       description: "Documenter feature <feature> du module <nom>",
       subagent_type: "sdd-spec:doc-generator",
+      model: <from config.models.doc-generator, default "haiku">,
       prompt: "
         Feature : <feature>
         Module : <nom>

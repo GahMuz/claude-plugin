@@ -55,7 +55,7 @@ Dispatcher d'abord en mode rapport uniquement :
 Agent({
   description: "Revue spec/code de <spec-id>",
   subagent_type: "sdd-spec:spec-reviewer",
-  model: <from config.models.code-reviewer, default "opus">,
+  model: <from config.models.spec-reviewer, default "sonnet">,
   prompt: "specId: <spec-id>
     specPath: <spec-path>
     worktreePath: .worktrees/<spec-id>
@@ -65,7 +65,7 @@ Agent({
 
 Présenter le rapport à l'utilisateur.
 Si le rapport contient des corrections proposées : demander "Appliquer ces corrections ? (oui/non)"
-- Si oui : redispatcher avec `fix: true`
+- Si oui : redispatcher avec `fix: true` et le même modèle (`config.models.spec-reviewer`, default "sonnet")
 - Si non : continuer sans appliquer
 
 Selon la recommandation finale :

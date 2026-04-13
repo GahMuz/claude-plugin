@@ -41,10 +41,15 @@ Offer to help configure missing LSP servers.
 
 ### Step 5: Configure Models
 Present default model assignments per agent:
-- Orchestrateur (coordination, ne code jamais) : `opus`
-- Implémenteur de tâches (écriture de code) : `sonnet`
-- Réviseur de code (revue qualité) : `sonnet`
+- Orchestrateur (coordination des vagues) : `sonnet`
+- Implémenteur de tâches (écriture de code TDD) : `sonnet`
+- Réviseur de code (quality gate) : `opus`
 - Analyse approfondie (investigation architecture) : `opus`
+- Vérificateur de plan (couverture TDD) : `haiku`
+- Validateur de design (SOLID + contrats) : `sonnet`
+- Auditeur spec/code (cohérence finale) : `sonnet`
+- Générateur de documentation : `haiku`
+- Analyseur de documentation : `sonnet`
 
 "Garder les valeurs par défaut ? (oui/non)"
 If non, let user customize each.

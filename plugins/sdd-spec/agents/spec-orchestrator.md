@@ -117,22 +117,16 @@ For each completed subtask:
 7. Report in French: "Wave N terminée : TASK-xxx.1, TASK-xxx.2. Checkboxes mises à jour : ✅ (X/Y sous-tâches au total). Suivant : Wave N+1."
 
 ### Step 5: Parent Task Review
-Before dispatching the first subtask of a parent task, capture:
-```bash
-BASE_SHA=$(git rev-parse HEAD)
-```
-After all subtasks are `[x]`, capture:
-```bash
-HEAD_SHA=$(git rev-parse HEAD)
-```
-
-Then dispatch:
+After all subtasks of TASK-xxx are `[x]`, dispatch:
 ```
 Agent({
   description: "Revue TASK-xxx",
   subagent_type: "sdd-spec:spec-code-reviewer",
   model: <config.models.code-reviewer ou "opus" par défaut>,
-  prompt: "<completed subtasks list> + git diff BASE_SHA..HEAD_SHA + <spec references> + <project rules> + output path: .sdd/specs/<spec-path>/reviews/TASK-xxx-review.md"
+  prompt: "<completed subtasks list> + <spec references> + <project rules>
+    Pour le diff : utiliser `git log --oneline --grep='TASK-xxx'` pour trouver les commits de cette tâche,
+    puis `git diff <hash-parent-du-premier-commit>..HEAD` pour obtenir le diff complet.
+    output path: .sdd/specs/<spec-path>/reviews/TASK-xxx-review.md"
 })
 ```
 
