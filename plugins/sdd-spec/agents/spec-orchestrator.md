@@ -68,7 +68,9 @@ Si aucun problème → continuer immédiatement.
 ### Step 2: Build Waves (with resume awareness)
 Read all subtask statuses from plan.md:
 - **Skip** subtasks marked `[x]` (already completed)
-- **Re-dispatch** subtasks marked `[~]` or `[!]` (in-progress or failed — needs retry); for `[!]` subtasks, include the debugging-process skill content in the agent prompt
+- **Re-dispatch** subtasks marked `[~]` or `[!]` (in-progress or failed — needs retry); for `[!]` subtasks, include the debugging-process skill content in the agent prompt. **Si plusieurs `[!]` existent :**
+  - Failures dans des fichiers/domaines clairement distincts → dispatcher en parallèle (gains de temps)
+  - Failures dans la même zone du code ou avec le même type d'erreur → dispatcher un seul agent d'investigation d'abord ; paralléliser seulement si l'investigation confirme l'indépendance
 - **Queue** subtasks marked `[ ]` (pending)
 
 Then analyze dependencies among remaining subtasks:
@@ -111,7 +113,8 @@ For each completed subtask:
 3. **Vérification des modifications**: For files the subtask was expected to **modifier**, use Grep to spot-check at least one key identifier from the subtask definition (function name, class name, test name) in the file. Do not trust the agent's success report alone. If nothing is found → revert to `[ ]`, report "Vérification échouée : aucune trace de l'implémentation dans [fichier]"
 4. Update state.json progress (completedSubtasks, currentBatch)
 5. **Append log.md entry**: date, wave number, completed subtasks, phantom detections, verification failures, issues
-6. Report in French: "Wave N terminée : TASK-xxx.1, TASK-xxx.2. Checkboxes mises à jour : ✅ (X/Y sous-tâches au total). Suivant : Wave N+1."
+6. **Spot check hollistique** (waves parallèles uniquement) : après vérification individuelle de chaque subtask, faire un contrôle croisé — les agents parallèles ont-ils modifié les mêmes fichiers ? Si oui, lire les sections concernées pour détecter des conflits ou des patterns systématiquement incorrects (ex. même mauvais import dans tous les fichiers). Signaler tout conflit avant de passer à la vague suivante.
+7. Report in French: "Wave N terminée : TASK-xxx.1, TASK-xxx.2. Checkboxes mises à jour : ✅ (X/Y sous-tâches au total). Suivant : Wave N+1."
 
 ### Step 5: Parent Task Review
 Before dispatching the first subtask of a parent task, capture:

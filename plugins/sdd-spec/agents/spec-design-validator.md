@@ -50,6 +50,13 @@ Pour chaque section DES, vérifier dans cet ordre :
 - **I** : les interfaces décrites sont-elles trop larges (méthodes non utilisées par certains clients) ?
 - **D** : y a-t-il des dépendances sur des implémentations concrètes plutôt que des abstractions ?
 
+**Isolation et clarté des frontières :**
+Pour chaque composant conçu, vérifier que l'on peut répondre aux trois questions sans lire ses internals :
+- Que fait-il ? (responsabilité unique, nommage explicite)
+- Comment l'utiliser ? (interface claire)
+- De quoi dépend-il ? (dépendances déclarées)
+Si l'une de ces questions nécessite de lire le corps du composant → frontière floue à clarifier.
+
 **Règles projet :**
 - Pour chaque règle chargée : grep ciblé sur les patterns mentionnés dans le design
 - Reporter chaque violation avec DES-xxx, règle violée, et correction suggérée

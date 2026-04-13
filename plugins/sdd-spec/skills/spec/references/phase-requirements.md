@@ -46,6 +46,14 @@ Avant de poser les questions de clarification, chercher du contexte dans le code
 Cette section est transmise à la phase design pour orienter les décisions architecturales.
 Si aucun module n'est concerné (nouvelle fonctionnalité complètement isolée) : noter "Aucun module existant concerné."
 
+### Step 1d: Vérification préliminaire du périmètre
+
+Avant de poser les premières questions, évaluer si la demande est réaliste comme spec unique :
+- La description mentionne-t-elle plusieurs systèmes indépendants sans lien fonctionnel ?
+- Y a-t-il des signaux de "deux specs en une" (ex. "refactorer X ET créer Y de zéro") ?
+
+Si oui : signaler le problème de périmètre immédiatement, proposer un split ou une redéfinition du scope. Ne pas continuer sans clarification.
+
 ### Step 2: Ask Clarifying Questions (in French)
 Do not assume requirements. Ask specific questions:
 - "Que doit-il se passer quand X ?"
@@ -54,7 +62,7 @@ Do not assume requirements. Ask specific questions:
 - "Quels sont les cas limites ?"
 - "Qu'est-ce qui ne devrait PAS être dans le périmètre ?"
 
-Ask 3-5 questions at a time. Iterate.
+Poser une question à la fois, en commençant par l'inconnue la plus critique. Attendre la réponse avant de passer à la suivante.
 
 ### Step 2b: Define Scope
 

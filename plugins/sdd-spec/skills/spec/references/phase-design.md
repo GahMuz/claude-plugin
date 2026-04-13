@@ -26,11 +26,12 @@ Optional — ne pas re-dispatcher si le contexte codebase répond déjà aux que
 For each logical group of related requirements:
 1. Assign DES-xxx ID
 2. Describe problem (in French)
-3. Propose approach with rationale
-4. Consider 2-3 alternatives with rejection reasons
+3. Pour les décisions architecturales non triviales : proposer 2-3 approches avec avantages/inconvénients avant de choisir. Présenter à l'utilisateur et attendre son choix. Pour les DES simples, une seule approche avec justification suffit.
+4. Documenter l'approche retenue avec la raison du choix et les alternatives rejetées
 5. Note tradeoffs
-6. List: `Implémente : [REQ-001, REQ-002]`
-7. Define **Contrat de test** : behaviors to verify (derived from REQ acceptance criteria), edge cases, cross-module integrations to test
+6. Si le DES touche du code existant : préférer étendre les patterns en place plutôt qu'en introduire de nouveaux. Ne pas proposer de refactoring hors périmètre.
+7. List: `Implémente : [REQ-001, REQ-002]`
+8. Define **Contrat de test** : behaviors to verify (derived from REQ acceptance criteria), edge cases, cross-module integrations to test
 
 ### Step 4: Explore Alternatives (in French)
 For non-trivial decisions, present options:
@@ -64,6 +65,16 @@ Do NOT silently choose one over the other. Present the conflict to the user in F
 - Explain the project rule that contradicts it
 - "Quelle direction souhaitez-vous prendre ?"
 - Wait for user decision before proceeding
+
+### Step 6a: Auto-revue du design
+
+Avant de dispatcher spec-design-validator, relire design.md avec un regard critique :
+- Chaque DES a un "Contrat de test" ?
+- Les dépendances entre DES sont déclarées ?
+- Pas de décisions sans justification ?
+- La couverture REQ → DES est cohérente ?
+
+Corriger les évidences avant de déléguer la validation formelle.
 
 ### Step 6b: Valider le design (spec-design-validator)
 
@@ -127,6 +138,7 @@ Append log.md entry: date, "Phase conception", DES sections créées, décisions
 - Tradeoffs honestly stated
 - Implementable in small tasks
 - Project rules respected (conflicts resolved with user)
+- Patterns existants respectés : la conception suit les conventions du codebase plutôt que d'en introduire de nouvelles sans justification
 - spec-design-validator passed (zero auto-fixable violations)
 
 ## Formatting Rules (apply when writing design.md)
