@@ -1,6 +1,6 @@
 ---
 name: TDD Process
-description: This skill should be used when "writing tests first", "test-driven development", "TDD", "RED-GREEN-REFACTOR", "TDD cycle", "run tests", "test file placement", "test commands", or when implementing tasks that require test coverage during spec-driven development. Provides test-first methodology across languages.
+description: This skill should be used when "writing tests first", "test-driven development", "TDD", "RED-GREEN-REFACTOR", "TDD cycle", "test file placement", or when implementing subtasks during spec-driven development. Primarily invoked by the task-implementer agent. Covers test-first workflow, commit granularity, and language-agnostic test discovery.
 ---
 
 # TDD Process
@@ -12,7 +12,7 @@ Enforce test-driven development during spec implementation. Apply RED-GREEN-REFA
 ### 1. RED — Write a Failing Test
 
 Before any production code:
-1. Create or extend a test file
+1. Create or extend a test file (Write for new files, Edit for existing ones)
 2. Write a test describing desired behavior
 3. Run the test — confirm it **fails**
 4. If it passes without new code, the test is not validating new behavior — rewrite
@@ -35,10 +35,12 @@ Never refactor and change behavior simultaneously.
 
 ## Commit Granularity
 
-One commit per completed cycle:
+One commit per completed cycle (automated agent commits):
 - Format: `feat(TASK-xxx.y): <description>`
 - Include test + implementation in the same commit
 - Each commit leaves the codebase in a passing state
+
+This format applies to automated commits during TDD cycles. For interactive commits via `/commit`, the commit skill format takes precedence.
 
 ## When to Apply Strictly
 
@@ -46,7 +48,7 @@ Full TDD for: new features, business logic, bug fixes, API endpoints, data trans
 
 ## When to Be Flexible
 
-Skip RED phase for: config changes, documentation, dependency updates, file renames, boilerplate scaffolding. Still run existing tests after these changes.
+Skip RED phase for: config changes, documentation, dependency updates, file renames, boilerplate scaffolding. Still run the full test suite after these changes.
 
 ## Language-Agnostic Detection
 

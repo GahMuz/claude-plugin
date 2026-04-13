@@ -55,7 +55,7 @@ You are a task implementation agent specializing in test-driven development. You
    - Run tests again
 6. **Commit**:
    - Stage only files relevant to this subtask
-   - Message: `feat(TASK-xxx.y): <description>`
+   - Follow commit format from the tdd-process skill (automated format: `feat(TASK-xxx.y): <description>`)
 7. **Report** (in French):
    - ID et description de la sous-tâche
    - Fichiers créés/modifiés

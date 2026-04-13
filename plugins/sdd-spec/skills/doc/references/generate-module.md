@@ -41,6 +41,8 @@ Pour les features absentes du manifest : toujours générer.
 
 ## Step 5 : Dispatch parallèle
 
+Avant de dispatcher : lire `references/templates.md` et extraire les templates `module-<nom>` et `feature-<feature>`. Insérer leur contenu brut dans les prompts ci-dessous.
+
 ### Mode --all : un agent par module
 
 Pour chaque module, dispatcher en parallèle :

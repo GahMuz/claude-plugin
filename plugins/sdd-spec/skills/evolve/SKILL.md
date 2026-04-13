@@ -34,6 +34,8 @@ For new or modified skills/hooks, verify:
 - No network calls without explicit user consent
 - No secrets or credentials in skill content
 - No file access outside project scope
+- **Write scope**: all writes must stay within `.claude/` — never modify files outside this directory
+- **Protected files**: `settings.json` and `settings.local.json` are off-limits — never propose modifying them
 - Report: "Scan sécurité : X problèmes trouvés" or "Aucun problème"
 
 ### Step 3: Duplicate Check
@@ -58,6 +60,7 @@ Based on the action:
 
 **For `add`:**
 - Propose: skill name, directory location, SKILL.md content outline, references needed
+- New SKILL.md files must include frontmatter with: `name`, `description`, `argument-hint`, `allowed-tools`
 - If adding a rules file (`rules-*.md`): also update the index table in `.claude/skills/rules-references/SKILL.md` with file name, domain, and "Charger quand" condition
 - Check for naming conflicts
 - Estimate token impact
@@ -75,6 +78,7 @@ Based on the action:
 - Recommend priority improvements
 
 **For `import`:**
+- Validate `<path>`: must be an existing file or directory — if absent, report "Chemin introuvable : `<path>`" and abort
 - Read the source skill
 - Run security + duplicate + granularity checks
 - Propose adaptation for current project

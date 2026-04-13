@@ -26,17 +26,15 @@ If nothing is staged, show what will be committed and ask confirmation.
 
 ## Step 2: ANALYZE CHANGES
 
-Categorize each changed file:
+Detect the project stack from `package.json`, `pom.xml`, `composer.json`, `build.gradle`, or file extensions. Adapt file categories accordingly. Examples by stack:
 
-| Category | Files | Impact |
-|----------|-------|--------|
-| Entity (`**/entity/*.java`) | ... | Schema change |
-| Liquibase (`**/changelog/*.xml`) | ... | Migration required |
-| Service (`**/service/**/*.java`) | ... | Business logic |
-| Controller (`**/rest/*.java`) | ... | API surface |
-| DTO (`**/dto/*.java`) | ... | Contract change |
-| Test (`**/test/**/*.java`) | ... | Quality |
-| Config (`*.yml`, `*.xml`, `pom.xml`) | ... | Infrastructure |
+**Java/Spring** : Entity (`**/entity/*.java`), Service (`**/service/**/*.java`), Controller (`**/rest/*.java`), DTO (`**/dto/*.java`), Liquibase (`**/changelog/*.xml`), Test (`**/test/**/*.java`), Config (`*.yml`, `*.xml`, `pom.xml`)
+
+**Node/TypeScript** : Routes/Controllers (`**/routes/**`, `**/controllers/**`), Services (`**/services/**`), Models/Schema (`**/models/**`, `**/*.schema.ts`), Test (`**/*.spec.ts`, `**/*.test.ts`), Config (`*.json`, `*.env*`, `tsconfig.json`)
+
+**PHP/Laravel** : Models (`**/Models/**`), Controllers (`**/Controllers/**`), Migrations (`**/migrations/**`), Tests (`**/Tests/**`), Config (`config/**`, `*.env`)
+
+For unrecognized stacks, group by directory and file type and apply the same Impact assessment logic.
 
 Assess:
 - **Purpose**: new feature, bug fix, refactor, chore, schema change, security fix
@@ -82,8 +80,7 @@ Risque : {LOW|MEDIUM|HIGH} — {justification en 1 ligne}
 | docs | Documentation only |
 
 ### Scope values
-Module short name: `account`, `member`, `organization`, `global`, `base`, `common`, `auth`, `liquibase`.
-Cross-module: `multi` or list 2-3 most important.
+Derive scope dynamically from the modules/directories touched — do not use hardcoded names. Use the short name of the affected module (e.g. `auth`, `user`, `payment`). If a `manifest.json` or equivalent module index exists, use its module names. Cross-module changes: `multi` or list 2-3 most impacted.
 
 ### Règles
 - Première ligne < 72 caractères
@@ -98,7 +95,11 @@ Cross-module: `multi` or list 2-3 most important.
 Présenter le message de commit. Demander : "On commit ? (oui / modifier / annuler)"
 
 If "oui":
-- Stage relevant files (exclude build artifacts, .env)
+- Stage relevant files — exclude:
+  - Build artifacts: `target/`, `dist/`, `build/`, `.next/`, `out/`
+  - Dependencies: `vendor/`, `node_modules/`
+  - Environment files: `.env`, `.env.*`
+  - IDE/OS noise: `.DS_Store`, `*.iml`, `.idea/`
 - Commit with the message
 - Show commit hash
 

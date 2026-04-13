@@ -17,6 +17,8 @@ Procédure pour la sous-commande ANALYSE.
 
 ## Step 3 : Dispatcher l'agent d'analyse
 
+Avant de dispatcher : lire `references/templates.md` et extraire les trois templates (`analyse-<module>`, `improvement-<module>`, `missing-rules-<module>`). Insérer leur contenu brut dans le prompt ci-dessous.
+
 ```
 Agent({
   description: "Analyser le module <nom>",
@@ -30,12 +32,12 @@ Agent({
     <contenu de rules.md et règles spécifiques, ou 'Aucune règle projet configurée'>
     
     Générer :
-    1. analyse-<nom>.md (template analyse de references/templates.md)
-    2. improvement-<nom>.md (template améliorations de references/templates.md)
-    3. missing-rules-<nom>.md UNIQUEMENT si des gaps sont trouvés (template règles manquantes)
+    1. analyse-<nom>.md
+    2. improvement-<nom>.md
+    3. missing-rules-<nom>.md UNIQUEMENT si des gaps sont trouvés
     
-    Templates :
-    <insérer les templates pertinents de references/templates.md>
+    Templates (contenu extrait de references/templates.md) :
+    <contenu brut des trois templates>
     
     Retourner : last_commit hash.
   "
