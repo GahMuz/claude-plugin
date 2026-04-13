@@ -21,13 +21,31 @@ PATCH=$(echo "$CURRENT" | cut -d. -f3)
 NEW_MINOR=$((MINOR + 1))
 NEW_VERSION="$MAJOR.$NEW_MINOR.$PATCH"
 
-# Update all files
-for FILE in "$MARKETPLACE" "$SDD_SPEC" "$SDD_ROI"; do
+# Update plugin.json files — each reads its own current version
+for FILE in "$SDD_SPEC" "$SDD_ROI"; do
   if [ -f "$FILE" ]; then
-    sed -i "s/\"version\": \"$CURRENT\"/\"version\": \"$NEW_VERSION\"/g" "$FILE"
-    git add "$FILE"
+    FILE_VER=$(grep -oP '"version": "\K[0-9]+\.[0-9]+\.[0-9]+' "$FILE" | head -1)
+    if [ -n "$FILE_VER" ]; then
+      sed -i "s/\"version\": \"$FILE_VER\"/\"version\": \"$NEW_VERSION\"/" "$FILE"
+      git add "$FILE"
+    fi
   fi
 done
+
+# Update marketplace.json — context-aware per-plugin replacement via awk
+# (avoids breakage when plugin versions have drifted out of sync)
+if [ -f "$MARKETPLACE" ]; then
+  awk -v ver="$NEW_VERSION" '
+    /"name": "sdd-spec"/ { in_plugin=1 }
+    /"name": "sdd-roi"/  { in_plugin=1 }
+    in_plugin && /"version"/ {
+      sub(/"version": "[^"]*"/, "\"version\": \"" ver "\"")
+      in_plugin=0
+    }
+    { print }
+  ' "$MARKETPLACE" > "$MARKETPLACE.tmp" && mv "$MARKETPLACE.tmp" "$MARKETPLACE"
+  git add "$MARKETPLACE"
+fi
 
 echo "Version bumped: $CURRENT → $NEW_VERSION"
 
