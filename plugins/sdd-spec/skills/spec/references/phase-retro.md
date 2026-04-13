@@ -1,0 +1,89 @@
+# Phase : Retrospective
+
+All output in French.
+
+## Purpose
+
+Extraire les règles apprises pendant le spec, mettre à jour la documentation `.sdd/docs/`, et persister les apprentissages dans les fichiers `rules-*.md` du projet.
+
+## Process
+
+### Step 1: Extract Learnings
+
+Analyser :
+- `log.md` — décisions prises, contournements, points de friction
+- `reviews/` — problèmes récurrents signalés par le code-reviewer
+- `state.json` changelog — conventions émergentes
+- `baseline-tests.json` `breakingChanges` — patterns de changements cassants
+
+### Step 2: Update Module Documentation
+
+Identifier les modules touchés (depuis les chemins de fichiers dans plan.md).
+Pour chaque module ayant une doc existante dans `.sdd/docs/modules/<module>/` :
+```
+Agent({
+  subagent_type: "sdd-spec:doc-generator",
+  prompt: "Mettre à jour la doc du module <module>. Chemin source: <path>. Doc existante: .sdd/docs/modules/<module>/module-<module>.md"
+})
+```
+Si aucune doc existante pour un module touché : suggérer `/doc <module>` pour une génération initiale.
+
+### Step 3: Categorize Rule Candidates
+
+Classer chaque règle candidate par domaine :
+- Règles controller → `rules-controller.md`
+- Règles service → `rules-service.md`
+- Règles entité/modèle → `rules-entity.md`
+- Règles test → `rules-test.md`
+- Règles API → `rules-api.md`
+- Règles sécurité → `rules-security.md`
+- Règles transversales → `rules.md`
+
+Pour chaque règle candidate, avant de la présenter :
+- **Sécurité** (comme `/evolve`) : pas de pattern d'injection, pas de credentials
+- **Doublons** : Grep dans le fichier cible — si déjà présent, ignorer silencieusement
+
+Si aucune règle candidate : passer à Step 5.
+
+### Step 4: Present Rules One by One
+
+Pour chaque règle candidate, présenter individuellement :
+
+```
+Proposition N/Total :
+
+Fichier cible : rules-<domain>.md
+Règle : "<règle>"
+Contexte : <où découverte / combien de fois flaggée>
+
+Appliquer ? (oui / non / modifier)
+```
+
+- **oui** → approuvée, passer à la suivante
+- **non** → ignorée, passer à la suivante
+- **modifier** → demander la version corrigée, passer à la suivante
+
+### Step 5: Apply Approved Rules on Separate Branch
+
+Si au moins une règle est approuvée :
+1. Créer la branche `claude/learn-<spec-id>` depuis la branche de base
+2. Créer/mettre à jour les fichiers `rules-*.md` dans `.claude/skills/rules-references/references/`
+3. Si nouveau fichier `rules-*.md` créé : mettre à jour l'index dans `.claude/skills/rules-references/SKILL.md`
+   (ajouter ligne : fichier, domaine, "Charger quand")
+4. Vérification de granularité (comme `/evolve audit`) :
+   - Fichier `rules-*.md` > 200 lignes → signaler
+   - Règles domain-specific dans `rules.md` → proposer d'extraire dans `rules-*.md`
+5. Commiter : `chore(claude): apprentissages du spec <titre>`
+6. Pousser : `git push -u origin claude/learn-<spec-id>`
+7. "Branche `claude/learn-<spec-id>` poussée. Créez la PR via Bitbucket."
+8. Append log.md : "Rétrospective : X règles ajoutées dans Y fichiers."
+
+Si aucune règle approuvée : skip.
+
+### Step 6: Finalize
+
+1. Mettre à jour state.json : currentPhase → `"completed"`.
+2. Mettre à jour registry.md : statut → `completed`.
+3. Append log.md : "Rétrospective terminée. Spec complété."
+
+"Spec `<titre>` complété. Les fichiers sont conservés dans `.sdd/specs/<spec-path>/` pour référence future."

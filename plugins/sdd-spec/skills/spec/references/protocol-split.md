@@ -179,7 +179,7 @@ Add a new row to `.sdd/specs/registry.md` for the new spec with its phase and do
 Update the original spec row's `Statut` if it changed.
 
 ### Step 8b: Split Memory Entry
-Follow the **Impact sur SPLIT** section in `references/phase-context.md` to distribute the memory entry between the two specs.
+Follow the **Impact sur SPLIT** section in `references/protocol-context.md` to distribute the memory entry between the two specs.
 
 ### Step 9: Activate One Spec
 

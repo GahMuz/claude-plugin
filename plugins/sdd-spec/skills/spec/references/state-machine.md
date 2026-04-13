@@ -10,6 +10,7 @@
 | `planning` | Breaking design into tasks |
 | `implementation` | Executing tasks with TDD |
 | `finishing` | Completing the branch |
+| `retrospective` | Extracting learnings and updating rules |
 | `completed` | Spec fully done |
 
 ## Valid Transitions
@@ -20,7 +21,8 @@ design → worktree                  (user approval, auto-chain)
 worktree → planning                (automatic after setup)
 planning → implementation          (user approval)
 implementation → finishing          (all subtasks completed)
-finishing → completed              (user action)
+finishing → retrospective          (user chooses "Valider")
+retrospective → completed          (retro complete)
 ```
 
 No other transitions are valid. Phases cannot be skipped.

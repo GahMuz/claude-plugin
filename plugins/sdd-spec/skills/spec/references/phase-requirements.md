@@ -54,6 +54,21 @@ Avant de poser les premières questions, évaluer si la demande est réaliste co
 
 Si oui : signaler le problème de périmètre immédiatement, proposer un split ou une redéfinition du scope. Ne pas continuer sans clarification.
 
+### Step 1e: Specs passés liés
+
+Lire `.sdd/specs/registry.md`. Pour chaque spec avec statut `completed` ou `retrospective` :
+- Comparer le titre et les mots-clés avec le titre et la description du spec courant
+- Si lien probable (même domaine fonctionnel, mêmes entités, même module) : lire son `requirement.md`
+
+Inclure dans le briefing initial à l'utilisateur :
+```
+💡 Specs liés trouvés : <titre-1>, <titre-2>
+   Leurs exigences sont chargées comme contexte.
+```
+
+Ce contexte oriente les questions de clarification (éviter de re-poser ce qui est déjà établi) et enrichit le glossaire.
+Si aucun spec lié : continuer sans mention.
+
 ### Step 2: Ask Clarifying Questions (in French)
 Do not assume requirements. Ask specific questions:
 - "Que doit-il se passer quand X ?"

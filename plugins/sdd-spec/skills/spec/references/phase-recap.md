@@ -34,16 +34,49 @@ Si absent : noter "Aucun contexte sauvegardé — `/spec close` créera un conte
 - [ ] <question bloquante ou importante>
 - ...
 
-### Prochaine action
-<commande concrète à lancer + pourquoi>
+### Commandes disponibles
+<liste selon la phase courante — voir Step 3b>
 ```
+
+## Step 3b: Commandes disponibles par phase
+
+Insérer dans "Commandes disponibles" les lignes correspondant à la phase courante :
+
+**requirements :**
+- `/spec approve` — valider les exigences et passer à la conception
+- `/spec clarify` — modifier ou affiner une exigence
+- `/spec discard` — abandonner ce spec
+
+**design :**
+- `/spec approve` — valider la conception et passer à la planification
+- `/spec clarify` — modifier une décision de design
+- `/spec-review` — audit de cohérence spec/code
+- `/spec discard` — abandonner ce spec
+
+**planning :**
+- `/spec approve` — valider le plan et démarrer l'implémentation
+- `/spec clarify` — ajuster une tâche ou sous-tâche
+- `/spec discard` — abandonner ce spec
+
+**execution (en cours) :**
+- attendre la fin de l'orchestrateur
+- `/spec clarify` — clarifier une sous-tâche en attente
+- `/spec-review` — audit manuel de cohérence spec/code
+
+**execution (100% `[x]`) :**
+- `/spec approve` — passer à la phase finishing
+- `/spec-review` — relancer un audit avant de finaliser
+
+**finishing :**
+- répondre au choix affiché : **Valider** (pousser + rétrospective) | **Fermer** (reprendre plus tard) | **Abandonner**
+
+**retrospective :**
+- en cours — répondre aux propositions de règles une par une
+
+**completed :**
+- `/spec open <titre>` — ouvrir un autre spec
 
 ## Step 4: Vérifier le worktree
 
 Exécuter `git status --short` dans le worktree (si `worktreePath` est défini dans state.json).
 Si des modifications non commitées : "Attention : modifications non commitées dans le worktree."
-
-## Step 5: Suggérer une vérification qualité
-
-Si la phase est implémentation ou ultérieure :
-"Lancez `/spec-review` pour vérifier la cohérence spec/code."

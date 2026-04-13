@@ -50,6 +50,7 @@ After orchestrator completes:
 - Report: "Toutes les sous-tâches terminées. Suite de tests : X tests passent. Y changements cassants documentés."
 
 ### Step 5: Dispatch Spec Reviewer
+Dispatcher d'abord en mode rapport uniquement :
 ```
 Agent({
   description: "Revue spec/code de <spec-id>",
@@ -58,13 +59,19 @@ Agent({
   prompt: "specId: <spec-id>
     specPath: <spec-path>
     worktreePath: .worktrees/<spec-id>
-    fix: true"
+    fix: false"
 })
 ```
 
-- Recommendation "prêt pour finishing" → transition to finishing phase
-- Recommendation "corrections nécessaires" → present report to user, ask how to proceed
-- Recommendation "re-planification requise" → return to planning phase
+Présenter le rapport à l'utilisateur.
+Si le rapport contient des corrections proposées : demander "Appliquer ces corrections ? (oui/non)"
+- Si oui : redispatcher avec `fix: true`
+- Si non : continuer sans appliquer
+
+Selon la recommandation finale :
+- "prêt pour finishing" → transition to finishing phase
+- "corrections nécessaires" → présenter le rapport, demander comment procéder
+- "re-planification requise" → retour en phase planning
 
 ### Error Handling
 - Orchestrator reports critical review issues → present to user in French, ask how to proceed

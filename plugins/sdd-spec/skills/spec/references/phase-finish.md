@@ -7,7 +7,7 @@ All output in French.
 ### Step 1: Final Verification
 In the worktree:
 1. Run full test suite — all must pass
-2. Check for uncommitted changes — commit or stash
+2. Check for uncommitted changes — commit if needed
 3. Verify all subtasks in plan.md are `[x]`
 
 If any check fails, report and ask how to proceed.
@@ -24,121 +24,41 @@ Fichiers modifiés : N
 Changements cassants : K (voir baseline-tests.json)
 ```
 
-If breaking changes exist, list them with test name and reason. Include in PR body and commit message.
+If breaking changes exist, list them with test name and reason.
 
 ### Step 3: Present Options
 
-1. **Fusionner** — Fusionner dans la branche de base, supprimer worktree et branche
-2. **Pull Request** — Pousser la branche, créer une PR, garder le worktree
-3. **Garder** — Garder branche et worktree pour travail manuel
-4. **Abandonner** — Supprimer branche et worktree, annuler les changements
+1. **Valider** — tout est commité, pousser la branche et lancer la rétrospective. La PR sera créée manuellement via Bitbucket.
+2. **Fermer** — sauvegarder le contexte et fermer le spec pour reprendre plus tard.
+3. **Abandonner** — supprimer la branche et le worktree, annuler tous les changements.
 
 "Quelle option choisissez-vous ?"
 
-### Step 4: Generate Commit Message
-Before any action, generate a rich commit message including all context:
+### Step 4: Execute Choice
 
-```
-feat(<spec-id>): <titre du spec>
-
-<résumé des exigences principales>
-
-Conception :
-- <approche choisie et justification>
-
-Changements :
-- <fichiers créés/modifiés principaux>
-
-Changements cassants :
-- <liste depuis baseline-tests.json, ou "Aucun">
-
-Refs : <REQ-xxx, DES-xxx>
-```
-
-Present the commit message for approval before executing.
-
-### Step 5: Execute Choice
-
-#### Fusionner
-```bash
-cd <project-root>
-git merge spec/<spec-id>
-git worktree remove .worktrees/<spec-id>
-git branch -d spec/<spec-id>
-```
-
-#### Pousser (pour PR)
+#### Valider
+1. Vérifier qu'il ne reste aucune modification non commitée dans le worktree.
+   Si oui : commiter avant de continuer.
+2. Pousser la branche :
 ```bash
 git push -u origin spec/<spec-id>
 ```
-"Branche poussée. Créez la PR via votre outil habituel."
+3. "Branche `spec/<spec-id>` poussée. Créez votre PR via Bitbucket quand vous êtes prêt."
+4. Mettre à jour state.json : currentPhase → `"retrospective"`.
+5. Mettre à jour registry.md : statut → `retrospective`.
+6. Suivre `references/phase-retro.md`.
 
-#### Garder
-"Branche et worktree conservés pour travail manuel."
+#### Fermer
+- Sauvegarder le contexte : suivre `references/protocol-context.md` section **CLOSE**.
+- "Spec fermé. Relancez avec `/spec open <titre>` quand vous êtes prêt."
 
 #### Abandonner
-**Double confirmation** : "Êtes-vous sûr ? Cette action supprimera tous les changements."
-Check for uncommitted changes first. If found: "Des modifications non commitées existent. Les abandonner aussi ?"
+**Double confirmation** : "Êtes-vous sûr ? Cette action supprimera tous les changements non mergés."
+Si des modifications non commitées existent : "Des modifications non commitées existent. Les abandonner aussi ?"
 ```bash
 git worktree remove --force .worktrees/<spec-id>
 git branch -D spec/<spec-id>
 ```
-
-### Step 6: Update State
-Set currentPhase to `"completed"`.
-
-### Step 7: Retrospective — Learning from this Spec
-
-Extract learnings and propose .claude/ improvements.
-**Separate branch and PR** — never mix config evolution with spec code.
-
-**7a — Extract Learnings**
-Analyze: log.md (decisions, workarounds), reviews/ (recurring issues), state.json changelog (conventions emerged), baseline-tests.json (breaking change patterns).
-
-**7b — Categorize Proposals by Domain**
-Each proposed rule goes to a domain-scoped file (not a single rules.md):
-- Controller rules → `rules-controller.md`
-- Service rules → `rules-service.md`
-- Entity/model rules → `rules-entity.md`
-- Test rules → `rules-test.md`
-- API rules → `rules-api.md`
-- Security rules → `rules-security.md`
-- Cross-cutting rules only → `rules.md`
-
-Create the `rules-*.md` file if it doesn't exist yet. This enables lazy loading — orchestrator loads only the rules file relevant to each subtask's domain.
-
-Also categorize documentation updates: coding-standards.md, architecture.md, testing.md, module docs.
-
-**7c — Present Proposals (in French)**
-
-```
-## Rétrospective : <titre du spec>
-
-### Nouvelles règles proposées
-- [ ] rules-controller.md : "<règle>" — découverte lors de <contexte>
-- [ ] rules-service.md : "<règle>" — flaggée X fois dans les revues
-- [ ] rules-test.md (nouveau) : "<règle>" — pattern de test récurrent
-
-### Documentation à mettre à jour
-- [ ] coding-standards.md : ajouter <pattern>
-- [ ] architecture.md : documenter <décision>
-```
-
-"Voulez-vous appliquer ces améliorations ? (oui/non/sélectionner)"
-
-**7d — Apply on Separate Branch**
-If user approves:
-1. Create branch `claude/learn-<spec-id>` from base branch
-2. **Deduplicate**: before adding a rule, check if it already exists in the target `rules-*.md` or in `rules.md`. Skip duplicates.
-3. Create/update `rules-*.md` files in `.claude/skills/rules-references/references/`
-4. Update the index table in `.claude/skills/rules-references/SKILL.md` for any new `rules-*.md` file (add row with file, domain, "Charger quand")
-5. Update documentation files if needed
-6. Commit: `chore(claude): apprentissages du spec <titre>`
-7. Push branch: `git push -u origin claude/learn-<spec-id>`
-8. "Branche poussée. Créez la PR via votre outil habituel."
-9. Log: "Rétrospective : X règles ajoutées dans Y fichiers. Branche poussée."
-
-If declined: skip.
-
-### Step 8: Cleanup (optional)
-"Conserver les fichiers spec dans `.sdd/specs/<spec-path>/` pour référence, ou les supprimer ?"
+- Mettre à jour registry.md : statut → `abandoned`.
+- Supprimer `.sdd/local/active.json`.
+- "Spec abandonné."

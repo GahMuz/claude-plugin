@@ -60,8 +60,8 @@ Extract subcommand from user input:
 1. Read `.sdd/specs/registry.md`. Title given → find matching row. No title → list non-completed rows, ask user (in French).
 2. Read `.sdd/local/active.json`. If present with a **different** specId: execute CLOSE (full context save). If same specId: skip to step 4.
 3. Write `.sdd/local/active.json` with this spec's ID, path, and activatedAt.
-4. Load context following priority order from `references/phase-context.md` section **Chargement du contexte** — present the briefing before resuming.
-5. Read state.json → currentPhase. If in implementation → follow `references/resume-protocol.md`.
+4. Load context following priority order from `references/protocol-context.md` section **Chargement du contexte** — present the briefing before resuming.
+5. Read state.json → currentPhase. If in implementation → follow `references/protocol-resume.md`.
 6. Report state (in French) and resume.
 
 ## RECAP
@@ -81,13 +81,14 @@ Read and follow `references/phase-recap.md`.
    - requirements → design: follow `references/phase-design.md`
    - design → worktree + planning: follow `references/phase-worktree.md` then `references/phase-planning.md`
    - planning → implementation: follow `references/phase-execution.md`
+   - finishing → retrospective: follow `references/phase-retro.md`
 4. Update state.json after each transition.
 5. Update `Statut` column in `.sdd/specs/registry.md`.
 
 ## CLARIFY
 
 0. Read `.sdd/local/active.json`. If absent: fail.
-Read and follow `references/phase-clarify.md`.
+Read and follow `references/protocol-clarify.md`.
 
 ## DISCARD
 
@@ -101,12 +102,12 @@ Read and follow `references/phase-clarify.md`.
 ## SPLIT
 
 0. Read `.sdd/local/active.json`. If absent: fail.
-Read and follow `references/phase-split.md`.
+Read and follow `references/protocol-split.md`.
 
 ## CLOSE
 
 0. Read `.sdd/local/active.json`. If absent: fail.
-Read and follow `references/phase-context.md` section **CLOSE**.
+Read and follow `references/protocol-context.md` section **CLOSE**.
 
 ## SWITCH
 
@@ -132,12 +133,13 @@ Execute OPEN on the requested spec. OPEN handles closing the current active auto
 | Planning | `references/phase-planning.md` |
 | Implementation | `references/phase-execution.md` (delegates to orchestrator agent) |
 | Finishing | `references/phase-finish.md` |
-| Clarify | `references/phase-clarify.md` |
+| Retrospective | `references/phase-retro.md` |
+| Clarify | `references/protocol-clarify.md` |
 | Recap | `references/phase-recap.md` |
-| Split | `references/phase-split.md` |
-| Close / Switch | `references/phase-context.md` |
+| Split | `references/protocol-split.md` |
+| Close / Switch | `references/protocol-context.md` |
 | State machine | `references/state-machine.md` |
-| Resume protocol | `references/resume-protocol.md` |
+| Resume protocol | `references/protocol-resume.md` |
 
 ## Related Skills
 
