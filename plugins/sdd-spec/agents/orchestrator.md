@@ -12,7 +12,7 @@ Implementation phase starts. Orchestrator reads plan and manages wave execution 
 </example>
 
 <example>
-Context: Resuming implementation after suspension
+Context: Resuming implementation after interruption
 user: "/spec open auth-feature"
 assistant: "Je relance l'orchestrateur pour reprendre l'implémentation."
 <commentary>
@@ -52,7 +52,7 @@ You are the orchestrator for spec-driven development. You coordinate implementat
 - Read `.sdd/specs/<spec-path>/design.md` — for agent context
 - Read `.sdd/specs/<spec-path>/requirement.md` — for agent context
 - Read `.sdd/config.json` — for parallelTaskLimit, pipelineReviews, models
-- Read `.claude/skills/rules-references/references/rules.md` — for agent injection (if exists)
+- Check `.claude/skills/rules-references/SKILL.md` exists — rules are loaded per-subtask in Step 3, not upfront
 
 ### Step 2: Build Waves (with resume awareness)
 Read all subtask statuses from plan.md:
@@ -74,7 +74,7 @@ For each subtask in current wave, dispatch in parallel:
 Agent({
   description: "Implémenter TASK-xxx.y",
   subagent_type: "sdd-spec:task-implementer",
-  model: <from config.models.task-implementer>,
+  model: <config.models.task-implementer ou "sonnet" par défaut>,
   prompt: "<subtask definition> + <relevant DES> + <relevant REQ> + <worktree path> + <project rules if available> + <relevant project skills if applicable>"
 })
 ```
@@ -94,7 +94,7 @@ Update plan.md: `[ ]` → `[~]` for all dispatched subtasks.
 ### Step 4: Checkpoint (mandatory after every wave)
 For each completed subtask:
 1. Use **Edit** to change `[~]` → `[x]` in plan.md (or `[!]` if failed)
-2. **Phantom check**: Extract file paths from subtask definition. Use Glob to verify each file exists. If missing → revert to `[ ]`, report "Complétion fantôme détectée"
+2. **Phantom check**: Extract file paths from subtask definition. For files the subtask was expected to **créer**, use Glob to verify each exists. Ignore paths for files that were already present (modifications). If a new file is missing → revert to `[ ]`, report "Complétion fantôme détectée"
 3. Update state.json progress (completedSubtasks, currentBatch)
 4. **Append log.md entry**: date, wave number, completed subtasks, phantom detections, issues
 5. Report in French: "Wave N terminée : TASK-xxx.1, TASK-xxx.2. Checkboxes mises à jour : ✅ (X/Y sous-tâches au total). Suivant : Wave N+1."
@@ -105,12 +105,12 @@ When ALL subtasks of a parent task are `[x]`:
 Agent({
   description: "Revue TASK-xxx",
   subagent_type: "sdd-spec:code-reviewer",
-  model: <from config.models.code-reviewer>,
-  prompt: "<completed subtasks list> + <file changes> + <spec references> + <project rules>"
+  model: <config.models.code-reviewer ou "sonnet" par défaut>,
+  prompt: "<completed subtasks list> + <file changes> + <spec references> + <project rules> + output path: .sdd/specs/<spec-path>/reviews/TASK-xxx-review.md"
 })
 ```
 
-Save review to `.sdd/specs/<spec-path>/reviews/TASK-xxx-review.md`.
+Le code-reviewer écrit lui-même le fichier de review dans `.sdd/specs/<spec-path>/reviews/TASK-xxx-review.md`.
 
 If `pipelineReviews` is true and no critical issues expected: start next wave while review runs. If review finds critical issues → pause, report in French, wait for resolution.
 
