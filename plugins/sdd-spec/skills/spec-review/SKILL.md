@@ -14,7 +14,7 @@ All output in French.
 
 1. Read `.sdd/local/active.json`. If absent: fail — "Aucun spec actif. Lancez `/spec open <titre>` pour en ouvrir un."
 2. Read `state.json` from the active spec to get `currentPhase` and `worktreePath`.
-3. Dispatch the spec-reviewer agent:
+3. Dispatch the spec-reviewer agent in report-only mode (fix: false always for initial dispatch):
 
 ```
 Agent({
@@ -23,11 +23,16 @@ Agent({
   prompt: "specId: <spec-id>
     specPath: <spec-path>
     worktreePath: <worktreePath or null if not yet in implementation>
-    fix: <true unless --no-fix was passed>"
+    fix: false"
 })
 ```
 
 4. Present the agent's report to the user.
+
+5. If the report contains proposed corrections AND `--no-fix` was NOT passed:
+   Ask: "Appliquer ces corrections ? (oui/non)"
+   - If oui: dispatch the agent again with `fix: true` and confirm the corrections applied.
+   - If non: done — report presented, no changes made.
 
 ## Related Skills
 

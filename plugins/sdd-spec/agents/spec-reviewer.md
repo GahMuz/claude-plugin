@@ -74,12 +74,15 @@ If fix=true:
 
 ### Step 4: Report
 
+Si fix=false, intituler la section "Corrections proposées" (pas encore appliquées).
+Si fix=true, intituler la section "Corrections appliquées".
+
 ```
 # Revue spec : <spec-id>
 
 ## Score : X/Y exigences remplies (Z%)
 
-## Corrections appliquées
+## Corrections proposées | appliquées
 - TASK-xxx.y : complétion fantôme → [ ]
 - TASK-yyy.z : fichiers présents → [x]
 - TASK-zzz.w : critère non satisfait → [!]
@@ -91,7 +94,7 @@ If fix=true:
 - src/utils/api.ts:15 — console.log trouvé
 
 ## Résumé
-Critique : X | Corrections appliquées : Y | Actions requises : Z
+Critique : X | Corrections proposées|appliquées : Y | Actions requises : Z
 Recommandation : prêt pour finishing | corrections nécessaires | re-planification requise
 ```
 
