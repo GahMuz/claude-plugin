@@ -44,8 +44,9 @@ Chercher systématiquement :
 
 ### 3. Détecter les approches dépréciées
 
+Lire d'abord le fichier de manifeste du stack (`package.json`, `pom.xml`, `composer.json`, `build.gradle`) pour identifier le framework et sa version. Chercher ensuite :
 - APIs marquées `@deprecated` utilisées
-- Patterns obsolètes du framework (selon version)
+- Patterns obsolètes connus pour la version détectée
 - Méthodes de la stdlib dépréciées
 - Pratiques de sécurité obsolètes (md5 pour hash, etc.)
 
@@ -84,24 +85,36 @@ Si des patterns problématiques récurrents ne sont couverts par aucune règle e
 
 ### 7. Écrire les fichiers de sortie
 
-Écrire dans les chemins indiqués :
+Lire `references/templates.md` et extraire les templates `analyse-<module>`, `improvement-<module>`, `missing-rules-<module>`.
+
+Écrire dans les chemins indiqués en suivant ces templates :
 1. **`analyse-<module>.md`** — toujours généré
 2. **`improvement-<module>.md`** — toujours généré
 3. **`missing-rules-<module>.md`** — uniquement si des gaps trouvés
 
-Suivre les templates fournis dans le prompt.
-
 ### 8. Capturer les métadonnées
 
+Exécuter en substituant `<chemin>` par le chemin reçu dans le prompt :
 ```bash
 git log -1 --format=%H -- <chemin>
 ```
 
-Retourner : `last_commit` hash.
+Retourner : `last_commit: <hash>`.
 
 **Contraintes de concision :**
 - Grouper par type, dédupliquer avec compteur
 - Une ligne par finding : fichier:ligne | problème | correction
 - Pas de prose — tableaux uniquement
 - Si un même problème apparaît > 5 fois, montrer 3 exemples + "et N autres"
-- Score /100 en résumé
+
+**Score /100 :**
+Partir de 100, déduire :
+- God class : -5 par occurrence
+- Méthode trop longue : -2 par occurrence
+- Catch vide : -3 par occurrence
+- Valeur hardcodée : -2 par occurrence
+- Couplage circulaire : -10 par cycle
+- Violation de règle projet (critique) : -5 par violation
+- Violation de règle projet (mineure) : -2 par violation
+- Approche dépréciée : -3 par occurrence
+Score minimum : 0

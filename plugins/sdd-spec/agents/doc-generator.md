@@ -62,19 +62,22 @@ Utiliser Glob pour lister tous les fichiers source dans le chemin reçu. Utilise
 
 ### 5. Écrire la documentation
 
-Suivre le template fourni dans le prompt (module ou feature). Écrire le fichier dans le chemin indiqué.
+Lire `references/templates.md` et extraire le template correspondant (`module-<nom>` ou `feature-<feature>`). Écrire le fichier dans le chemin indiqué en suivant ce template.
 
 ### 6. Capturer les métadonnées
 
-Exécuter via Bash :
+Exécuter via Bash en substituant `<chemin>` par le chemin reçu dans le prompt :
 ```bash
 git log -1 --format=%H -- <chemin>
 ```
 
-Retourner dans ta réponse finale :
-- `file_count` : nombre de fichiers source scannés
-- `last_commit` : hash du dernier commit sur ce chemin
-- `features` : liste des features détectées (si documentation module)
+Retourner dans ta réponse finale au format structuré :
+```
+file_count: <N>
+last_commit: <hash>
+features: [<feature1>, <feature2>, ...]
+```
+`features` est omis si tu documentes une feature unique (pas un module).
 
 **Contraintes de concision :**
 - Module doc : 200-300 lignes max
