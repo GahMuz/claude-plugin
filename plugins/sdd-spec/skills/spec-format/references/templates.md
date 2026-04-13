@@ -257,6 +257,7 @@ Cette matrice permet de repérer les exigences non couvertes d'un coup d'œil.
 
 ```json
 {
+  "schemaVersion": "0.11.0",
   "languages": ["php", "node-typescript", "java"],
   "pipelineReviews": true,
   "parallelTaskLimit": 0,

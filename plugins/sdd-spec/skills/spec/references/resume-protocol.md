@@ -1,14 +1,5 @@
 # Resume Protocol
 
-## Detecting Work to Resume
-
-On `/spec resume`:
-1. Read `.sdd/specs/registry.md` to find all specs and their paths
-2. Filter: `currentPhase` is `"suspended"` or any non-`"completed"` phase
-3. Multiple candidates → list with phase and last updated, ask user (in French)
-4. Single candidate → resume directly
-5. None → report "Aucun spec à reprendre"
-
 ## Resuming by Phase
 
 ### Interactive Phases (requirements, design, planning)

@@ -60,13 +60,9 @@ type: project
 
 **Règle de description :** doit contenir spec-id, phase, et 2-3 éléments concrets pour que Claude puisse juger la pertinence sans lire le contenu.
 
-## Note multi-terminal
-
-La spec active est trackée en **mémoire de conversation** uniquement — pas dans un fichier partagé. Plusieurs terminaux peuvent travailler sur des specs différentes simultanément sans conflit : chaque session a son propre contexte de conversation, et les fichiers `context.md` sont séparés par spec.
-
 ## Chargement du contexte (utilisé par RESUME)
 
-Appelé par `/spec resume` après identification de la spec. Établit la spec comme active dans la session (conversation-level) puis présente le contexte avant de reprendre le workflow.
+Appelé par `/spec open` après identification de la spec. Établit la spec comme active sur cette machine puis présente le contexte avant de reprendre le workflow.
 
 ### Step 3 : Charger le contexte (priorité décroissante)
 
@@ -94,8 +90,7 @@ Dernières actions : ...
 ## CLOSE
 
 ### Step 1 : Identifier la spec active
-Utiliser la spec établie par `/spec open` dans cette session.
-Si aucune spec ouverte dans cette session : afficher registry.md et demander quelle spec fermer.
+Lire `.sdd/local/active.json`. (Le handler parent a déjà échoué si absent.)
 
 ### Step 2 : Synthétiser le contexte
 Depuis la conversation courante et les fichiers de la spec (state.json, log.md, requirement.md, design.md) :
@@ -117,8 +112,8 @@ Mettre à jour `MEMORY.md` : ajouter ou mettre à jour la ligne :
 - [Spec : <spec-id>](spec_<spec-id>.md) — <description courte de l'état actuel>
 ```
 
-### Step 5 : Libérer la spec active dans la conversation
-Effacer le tracking interne — plus de spec active dans cette conversation.
+### Step 5 : Libérer la spec active
+Supprimer `.sdd/local/active.json` — plus de spec active sur cette machine.
 
 ### Step 6 : Confirmer
 ```
@@ -132,7 +127,7 @@ Spec fermée — rouvrez avec `/spec open <spec-id>`.
 ## SWITCH
 
 1. Si une spec est active dans cette session : exécuter CLOSE complet (sauvegarde contexte)
-2. Exécuter RESUME sur la spec demandée (charge contexte + reprend le workflow)
+2. Exécuter OPEN sur la spec demandée (charge contexte + reprend le workflow)
 
 ```
 Fermeture de <spec-ancienne>... context.md et memory mis à jour.

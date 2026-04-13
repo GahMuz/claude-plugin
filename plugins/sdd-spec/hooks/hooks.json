@@ -1,5 +1,5 @@
 {
-  "description": "Spec-driven development workflow hooks — security guards, spec sync, auto-format",
+  "description": "Spec-driven development workflow hooks — security guards, active spec reminder",
   "hooks": {
     "PreToolUse": [
       {

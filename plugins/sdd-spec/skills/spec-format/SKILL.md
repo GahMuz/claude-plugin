@@ -52,11 +52,11 @@ Flat index of all specs — lets the agent discover and load any spec without sc
 | feature-name | Titre de la spec | 2026/04 | completed | [REQ](2026/04/feature-name/requirement.md) | [DES](2026/04/feature-name/design.md) | [PLAN](2026/04/feature-name/plan.md) |
 ```
 
-**Statut values:** `requirements` · `design` · `planning` · `implementation` · `finishing` · `suspended` · `completed` · `discarded`
+**Statut values:** `requirements` · `design` · `planning` · `implementation` · `finishing` · `completed` · `discarded`
 
 **Maintenance rules:**
 - Add a row on `START_NEW`
-- Update `Statut` column on every phase transition (APPROVE, SUSPEND, FINISH)
+- Update `Statut` column on every phase transition (APPROVE, CLOSE, FINISH)
 - Remove row on `DISCARD`
 
 ## ID System

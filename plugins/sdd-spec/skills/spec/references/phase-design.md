@@ -15,7 +15,7 @@ Search for `.claude/skills/rules-references/SKILL.md`:
 ### Step 2b: Deep Investigation (if needed)
 If the design involves complex existing architecture, unclear performance implications, or security trade-offs, dispatch the deep-dive agent:
 ```
-Agent({ subagent_type: "spec-driven-dev:deep-dive", prompt: "<question to investigate>" })
+Agent({ subagent_type: "sdd-spec:deep-dive", prompt: "<question to investigate>" })
 ```
 Use findings to inform design decisions. Optional — skip for straightforward features.
 

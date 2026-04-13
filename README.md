@@ -34,23 +34,22 @@ use option "Install for you (user scope)"
 | Commande | Description |
 |----------|-------------|
 | `/spec-init` | Configurer le projet pour le SDD |
-| `/spec new <titre>` | Démarrer un nouveau spec |
+| `/spec new <titre>` | Démarrer un nouveau spec (ferme automatiquement le spec actif si nécessaire) |
+| `/spec open [titre]` | Ouvrir un spec : restaure le contexte (context.md / memory) puis reprend le workflow |
 | `/spec approve` | Approuver la phase courante et passer à la suivante |
-| `/spec resume [titre]` | Reprendre une spec : restaure le contexte (context.md / memory) puis reprend le workflow |
-| `/spec status` | Voir l'état de tous les specs |
 | `/spec clarify` | Ajouter une clarification (met à jour les documents en place) |
-| `/spec suspend` | Suspendre le spec courant |
 | `/spec discard` | Abandonner un spec (destructif, confirmation requise) |
 
-## Gestion du contexte multi-spec
+## Gestion du contexte
 
-Plusieurs specs peuvent être en cours simultanément — y compris dans des terminaux différents en parallèle. Chaque terminal maintient son propre contexte de session.
+Un seul spec peut être actif à la fois sur une machine. L'état actif est stocké dans `.sdd/local/active.json` (gitignored — jamais commité).
 
 | Commande | Description |
 |----------|-------------|
-| `/spec recap` | Briefing complet : spec active, phase, décisions clés, questions ouvertes, prochaine action |
-| `/spec close` | Sauvegarder le contexte de la session dans la mémoire et désactiver la spec |
-| `/spec switch <titre>` | Fermer la spec active (sauvegarde contexte) et reprendre une autre |
+| `/spec recap` | Briefing complet : phase, décisions clés, questions ouvertes, prochaine action |
+| `/spec close` | Sauvegarder le contexte et désactiver le spec |
+| `/spec switch <titre>` | Fermer le spec actif (sauvegarde contexte) et en ouvrir un autre |
+| `/spec-status` | Vue d'ensemble : spec actif, specs en cours, specs terminés |
 
 Le contexte de chaque spec (décisions clés, fichiers identifiés, questions ouvertes) est persisté sur deux niveaux :
 - **`context.md`** dans le répertoire de la spec — commité dans le repo, partagé entre développeurs
@@ -72,7 +71,7 @@ Lors de la définition des exigences ou du design, le plugin détecte automatiqu
 
 | Commande | Description |
 |----------|-------------|
-| `/spec-sync [spec-id]` | Synchroniser et corriger le drift spec/code |
+| `/spec-review [--no-fix]` | Revue manuelle spec/code (auto-déclenchée en fin d'implémentation) |
 | `/continue` | Détecter la prochaine action à effectuer |
 | `/doc <module \| --all \| update \| analyse \| status>` | Documenter et analyser le codebase (économie 80-90% tokens) |
 | `/commit [context]` | Commit structuré avec analyse de risque et ruptures |

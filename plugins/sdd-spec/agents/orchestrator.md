@@ -13,10 +13,10 @@ Implementation phase starts. Orchestrator reads plan and manages wave execution 
 
 <example>
 Context: Resuming implementation after suspension
-user: "/spec resume auth-feature"
+user: "/spec open auth-feature"
 assistant: "Je relance l'orchestrateur pour reprendre l'implémentation."
 <commentary>
-Resume requires the orchestrator to detect half-done work and continue from the right point.
+Opening a spec mid-implementation requires the orchestrator to detect half-done work and continue from the right point.
 </commentary>
 </example>
 
@@ -73,7 +73,7 @@ For each subtask in current wave, dispatch in parallel:
 ```
 Agent({
   description: "Implémenter TASK-xxx.y",
-  subagent_type: "spec-driven-dev:task-implementer",
+  subagent_type: "sdd-spec:task-implementer",
   model: <from config.models.task-implementer>,
   prompt: "<subtask definition> + <relevant DES> + <relevant REQ> + <worktree path> + <project rules if available> + <relevant project skills if applicable>"
 })
@@ -104,7 +104,7 @@ When ALL subtasks of a parent task are `[x]`:
 ```
 Agent({
   description: "Revue TASK-xxx",
-  subagent_type: "spec-driven-dev:code-reviewer",
+  subagent_type: "sdd-spec:code-reviewer",
   model: <from config.models.code-reviewer>,
   prompt: "<completed subtasks list> + <file changes> + <spec references> + <project rules>"
 })

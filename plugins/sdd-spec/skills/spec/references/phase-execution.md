@@ -22,7 +22,7 @@ Delegate all wave execution to the orchestrator agent:
 ```
 Agent({
   description: "Orchestrer l'implémentation de <spec-id>",
-  subagent_type: "spec-driven-dev:orchestrator",
+  subagent_type: "sdd-spec:orchestrator",
   model: <from config.models.orchestrator, default "opus">,
   prompt: "Spec: <spec-id>
     Plan: .sdd/specs/<spec-path>/plan.md
@@ -48,9 +48,25 @@ After orchestrator completes:
   - If bug: report for fix before finishing
 - Append log.md entry: "Implémentation terminée. X/Y sous-tâches complétées. Z changements cassants documentés."
 - Report: "Toutes les sous-tâches terminées. Suite de tests : X tests passent. Y changements cassants documentés."
-- Transition to finishing phase
+
+### Step 5: Dispatch Spec Reviewer
+```
+Agent({
+  description: "Revue spec/code de <spec-id>",
+  subagent_type: "sdd-spec:spec-reviewer",
+  model: <from config.models.code-reviewer, default "sonnet">,
+  prompt: "specId: <spec-id>
+    specPath: <spec-path>
+    worktreePath: .worktrees/<spec-id>
+    fix: true"
+})
+```
+
+- Recommendation "prêt pour finishing" → transition to finishing phase
+- Recommendation "corrections nécessaires" → present report to user, ask how to proceed
+- Recommendation "re-planification requise" → return to planning phase
 
 ### Error Handling
 - Orchestrator reports critical review issues → present to user in French, ask how to proceed
 - Orchestrator reports phantom completions → log and present to user
-- Orchestrator fails entirely → report error, suggest `/spec resume`
+- Orchestrator fails entirely → report error, suggest `/spec open`

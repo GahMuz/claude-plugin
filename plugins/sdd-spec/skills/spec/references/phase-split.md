@@ -181,19 +181,24 @@ Update the original spec row's `Statut` if it changed.
 ### Step 8b: Split Memory Entry
 Follow the **Impact sur SPLIT** section in `references/phase-context.md` to distribute the memory entry between the two specs.
 
-### Step 9: Confirm
+### Step 9: Activate One Spec
+
+Ask the user which spec to continue (in French):
+
 ```
 Division effectuée :
 
-Spec originale : <original-title> — conserve REQ-001, REQ-002, DES-001
-Nouvelle spec  : <new-title>      — contient REQ-003, REQ-004, DES-002
+A : <original-title> — conserve REQ-001, REQ-002, DES-001  (phase : <phase>)
+B : <new-title>      — contient REQ-003, REQ-004, DES-002  (phase : <phase>)
 
-Phase de la nouvelle spec : <phase>
 Références croisées documentées dans les deux specs.
 
-Lancez `/spec resume <new-title>` pour continuer la nouvelle spec,
-ou `/spec` pour continuer la spec originale.
+Quelle spec souhaitez-vous continuer ? (A / B)
 ```
+
+Once the user answers:
+- Write `.sdd/local/active.json` for the chosen spec.
+- The other spec is ready to open later with `/spec open <titre>`.
 
 ## Cross-Reference Integrity Rules
 

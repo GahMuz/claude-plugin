@@ -51,7 +51,7 @@ If non, let user customize each.
 
 ### Step 6: Create .sdd/
 ```bash
-mkdir -p .sdd/specs .sdd/docs
+mkdir -p .sdd/specs .sdd/docs .sdd/local
 ```
 
 Initialize `.sdd/specs/registry.md`:
@@ -80,8 +80,11 @@ Write `.sdd/config.json`:
 ```
 
 ### Step 7: Update .gitignore
-Add `.worktrees/` to `.gitignore` if not present.
-Do NOT gitignore `.sdd/`.
+Add to `.gitignore` if not present:
+- `.worktrees/`
+- `.sdd/local/`
+
+Do NOT gitignore `.sdd/` itself — only `.sdd/local/` is excluded from commits.
 
 ### Step 8: Scaffold Rules-References Skill
 Create skeleton in `.claude/skills/rules-references/`:
@@ -165,11 +168,21 @@ Le réviseur de code les invoquera automatiquement lors des revues."
 Ask: "Voulez-vous créer un guard skill maintenant ? (non par défaut)"
 
 ### Step 10: Report
-"Projet initialisé pour le développement spec-driven :
+
+```
+Projet initialisé pour le développement spec-driven :
 - Langages : <liste>
 - Statut LSP : <statut par langage>
 - Modèles : orchestrateur=<model>, implémenteur=<model>, réviseur=<model>, investigation=<model>
-- Configuration : `.sdd/config.json`
-- Règles projet : `.claude/skills/rules-references/`
+- Configuration : .sdd/config.json
+- Règles projet : .claude/skills/rules-references/
 
-Prochaine étape : personnalisez les règles dans `.claude/skills/rules-references/references/rules.md`, puis lancez `/spec new <titre>`."
+Prochaine étape : personnalisez les règles dans .claude/skills/rules-references/references/rules.md, puis lancez /spec new <titre>.
+```
+
+## Related Skills
+
+| Skill | Purpose |
+|-------|---------|
+| `/spec new <titre>` | Démarrer le premier spec |
+| `/spec-status` | Vue d'ensemble de tous les specs |

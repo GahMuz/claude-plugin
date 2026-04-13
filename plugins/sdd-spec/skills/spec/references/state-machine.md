@@ -11,7 +11,6 @@
 | `implementation` | Executing tasks with TDD |
 | `finishing` | Completing the branch |
 | `completed` | Spec fully done |
-| `suspended` | Paused, resumable |
 
 ## Valid Transitions
 
@@ -22,9 +21,6 @@ worktree → planning                (automatic after setup)
 planning → implementation          (user approval)
 implementation → finishing          (all subtasks completed)
 finishing → completed              (user action)
-
-Any phase → suspended              (user suspend)
-suspended → <suspendedFrom>        (user resume)
 ```
 
 No other transitions are valid. Phases cannot be skipped.
@@ -38,20 +34,6 @@ When advancing from phase X to phase Y:
 4. Set `phases.Y.startedAt` to ISO-8601
 5. Set `currentPhase` to Y
 6. Set root `updatedAt`
-
-## Suspend Procedure
-
-1. Add `"suspendedFrom": "<currentPhase>"` to state.json
-2. Set `currentPhase` to `"suspended"`
-3. Set `updatedAt`
-
-## Resume Procedure
-
-1. Read `suspendedFrom`
-2. Set `currentPhase` to that value
-3. Remove `suspendedFrom`
-4. Set `updatedAt`
-5. Follow resume protocol for the restored phase
 
 ## Implementation Progress Tracking
 
