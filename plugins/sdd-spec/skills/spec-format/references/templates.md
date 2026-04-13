@@ -37,6 +37,14 @@ Pas d'architecture ni de solution technique.>
 |----------------------------|-------------------|
 | <Élément> | <Pourquoi exclu — différé, autre spec, hors domaine> |
 
+## Contexte codebase
+
+| Module | Rôle | Pertinence pour cette spec |
+|--------|------|---------------------------|
+| <module-name> | <description courte> | <pourquoi c'est pertinent> |
+
+> Source : docs `.sdd/` | investigation `spec-deep-dive` | Aucun module existant concerné
+
 ## Exigences fonctionnelles
 
 ### REQ-001 : <Titre court>
@@ -121,6 +129,14 @@ En tant que <rôle>, je veux <capacité> afin de <bénéfice>.
 
 **Compromis :** <Compromis connus de l'approche choisie>
 
+**Contrat de test :**
+- Comportements à vérifier :
+  - <comportement dérivé du critère d'acceptation REQ-xxx>
+- Cas limites :
+  - <cas limite identifié>
+- Intégrations à tester :
+  - <module ou service impliqué>
+
 **Statut :** brouillon | approuvé | modifié
 
 ---
@@ -173,9 +189,17 @@ Cette matrice permet de repérer les exigences non couvertes d'un coup d'œil.
 
 #### Sous-tâches
 
-- [ ] **TASK-001.1 : Créer l'entité Utilisateur**
+- [ ] **TASK-001.1 [RED] : Écrire les tests de l'entité Utilisateur**
   **Effort estimé :** ~2 min
-  **Description :** Créer le modèle Utilisateur avec les champs : id, email, nom, timestamps.
+  **Description :** Écrire les tests en échec pour le modèle Utilisateur (id, email, nom, timestamps) — depuis contrat de test DES-001.
+  **Fichiers :**
+  - `src/entities/User.test.ts` (créer)
+  **Vérification :** tests doivent échouer (module non encore créé)
+
+- [ ] **TASK-001.2 [GREEN] : Implémenter l'entité Utilisateur**
+  **Effort estimé :** ~2 min
+  **Dépendances :** [TASK-001.1]
+  **Description :** Créer le modèle Utilisateur minimal pour faire passer les tests TASK-001.1.
   **Fichiers :**
   - `src/entities/User.ts` (créer)
   **Vérification :**
@@ -183,28 +207,23 @@ Cette matrice permet de repérer les exigences non couvertes d'un coup d'œil.
   npx jest src/entities/User.test.ts
   ```
 
-- [ ] **TASK-001.2 : Créer le repository Utilisateur**
+- [ ] **TASK-001.3 [RED] : Écrire les tests du repository Utilisateur**
+  **Effort estimé :** ~2 min
+  **Dépendances :** [TASK-001.2]
+  **Description :** Écrire les tests en échec pour findById, findByEmail, save, delete.
+  **Fichiers :**
+  - `src/repositories/UserRepository.test.ts` (créer)
+  **Vérification :** tests doivent échouer
+
+- [ ] **TASK-001.4 [GREEN] : Implémenter le repository Utilisateur**
   **Effort estimé :** ~3 min
-  **Dépendances :** [TASK-001.1]
-  **Description :** Créer le repository avec findById, findByEmail, save, delete.
+  **Dépendances :** [TASK-001.3]
+  **Description :** Créer le repository pour faire passer les tests TASK-001.3.
   **Fichiers :**
   - `src/repositories/UserRepository.ts` (créer)
-  - `src/repositories/UserRepository.test.ts` (créer)
   **Vérification :**
   ```bash
   npx jest src/repositories/UserRepository.test.ts
-  ```
-
-- [ ] **TASK-001.3 : Créer le service Utilisateur**
-  **Effort estimé :** ~4 min
-  **Dépendances :** [TASK-001.2]
-  **Description :** Couche service avec opérations créer, lire, modifier, supprimer.
-  **Fichiers :**
-  - `src/services/UserService.ts` (créer)
-  - `src/services/UserService.test.ts` (créer)
-  **Vérification :**
-  ```bash
-  npx jest src/services/UserService.test.ts
   ```
 
 ---
@@ -262,10 +281,10 @@ Cette matrice permet de repérer les exigences non couvertes d'un coup d'œil.
   "pipelineReviews": true,
   "parallelTaskLimit": 0,
   "models": {
-    "orchestrator": "opus",
-    "task-implementer": "sonnet",
-    "code-reviewer": "sonnet",
-    "deep-dive": "opus"
+    "spec-orchestrator": "opus",
+    "spec-task-implementer": "sonnet",
+    "spec-code-reviewer": "sonnet",
+    "spec-deep-dive": "opus"
   },
   "createdAt": "2026-04-10T12:00:00Z"
 }

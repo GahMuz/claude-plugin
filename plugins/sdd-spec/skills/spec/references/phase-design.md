@@ -5,7 +5,9 @@ All output in French.
 ## Process
 
 ### Step 1: Read Requirements
-Load `.sdd/specs/<spec-path>/requirement.md`. Understand all REQ items and acceptance criteria.
+Load `.sdd/specs/<spec-path>/requirement.md`. Extraire :
+- Tous les REQ items et leurs critères d'acceptation
+- La section **"Contexte codebase"** : modules existants concernés, patterns en place, points d'attention — cette section oriente directement les décisions architecturales en phase design (quels modules étendre, quels patterns respecter, quelles contraintes techniques appliquer)
 
 ### Step 2: Check Project Rules
 Search for `.claude/skills/rules-references/SKILL.md`:
@@ -13,11 +15,12 @@ Search for `.claude/skills/rules-references/SKILL.md`:
 - Not found → proceed without project-specific constraints
 
 ### Step 2b: Deep Investigation (if needed)
-If the design involves complex existing architecture, unclear performance implications, or security trade-offs, dispatch the deep-dive agent:
+Le contexte codebase fourni par la phase requirements couvre les modules déjà identifiés.
+Dispatcher `spec-deep-dive` uniquement si une question spécifique reste sans réponse après lecture du contexte codebase (ex: impact d'une décision sur un module non encore analysé, contrainte de performance à mesurer) :
 ```
-Agent({ subagent_type: "sdd-spec:spec-deep-dive", prompt: "<question to investigate>" })
+Agent({ subagent_type: "sdd-spec:spec-deep-dive", prompt: "<question ciblée>" })
 ```
-Use findings to inform design decisions. Optional — skip for straightforward features.
+Optional — ne pas re-dispatcher si le contexte codebase répond déjà aux questions architecturales.
 
 ### Step 3: Design Each Requirement Group
 For each logical group of related requirements:
@@ -27,6 +30,7 @@ For each logical group of related requirements:
 4. Consider 2-3 alternatives with rejection reasons
 5. Note tradeoffs
 6. List: `Implémente : [REQ-001, REQ-002]`
+7. Define **Contrat de test** : behaviors to verify (derived from REQ acceptance criteria), edge cases, cross-module integrations to test
 
 ### Step 4: Explore Alternatives (in French)
 For non-trivial decisions, present options:
@@ -60,6 +64,19 @@ Do NOT silently choose one over the other. Present the conflict to the user in F
 - Explain the project rule that contradicts it
 - "Quelle direction souhaitez-vous prendre ?"
 - Wait for user decision before proceeding
+
+### Step 6b: Valider le design (spec-design-validator)
+
+Dispatcher l'agent de validation pour vérification automatique règles + testabilité :
+```
+Agent({
+  description: "Valider design <spec-id>",
+  subagent_type: "sdd-spec:spec-design-validator",
+  prompt: "Spec path: <spec-path>"
+})
+```
+L'agent itère jusqu'à zéro violation corrigeable automatiquement.
+Les violations résiduelles nécessitant une décision architecturale sont présentées à l'utilisateur avant de continuer.
 
 ### Step 7: Present Design
 Present complete design.md (in French):
@@ -104,11 +121,13 @@ Append log.md entry: date, "Phase conception", DES sections créées, décisions
 ## Quality Criteria
 - Coverage mapping table complete (no ❌)
 - Every REQ addressed by >= 1 DES
+- Every DES has a "Contrat de test" section
 - SOLID principles respected (or exceptions justified)
 - Alternatives genuinely considered
 - Tradeoffs honestly stated
 - Implementable in small tasks
 - Project rules respected (conflicts resolved with user)
+- spec-design-validator passed (zero auto-fixable violations)
 
 ## Formatting Rules (apply when writing design.md)
 - Maximum line length : 200 characters — wrap longer lines

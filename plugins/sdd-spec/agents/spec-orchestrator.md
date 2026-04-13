@@ -66,6 +66,8 @@ Then analyze dependencies among remaining subtasks:
 - Continue until all subtasks are assigned
 - Respect `parallelTaskLimit` (0 = unlimited per wave)
 
+**Contrainte RED/GREEN implicite :** en plus des dépendances déclarées, une sous-tâche `[GREEN]` dépend toujours de la sous-tâche `[RED]` du même TASK (même si non déclarée). Ne jamais dispatcher un `[GREEN]` si son `[RED]` correspondant n'est pas `[x]`.
+
 This enables transparent resume: if orchestrator is re-dispatched after suspension, it picks up where it left off.
 
 ### Step 3: Execute Wave

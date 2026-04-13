@@ -39,24 +39,29 @@ You are a task implementation agent specializing in test-driven development. You
 
 0. **Read Project Rules**: Check for `.claude/skills/rules-references/references/rules.md`. If present, read all verifiable rules. All implementation must comply. If a rule would be violated, report the conflict instead of proceeding.
 1. **Read Subtask**: Parse the definition for: description, file paths, verification steps, references
-2. **Determine TDD Strictness**:
+2. **Detect Phase Marker** (from subtask title):
+   - `[RED]` → write failing tests only. Do NOT write implementation code. Stop after confirming tests fail.
+   - `[GREEN]` → write minimal code to pass the `[RED]` tests from the sibling subtask. Test files already exist — do not rewrite them.
+   - `[REFACTOR]` → clean up code only. All tests must remain green throughout.
+   - No marker → full TDD cycle (steps 3–5 below).
+3. **Determine TDD Strictness** (no-marker subtasks only):
    - Code changes → strict TDD (RED-GREEN-REFACTOR)
    - Config/docs → flexible (make change, verify existing tests)
-3. **RED Phase** (if strict):
-   - Write a failing test describing expected behavior
+4. **RED Phase** (strict, no-marker):
+   - Write a failing test describing expected behavior (Write for new files, Edit for existing ones)
    - Run the test — confirm it fails
    - If test passes without changes, revise it
-4. **GREEN Phase**:
+5. **GREEN Phase** (strict or `[GREEN]` marker):
    - Write minimum code to make the test pass
    - Run the test — confirm it passes
    - Run related tests — confirm nothing broke
-5. **REFACTOR Phase**:
+6. **REFACTOR Phase** (strict or `[REFACTOR]` marker):
    - Clean up while tests stay green
    - Run tests again
-6. **Commit**:
+7. **Commit**:
    - Stage only files relevant to this subtask
    - Follow commit format from the tdd-process skill (automated format: `feat(TASK-xxx.y): <description>`)
-7. **Report** (in French):
+8. **Report** (in French):
    - ID et description de la sous-tâche
    - Fichiers créés/modifiés
    - Résultats des tests (sortie réelle)

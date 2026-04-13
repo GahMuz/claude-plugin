@@ -28,6 +28,24 @@ Avant de poser les questions, identifier les termes métier ou techniques
 qui pourraient être ambigus dans le contexte de cette spec.
 Les lister pour les inclure dans le glossaire du document final.
 
+### Step 1c: Recherche contexte codebase
+
+Avant de poser les questions de clarification, chercher du contexte dans le code existant :
+
+1. Vérifier si `.sdd/docs/index.md` existe — si oui, identifier les modules potentiellement concernés par le titre et la description de la spec
+   - Pour chaque module pertinent : lire `.sdd/docs/modules/<nom>/module-<nom>.md`
+2. Si les docs sont absents ou insuffisants pour les zones concernées : dispatcher `spec-deep-dive`
+   ```
+   Agent({ subagent_type: "sdd-spec:spec-deep-dive", prompt: "<question ciblée sur la zone concernée>" })
+   ```
+3. Synthétiser dans une section **"Contexte codebase"** à inclure dans requirement.md :
+   - Modules existants concernés et leur rôle
+   - Patterns ou conventions déjà en place pertinents pour cette spec
+   - Points d'attention identifiés (dépendances, contraintes, dette technique)
+
+Cette section est transmise à la phase design pour orienter les décisions architecturales.
+Si aucun module n'est concerné (nouvelle fonctionnalité complètement isolée) : noter "Aucun module existant concerné."
+
 ### Step 2: Ask Clarifying Questions (in French)
 Do not assume requirements. Ask specific questions:
 - "Que doit-il se passer quand X ?"
@@ -147,6 +165,7 @@ Append log.md entry: date, "Phase exigences", actions (X exigences rédigées), 
 - Non-functional requirements covered with REQ-NF-xxx and measurable thresholds
 - Glossaire présent pour tout terme ambigu ou spécifique au domaine
 - Périmètre explicite : tableaux "dans" et "hors" périmètre remplis
+- Section "Contexte codebase" présente (modules concernés ou mention explicite "Aucun")
 - No architecture, code, or SQL in requirement.md
 - Each REQ addresses a single concern
 

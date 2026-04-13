@@ -24,11 +24,17 @@ For each parent, create subtasks (TASK-xxx.y):
 - Identify dependencies within and across parents
 - Prefix with `[ ]` status icon
 
+**Structure RED/GREEN/REFACTOR :**
+Pour toute tâche impliquant du nouveau code ou de la logique métier, décomposer en :
+- `TASK-xxx.1 [RED]` : Écrire les tests en échec — dérivés du "Contrat de test" du DES correspondant
+- `TASK-xxx.2 [GREEN]` : Implémenter le code minimal pour faire passer les tests
+- `TASK-xxx.3 [REFACTOR]` : Nettoyer le code (optionnel si l'implémentation est déjà propre)
+Exceptions : tâches de configuration, documentation, dépendances — pas de `[RED]` requis.
+
 **Splitting guidelines:**
 - One concern per subtask
 - If > 3 files, consider splitting
-- Group related model + test when model is small
-- Separate test creation from implementation only if test is complex
+- Never group `[RED]` and `[GREEN]` in the same subtask
 
 ### Step 4: Analyze Dependencies
 Build dependency graph:
@@ -49,6 +55,21 @@ Verify plan doesn't violate any rules (e.g., a task modifying a generated file w
 - Every TASK → >= 1 subtask
 - No orphan references
 - Report gaps (in French)
+
+### Step 6b: Vérifier le plan (spec-planner)
+
+Dispatcher spec-planner pour vérification automatique de couverture et structure TDD :
+```
+Agent({
+  description: "Vérifier le plan <spec-id>",
+  subagent_type: "sdd-spec:spec-planner",
+  prompt: "Spec path: <spec-path>"
+})
+```
+- Si **APPROUVÉ** : passer à Step 7
+- Si **back-pressure vers design** : retourner en phase design (contrats de test manquants)
+- Si **back-pressure vers requirements** : retourner en phase requirements (REQ non couverts)
+- Si corrections mineures appliquées automatiquement : re-lire plan.md avant Step 7
 
 ### Step 7: Present Plan (in French)
 Present plan.md:
