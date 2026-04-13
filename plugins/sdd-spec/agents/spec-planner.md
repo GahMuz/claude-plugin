@@ -50,6 +50,18 @@ Pour chaque TASK parent :
 
 Pour chaque sous-tâche `[RED]` présente : vérifier qu'elle référence ou décrit les comportements à tester (idéalement depuis le contrat de test du DES correspondant).
 
+### 3bis. Vérifier la qualité d'implémentabilité
+
+**No Placeholders** — chercher dans plan.md les patterns suivants (bloquants s'ils se trouvent dans une étape d'implémentation) :
+- `TBD`, `TODO`, `à compléter`, `implement later`
+- "ajouter la validation", "gérer les cas limites", "ajouter la gestion d'erreur" sans code concret
+- "similaire à TASK-N" sans répéter le contenu
+- Étapes décrivant *quoi* faire sans montrer *comment* (pas de bloc de code quand du code est attendu)
+
+**Cohérence des noms** — vérifier que les noms de fonctions, types, méthodes définis dans les premiers TASKs sont utilisés de façon identique dans les TASKs suivants. Une divergence (ex. `clearLayers()` → `clearFullLayers()`) est un bug silencieux.
+
+**Calibration** — ne signaler que ce qui bloquerait réellement l'implémentation. Les préférences de style et suggestions mineures vont en Recommandations, pas en Issues.
+
 ### 4. Appliquer les corrections simples
 
 Via Edit sur plan.md :
@@ -79,12 +91,19 @@ Via Edit sur plan.md :
 - TASKs avec RED/GREEN : X/Y ✅
 - Corrections appliquées automatiquement : N
 
-### Back-pressure requise
+### Qualité d'implémentabilité
+- Placeholders détectés : N [liste ou "Aucun"]
+- Incohérences de noms : N [liste ou "Aucune"]
+
+### Back-pressure requise (bloquant)
 - Vers design : [liste DES sans contrat de test — ou "Aucune"]
 - Vers requirements : [liste REQ non couverts — ou "Aucune"]
+
+### Recommandations (non-bloquant)
+- [suggestions de style, clarifications mineures — ou "Aucune"]
 
 ### Statut final
 APPROUVÉ — le plan peut passer à l'implémentation.
   ou
-EN ATTENTE — N gaps bloquants à résoudre (voir back-pressure ci-dessus).
+EN ATTENTE — N gaps bloquants à résoudre (voir ci-dessus).
 ```

@@ -57,7 +57,7 @@ You are the orchestrator for spec-driven development. You coordinate implementat
 ### Step 2: Build Waves (with resume awareness)
 Read all subtask statuses from plan.md:
 - **Skip** subtasks marked `[x]` (already completed)
-- **Re-dispatch** subtasks marked `[~]` or `[!]` (in-progress or failed — needs retry)
+- **Re-dispatch** subtasks marked `[~]` or `[!]` (in-progress or failed — needs retry); for `[!]` subtasks, include the debugging-process skill content in the agent prompt
 - **Queue** subtasks marked `[ ]` (pending)
 
 Then analyze dependencies among remaining subtasks:
@@ -97,9 +97,10 @@ Update plan.md: `[ ]` → `[~]` for all dispatched subtasks.
 For each completed subtask:
 1. Use **Edit** to change `[~]` → `[x]` in plan.md (or `[!]` if failed)
 2. **Phantom check**: Extract file paths from subtask definition. For files the subtask was expected to **créer**, use Glob to verify each exists. Ignore paths for files that were already present (modifications). If a new file is missing → revert to `[ ]`, report "Complétion fantôme détectée"
-3. Update state.json progress (completedSubtasks, currentBatch)
-4. **Append log.md entry**: date, wave number, completed subtasks, phantom detections, issues
-5. Report in French: "Wave N terminée : TASK-xxx.1, TASK-xxx.2. Checkboxes mises à jour : ✅ (X/Y sous-tâches au total). Suivant : Wave N+1."
+3. **Vérification des modifications**: For files the subtask was expected to **modifier**, use Grep to spot-check at least one key identifier from the subtask definition (function name, class name, test name) in the file. Do not trust the agent's success report alone. If nothing is found → revert to `[ ]`, report "Vérification échouée : aucune trace de l'implémentation dans [fichier]"
+4. Update state.json progress (completedSubtasks, currentBatch)
+5. **Append log.md entry**: date, wave number, completed subtasks, phantom detections, verification failures, issues
+6. Report in French: "Wave N terminée : TASK-xxx.1, TASK-xxx.2. Checkboxes mises à jour : ✅ (X/Y sous-tâches au total). Suivant : Wave N+1."
 
 ### Step 5: Parent Task Review
 When ALL subtasks of a parent task are `[x]`:
@@ -118,7 +119,7 @@ If `pipelineReviews` is true and no critical issues expected: start next wave wh
 
 ### Step 6: Handle Issues
 - **Phantom completion**: Revert checkbox, re-dispatch subtask
-- **Failed subtask**: Mark `[!]`, continue others, report after wave
+- **Failed subtask**: Mark `[!]`, continue others, report after wave. If a subtask returns `[!]` a second time after retry, dispatch `spec-deep-dive` before any further attempt.
 - **Critical review issue**: Block next wave, report issues with severity
 - **All subtasks in wave fail**: Pause, report, wait for user
 

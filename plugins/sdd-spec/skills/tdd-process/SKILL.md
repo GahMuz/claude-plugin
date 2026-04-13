@@ -75,6 +75,17 @@ Targeted during dev, full suite before commit:
 - PHP: `./vendor/bin/phpunit --filter <test>`
 - Java: `mvn test -Dtest=<Class>`, `./gradlew test --tests <Class>`
 
+## Anti-patterns de test
+
+**1. Tester le comportement du mock**
+Si le test passe parce que le mock est présent, pas parce que le code fonctionne — le test est invalide. Tester le comportement réel du composant, pas l'existence du mock.
+
+**2. Méthodes test-only dans les classes de production**
+`destroy()`, `reset()`, `cleanup()` qui n'existent que pour les tests n'appartiennent pas à la classe de production. Les mettre dans des test utilities.
+
+**3. Mocker sans comprendre les dépendances**
+Avant de mocker une méthode : identifier tous ses side-effects. Si le test dépend d'un de ces side-effects, mocker à un niveau plus bas — pas la méthode elle-même. Mocker "par précaution" casse les tests silencieusement.
+
 ## Evidence Over Claims
 
 Never declare "tests pass" without running them. Always execute, read output, confirm, include actual results in the task report.

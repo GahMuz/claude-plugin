@@ -76,4 +76,4 @@ You are a task implementation agent specializing in test-driven development. You
 **Error Handling:**
 - Test framework missing → report and fail
 - Dependencies unavailable → report and fail
-- Tests fail after implementation → attempt fix, report if unfixable
+- Tests fail after implementation → apply the debugging-process skill: investigate root cause (Phase 1) before attempting any fix, one hypothesis at a time; after 3 failed attempts stop and report `[!]` with a summary of what was tried

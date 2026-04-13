@@ -11,11 +11,16 @@ git branch spec/<spec-id>
 If branch exists from a previous attempt, report and ask user (in French).
 
 ### Step 2: Create Worktree
+Verify `.worktrees/` is ignored before creating:
+```bash
+git check-ignore -q .worktrees
+```
+If NOT ignored: add `.worktrees/` to `.gitignore` and commit the change before proceeding.
+
 ```bash
 mkdir -p .worktrees
 git worktree add .worktrees/<spec-id> spec/<spec-id>
 ```
-Add `.worktrees/` to `.gitignore` if not already there.
 
 ### Step 3: Project Setup
 In the worktree directory, run setup based on detected project files:
