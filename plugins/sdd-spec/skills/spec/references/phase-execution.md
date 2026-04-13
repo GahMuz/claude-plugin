@@ -23,7 +23,7 @@ Delegate all wave execution to the orchestrator agent:
 Agent({
   description: "Orchestrer l'implémentation de <spec-id>",
   subagent_type: "sdd-spec:spec-orchestrator",
-  model: <from config.models.orchestrator, default "opus">,
+  model: <from config.models.orchestrator, default "sonnet">,
   prompt: "Spec: <spec-id>
     Plan: .sdd/specs/<spec-path>/plan.md
     Design: .sdd/specs/<spec-path>/design.md
@@ -55,7 +55,7 @@ Dispatcher d'abord en mode rapport uniquement :
 Agent({
   description: "Revue spec/code de <spec-id>",
   subagent_type: "sdd-spec:spec-reviewer",
-  model: <from config.models.code-reviewer, default "sonnet">,
+  model: <from config.models.code-reviewer, default "opus">,
   prompt: "specId: <spec-id>
     specPath: <spec-path>
     worktreePath: .worktrees/<spec-id>

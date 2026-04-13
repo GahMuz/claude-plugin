@@ -11,7 +11,7 @@ Agent verifies all REQ and DES are covered, every code task has RED/GREEN subtas
 </commentary>
 </example>
 
-model: sonnet
+model: haiku
 color: purple
 tools: ["Read", "Edit", "Glob", "Grep"]
 ---

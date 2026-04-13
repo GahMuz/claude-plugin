@@ -20,7 +20,7 @@ Targeted review of specific parent tasks.
 </commentary>
 </example>
 
-model: sonnet
+model: opus
 color: cyan
 tools: ["Read", "Glob", "Grep", "Bash"]
 ---

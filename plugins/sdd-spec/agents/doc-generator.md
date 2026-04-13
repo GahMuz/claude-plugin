@@ -20,7 +20,7 @@ For large modules (>5 features), the skill dispatches one agent per feature for 
 </commentary>
 </example>
 
-model: sonnet
+model: haiku
 color: blue
 tools: ["Read", "Glob", "Grep", "Bash", "Write"]
 ---

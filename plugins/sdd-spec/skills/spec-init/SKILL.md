@@ -70,10 +70,15 @@ Write `.sdd/config.json`:
   "pipelineReviews": true,
   "parallelTaskLimit": 0,
   "models": {
-    "orchestrator": "opus",
+    "orchestrator": "sonnet",
     "task-implementer": "sonnet",
-    "code-reviewer": "sonnet",
-    "deep-dive": "opus"
+    "code-reviewer": "opus",
+    "deep-dive": "opus",
+    "planner": "haiku",
+    "design-validator": "sonnet",
+    "spec-reviewer": "sonnet",
+    "doc-generator": "haiku",
+    "doc-analyser": "sonnet"
   },
   "createdAt": "<ISO-8601>"
 }

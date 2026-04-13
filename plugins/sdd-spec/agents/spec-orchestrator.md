@@ -20,7 +20,7 @@ Opening a spec mid-implementation requires the orchestrator to detect half-done 
 </commentary>
 </example>
 
-model: opus
+model: sonnet
 color: yellow
 tools: ["Read", "Edit", "Glob", "Grep", "Agent"]
 ---
@@ -131,7 +131,7 @@ Then dispatch:
 Agent({
   description: "Revue TASK-xxx",
   subagent_type: "sdd-spec:spec-code-reviewer",
-  model: <config.models.code-reviewer ou "sonnet" par défaut>,
+  model: <config.models.code-reviewer ou "opus" par défaut>,
   prompt: "<completed subtasks list> + git diff BASE_SHA..HEAD_SHA + <spec references> + <project rules> + output path: .sdd/specs/<spec-path>/reviews/TASK-xxx-review.md"
 })
 ```
