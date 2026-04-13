@@ -49,36 +49,42 @@ fi
 
 echo "Version bumped: $CURRENT → $NEW_VERSION"
 
-# Check if schema-related files changed and a migration file is needed
+# Detect schema-related file changes
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 MIGRATIONS_DIR="$REPO_ROOT/plugins/sdd-spec/skills/spec-migrate/migrations"
+MIGRATIONS_MD="$MIGRATIONS_DIR/migrations.md"
 MIGRATION_FILE="$MIGRATIONS_DIR/v${NEW_VERSION}.md"
 
 SCHEMA_CHANGED=$(git diff --cached --name-only | grep -E \
   "plugins/sdd-spec/skills/(spec-format|spec-init)/SKILL\.md|plugins/sdd-spec/skills/doc/SKILL\.md")
 
+# Update migrations.md index (add new version at top, DESC order)
+if [ -f "$MIGRATIONS_MD" ]; then
+  if [ -n "$SCHEMA_CHANGED" ]; then
+    MIGRATION_ENTRY="| v${NEW_VERSION} | [v${NEW_VERSION}.md](v${NEW_VERSION}.md) |"
+  else
+    MIGRATION_ENTRY="| v${NEW_VERSION} | - |"
+  fi
+  awk -v entry="$MIGRATION_ENTRY" '
+    /^\|---/ { print; print entry; next }
+    { print }
+  ' "$MIGRATIONS_MD" > "$MIGRATIONS_MD.tmp" && mv "$MIGRATIONS_MD.tmp" "$MIGRATIONS_MD"
+  git add "$MIGRATIONS_MD"
+fi
+
+# Generate migration file if schema changed
 if [ -n "$SCHEMA_CHANGED" ] && [ ! -f "$MIGRATION_FILE" ]; then
   echo "Schema changes detected, generating migration file v${NEW_VERSION}.md..."
-
-  DIFF=$(git diff --cached -- \
-    "plugins/sdd-spec/skills/spec-format/SKILL.md" \
-    "plugins/sdd-spec/skills/spec-init/SKILL.md" \
-    "plugins/sdd-spec/skills/doc/SKILL.md")
-
-  PROMPT="Tu es un expert du plugin sdd-spec (spec-driven development pour Claude Code).
-Génère le contenu du fichier de migration v${NEW_VERSION}.md pour migrer les projets utilisateurs depuis la version précédente.
-
-Règles :
-- Décris uniquement les opérations sur les fichiers de données utilisateur (.sdd/, .specs/)
-- Étapes en bash concrètes si nécessaire
-- En français
-- Format : '# v${NEW_VERSION} — <titre concis>' suivi de Steps numérotés
-- Si aucune action utilisateur requise : écrire uniquement '# v${NEW_VERSION}\n\nAucune migration nécessaire.'
-
-Diff des fichiers de schéma :
-${DIFF}"
-
-  claude --print "$PROMPT" > "$MIGRATION_FILE"
+  CHANGED_FILES=$(echo "$SCHEMA_CHANGED" | tr '\n' ', ' | sed 's/,$//')
+  PROMPT="Generate a migration file for sdd-spec plugin version ${NEW_VERSION}. The following schema-related files changed: ${CHANGED_FILES}. Output only the migration file content in markdown. Start with '# v${NEW_VERSION} — <brief title>'. Then list the migration steps as bash commands or edit instructions for the user's .sdd/config.json. Focus only on changes the user needs to apply to their existing project data. If no user data migration is needed, output exactly: '# v${NEW_VERSION}\n\nAucune migration nécessaire.'"
+  CONTENT=$(claude --print "$PROMPT" 2>/dev/null)
+  if [ -n "$CONTENT" ]; then
+    printf "%s\n" "$CONTENT" > "$MIGRATION_FILE"
+    echo "Migration file generated: v${NEW_VERSION}.md"
+  else
+    printf "# v%s\n\nTODO: décrire les étapes de migration si nécessaire.\n" "$NEW_VERSION" > "$MIGRATION_FILE"
+    echo "Migration file created (placeholder): v${NEW_VERSION}.md"
+  fi
   git add "$MIGRATION_FILE"
-  echo "Migration file generated and staged: v${NEW_VERSION}.md"
+  echo "⚠  Review the migration file and add steps if user data migration is needed."
 fi

@@ -1,6 +1,6 @@
 ---
 name: spec-migrate
-description: "This skill should be used when the user invokes '/spec-migrate' to migrate an existing project from an older sdd-spec schema version to the current one. Reads schemaVersion from config.json, resolves pending migration files in order, and applies each one. Supports --dry-run for preview."
+description: "This skill should be used when the user invokes '/spec-migrate' to migrate an existing project from an older sdd-spec schema version to the current one. Reads schemaVersion from config.json, resolves pending migrations from migrations.md in order, and applies each one. Supports --dry-run for preview."
 argument-hint: "[--dry-run]"
 allowed-tools: ["Read", "Write", "Bash", "Glob", "Grep", "Edit"]
 ---
@@ -23,13 +23,14 @@ Si le champ est absent → supposer `"0.1.0"` (avant introduction du versionnage
 
 ## Step 1 : Déterminer le plan de migration
 
-Lister tous les fichiers `migrations/v*.md` dans le répertoire de ce skill.
-Les trier par version sémantique croissante.
-La version du fichier le plus élevé = **version cible courante**.
+Lire `migrations/migrations.md` dans le répertoire de ce skill.
+Parser le tableau : chaque ligne est `| vX.Y.Z | <fichier ou -> |`.
 
-Filtrer : garder uniquement les versions **strictement supérieures** à `schemaVersion`.
+- La première entrée de données = **version cible courante** (ordre DESC).
+- Filtrer : garder uniquement les lignes dont la version est **strictement supérieure** à `schemaVersion`.
+- Trier les lignes filtrées par version sémantique **croissante** (ordre d'application).
 
-Si aucun fichier à appliquer : "Schéma déjà à jour (v<schemaVersion>). Aucune migration nécessaire."
+Si aucune ligne à appliquer : "Schéma déjà à jour (v<schemaVersion>). Aucune migration nécessaire."
 
 ## Step 2 : Afficher le plan
 
@@ -40,7 +41,7 @@ Version installée : <schemaVersion>
 Version cible     : <version cible>
 
 Migrations à appliquer :
-1. v0.4.0 — <titre de la migration>
+1. v0.4.0 — <titre de la migration ou "Aucune étape requise">
 
 Mode : SIMULATION     ← si --dry-run
        MIGRATION RÉELLE  ← sinon
@@ -51,13 +52,14 @@ Si `--dry-run` : afficher le plan uniquement, ne rien modifier, terminer.
 
 ## Step 3 : Appliquer les migrations en séquence
 
-Pour chaque migration dans l'ordre :
+Pour chaque version dans l'ordre croissant :
 
-1. Lire le fichier `migrations/vX.Y.Z.md`
-2. Si le contenu indique "Aucune migration nécessaire." → mettre à jour `schemaVersion` et passer à la suivante
-3. Sinon : exécuter les étapes décrites dans le fichier de migration
-4. Après succès : mettre à jour `schemaVersion` dans config.json avec cette version via Edit
-5. Si une étape échoue : **s'arrêter immédiatement**, signaler l'erreur, ne pas continuer
+1. Lire l'entrée dans migrations.md :
+   - Si la colonne Migration vaut `-` : mettre à jour `schemaVersion` et passer à la suivante
+   - Si la colonne Migration contient un lien vers un fichier : lire `migrations/vX.Y.Z.md`
+2. Exécuter les étapes décrites dans le fichier de migration
+3. Après succès : mettre à jour `schemaVersion` dans config.json avec cette version via Edit
+4. Si une étape échoue : **s'arrêter immédiatement**, signaler l'erreur, ne pas continuer
 
 Mettre à jour `schemaVersion` après **chaque** migration réussie — permet de reprendre si une migration intermédiaire échoue.
 
