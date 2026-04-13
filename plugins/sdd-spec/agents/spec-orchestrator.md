@@ -1,5 +1,5 @@
 ---
-name: orchestrator
+name: spec-orchestrator
 description: Use this agent to coordinate wave-based implementation of a spec plan. Reads the plan, organizes subtasks into parallel waves, dispatches task-implementer and code-reviewer agents, manages checkboxes, and performs phantom completion checks. Never writes code itself.
 
 <example>
@@ -73,7 +73,7 @@ For each subtask in current wave, dispatch in parallel:
 ```
 Agent({
   description: "Implémenter TASK-xxx.y",
-  subagent_type: "sdd-spec:task-implementer",
+  subagent_type: "sdd-spec:spec-task-implementer",
   model: <config.models.task-implementer ou "sonnet" par défaut>,
   prompt: "<subtask definition> + <relevant DES> + <relevant REQ> + <worktree path> + <project rules if available> + <relevant project skills if applicable>"
 })
@@ -104,7 +104,7 @@ When ALL subtasks of a parent task are `[x]`:
 ```
 Agent({
   description: "Revue TASK-xxx",
-  subagent_type: "sdd-spec:code-reviewer",
+  subagent_type: "sdd-spec:spec-code-reviewer",
   model: <config.models.code-reviewer ou "sonnet" par défaut>,
   prompt: "<completed subtasks list> + <file changes> + <spec references> + <project rules> + output path: .sdd/specs/<spec-path>/reviews/TASK-xxx-review.md"
 })

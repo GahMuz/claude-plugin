@@ -1,5 +1,5 @@
 ---
-name: code-reviewer
+name: spec-code-reviewer
 description: Use this agent to perform a 3-stage code review on completed parent tasks. Reviews spec compliance, code quality (SOLID), and project-specific rules. Dispatched automatically between implementation batches.
 
 <example>

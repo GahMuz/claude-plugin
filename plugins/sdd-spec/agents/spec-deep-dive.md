@@ -1,5 +1,5 @@
 ---
-name: deep-dive
+name: spec-deep-dive
 description: Use this agent for thorough architectural analysis, root cause investigation, performance analysis, or complex design trade-off evaluation. Dispatched when a problem requires deep investigation before implementation.
 
 <example>

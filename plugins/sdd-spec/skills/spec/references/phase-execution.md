@@ -22,7 +22,7 @@ Delegate all wave execution to the orchestrator agent:
 ```
 Agent({
   description: "Orchestrer l'implémentation de <spec-id>",
-  subagent_type: "sdd-spec:orchestrator",
+  subagent_type: "sdd-spec:spec-orchestrator",
   model: <from config.models.orchestrator, default "opus">,
   prompt: "Spec: <spec-id>
     Plan: .sdd/specs/<spec-path>/plan.md

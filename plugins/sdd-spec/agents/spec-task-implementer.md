@@ -1,5 +1,5 @@
 ---
-name: task-implementer
+name: spec-task-implementer
 description: Use this agent to implement a single subtask from a spec plan using test-driven development. Dispatched automatically during the execution phase of spec-driven development.
 
 <example>
