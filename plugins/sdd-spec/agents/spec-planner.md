@@ -62,6 +62,12 @@ Pour chaque sous-tâche `[RED]` présente : vérifier qu'elle référence ou dé
 
 **Calibration** — ne signaler que ce qui bloquerait réellement l'implémentation. Les préférences de style et suggestions mineures vont en Recommandations, pas en Issues.
 
+### 3ter. Vérifier la cohérence du périmètre
+
+Examiner si le plan couvre plusieurs sous-systèmes **indépendants** (ex. : module A et module B sans dépendances croisées, chacun livrable séparément). Si oui → ajouter en Recommandations : "Plusieurs sous-systèmes indépendants détectés — envisager un `/spec split` pour que chaque plan produise un logiciel testable de façon autonome."
+
+Ne pas bloquer l'approbation pour cette raison — c'est une Recommandation, pas un Issue bloquant.
+
 ### 4. Appliquer les corrections simples
 
 Via Edit sur plan.md :

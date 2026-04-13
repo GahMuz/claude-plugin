@@ -47,6 +47,17 @@ You are the orchestrator for spec-driven development. You coordinate implementat
 
 **Orchestration Process:**
 
+### Step 0: Critical Plan Review (first execution only — skip if resuming)
+Before dispatching anything, scan plan.md for blockers:
+- Dépendances circulaires (TASK-A dépend de TASK-B qui dépend de TASK-A)
+- TASKs sans référence DES ou REQ identifiable
+- Acceptance criteria absents ou impossibles à vérifier
+- Prérequis externes non disponibles (service tiers, credential, fichier manquant)
+
+Si un problème est détecté → reporter en français, attendre confirmation de l'utilisateur avant de passer à Step 1. Ne pas démarrer l'exécution sur un plan qui a des gaps bloquants.
+
+Si aucun problème → continuer immédiatement.
+
 ### Step 1: Read Context
 - Read `.sdd/specs/<spec-path>/plan.md` — parse all TASK and subtask items with statuses
 - Read `.sdd/specs/<spec-path>/design.md` — for agent context
@@ -103,23 +114,44 @@ For each completed subtask:
 6. Report in French: "Wave N terminée : TASK-xxx.1, TASK-xxx.2. Checkboxes mises à jour : ✅ (X/Y sous-tâches au total). Suivant : Wave N+1."
 
 ### Step 5: Parent Task Review
-When ALL subtasks of a parent task are `[x]`:
+Before dispatching the first subtask of a parent task, capture:
+```bash
+BASE_SHA=$(git rev-parse HEAD)
+```
+After all subtasks are `[x]`, capture:
+```bash
+HEAD_SHA=$(git rev-parse HEAD)
+```
+
+Then dispatch:
 ```
 Agent({
   description: "Revue TASK-xxx",
   subagent_type: "sdd-spec:spec-code-reviewer",
   model: <config.models.code-reviewer ou "sonnet" par défaut>,
-  prompt: "<completed subtasks list> + <file changes> + <spec references> + <project rules> + output path: .sdd/specs/<spec-path>/reviews/TASK-xxx-review.md"
+  prompt: "<completed subtasks list> + git diff BASE_SHA..HEAD_SHA + <spec references> + <project rules> + output path: .sdd/specs/<spec-path>/reviews/TASK-xxx-review.md"
 })
 ```
 
 Le code-reviewer écrit lui-même le fichier de review dans `.sdd/specs/<spec-path>/reviews/TASK-xxx-review.md`.
 
-If `pipelineReviews` is true and no critical issues expected: start next wave while review runs. If review finds critical issues → pause, report in French, wait for resolution.
+If `pipelineReviews` is true and no critical issues expected: start next wave while review runs.
+
+**Handling review results:**
+- "correction requise" → pause, report in French, wait for resolution before next parent task
+- "continuer avec corrections" → dispatch implementer to fix AVERTISSEMENT before starting next parent task; do not skip
+- "continuer" → proceed immediately
 
 ### Step 6: Handle Issues
+
+**Subtask statuses from task-implementer:**
+- **DONE** → proceed to checkpoint normally
+- **DONE_WITH_CONCERNS** → proceed to checkpoint, but include the concern in the review prompt so code-reviewer pays specific attention to it
+- **NEEDS_CONTEXT** → do not mark `[!]`; pause wave, report missing context in French, wait for user to provide it, then re-dispatch
+- **BLOCKED** → mark `[!]`, report blocker in French; on retry include debugging-process skill; if `[!]` a second time, dispatch `spec-deep-dive` before any further attempt
+
+**Other issues:**
 - **Phantom completion**: Revert checkbox, re-dispatch subtask
-- **Failed subtask**: Mark `[!]`, continue others, report after wave. If a subtask returns `[!]` a second time after retry, dispatch `spec-deep-dive` before any further attempt.
 - **Critical review issue**: Block next wave, report issues with severity
 - **All subtasks in wave fail**: Pause, report, wait for user
 

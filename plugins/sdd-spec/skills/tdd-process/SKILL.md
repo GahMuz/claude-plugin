@@ -14,8 +14,11 @@ Enforce test-driven development during spec implementation. Apply RED-GREEN-REFA
 Before any production code:
 1. Create or extend a test file (Write for new files, Edit for existing ones)
 2. Write a test describing desired behavior
-3. Run the test — confirm it **fails**
-4. If it passes without new code, the test is not validating new behavior — rewrite
+3. Run the test — confirm it **fails for the right reason** :
+   - Le test **échoue** (feature absente) ≠ le test **errore** (syntax error, import manquant)
+   - Lire le message d'erreur : doit indiquer que la feature n'existe pas encore
+   - Si le message est une erreur technique → corriger l'erreur, relancer, vérifier à nouveau
+   - Si le test passe → il ne valide pas un nouveau comportement, le réécrire
 
 ### 2. GREEN — Write Minimal Code
 
@@ -85,6 +88,9 @@ Si le test passe parce que le mock est présent, pas parce que le code fonctionn
 
 **3. Mocker sans comprendre les dépendances**
 Avant de mocker une méthode : identifier tous ses side-effects. Si le test dépend d'un de ces side-effects, mocker à un niveau plus bas — pas la méthode elle-même. Mocker "par précaution" casse les tests silencieusement.
+
+**4. Mocks incomplets**
+Mocker uniquement les champs que l'on connaît crée des bugs silencieux quand du code en aval utilise des champs non mockés. Toujours reproduire la structure complète de la vraie réponse — tous les champs que le système pourrait consommer, pas seulement ceux utilisés dans le test immédiat.
 
 ## Evidence Over Claims
 
