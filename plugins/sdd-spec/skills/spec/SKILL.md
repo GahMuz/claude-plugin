@@ -10,19 +10,19 @@ allowed-tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep", "Agent"]
 
 All communication with the user MUST be in French.
 
-## Local Active Spec
+## Local Active Item
 
-The currently active spec is tracked in `.sdd/local/active.json` — gitignored, machine-local, never committed.
+The currently active item (spec or ADR) is tracked in `.sdd/local/active.json` — gitignored, machine-local, never committed.
 
 ```json
-{ "specId": "mon-spec", "specPath": ".sdd/specs/2026/04/mon-spec", "activatedAt": "ISO-8601" }
+{ "type": "spec", "id": "mon-spec", "path": ".sdd/specs/2026/04/mon-spec", "activatedAt": "ISO-8601" }
 ```
 
 **Rules:**
-- Only one spec can be active at a time on this machine.
+- Only one item (spec or ADR) can be active at a time on this machine. This single file enforces the constraint.
 - `new`, `open`, `switch` are the only commands that write this file.
-- All other commands fail immediately if this file is absent: "Aucun spec actif. Lancez `/spec open <titre>` pour en ouvrir un."
-- `new` and `open` automatically close the current active spec first (full context save via CLOSE) if one is open.
+- All other commands fail immediately if this file is absent or has `type != "spec"`: "Aucun spec actif. Lancez `/spec open <titre>` pour en ouvrir un."
+- `new` and `open` check `active.json`: if present with any type, execute the appropriate CLOSE (spec or ADR) before continuing.
 
 ## Parse Arguments
 
@@ -59,7 +59,7 @@ Extract subcommand from user input:
 ## OPEN
 
 1. Read `.sdd/specs/registry.md`. Title given → find matching row. No title → list non-completed rows, ask user (in French).
-2. Read `.sdd/local/active.json`. If present with a **different** specId: execute CLOSE (full context save). If same specId: skip to step 4.
+2. Read `.sdd/local/active.json`. If present with `type="adr"`: execute ADR CLOSE. If `type="spec"` with different id: execute spec CLOSE. If same id: skip to step 4.
 3. Write `.sdd/local/active.json` with this spec's ID, path, and activatedAt.
 4. Load context following priority order from `references/protocol-context.md` section **Chargement du contexte** — present the briefing before resuming.
 5. Read state.json → currentPhase. If in implementation → follow `references/protocol-resume.md`.
@@ -67,33 +67,35 @@ Extract subcommand from user input:
 
 ## RECAP
 
-0. Read `.sdd/local/active.json`. If absent: fail.
+0. Read `.sdd/local/active.json`. If absent or `type != "spec"`: fail.
 Read and follow `references/phase-recap.md`.
 
 ## APPROVE
 
-0. Read `.sdd/local/active.json`. If absent: fail.
+0. Read `.sdd/local/active.json`. If absent or `type != "spec"`: fail.
 1. Read state.json → currentPhase.
 2. Validate current phase output:
    - requirements: requirement.md has >= 1 REQ
    - design: design.md has >= 1 DES
    - planning: plan.md has >= 1 TASK with subtasks
+   - finishing: all tests pass, all subtasks [x], no uncommitted changes in worktree
 3. Advance per state machine (`references/state-machine.md`):
    - requirements → design: follow `references/phase-design.md`
    - design → worktree + planning: follow `references/phase-worktree.md` then `references/phase-planning.md`
    - planning → implementation: follow `references/phase-execution.md`
    - finishing → retrospective: follow `references/phase-retro.md`
+   - retrospective → completed: follow `references/phase-retro.md`
 4. Update state.json after each transition.
 5. Update `Statut` column in `.sdd/specs/registry.md`.
 
 ## CLARIFY
 
-0. Read `.sdd/local/active.json`. If absent: fail.
+0. Read `.sdd/local/active.json`. If absent or `type != "spec"`: fail.
 Read and follow `references/protocol-clarify.md`.
 
 ## DISCARD
 
-0. Read `.sdd/local/active.json`. If absent: fail.
+0. Read `.sdd/local/active.json`. If absent or `type != "spec"`: fail.
 1. **Ask explicit confirmation** (destructive).
 2. If confirmed: remove worktree, delete branch, remove `.sdd/specs/YYYY/MM/<id>/`.
 3. Remove row from `.sdd/specs/registry.md`.
@@ -102,12 +104,12 @@ Read and follow `references/protocol-clarify.md`.
 
 ## SPLIT
 
-0. Read `.sdd/local/active.json`. If absent: fail.
+0. Read `.sdd/local/active.json`. If absent or `type != "spec"`: fail.
 Read and follow `references/protocol-split.md`.
 
 ## CLOSE
 
-0. Read `.sdd/local/active.json`. If absent: fail.
+0. Read `.sdd/local/active.json`. If absent or `type != "spec"`: fail — "Aucun spec actif. Utilisez `/adr close` si un ADR est actif."
 Read and follow `references/protocol-context.md` section **CLOSE**.
 
 ## SWITCH

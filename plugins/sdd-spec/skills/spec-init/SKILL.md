@@ -56,7 +56,7 @@ If non, let user customize each.
 
 ### Step 6: Create .sdd/
 ```bash
-mkdir -p .sdd/specs .sdd/docs .sdd/local
+mkdir -p .sdd/specs .sdd/docs .sdd/local .sdd/decisions
 ```
 
 Initialize `.sdd/specs/registry.md`:
@@ -65,6 +65,14 @@ Initialize `.sdd/specs/registry.md`:
 
 | Identifiant | Titre | Période | Statut | Requirement | Design | Plan |
 |-------------|-------|---------|--------|-------------|--------|------|
+```
+
+Initialize `.sdd/decisions/registry.md`:
+```markdown
+# Registre des ADRs
+
+| Numéro | Identifiant | Titre | Période | Statut |
+|--------|-------------|-------|---------|--------|
 ```
 
 Write `.sdd/config.json`:

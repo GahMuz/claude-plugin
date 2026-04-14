@@ -69,7 +69,7 @@ Si le rapport contient des corrections proposées : demander "Appliquer ces corr
 - Si non : continuer sans appliquer
 
 Selon la recommandation finale :
-- "prêt pour finishing" → transition to finishing phase
+- "prêt pour finishing" → follow `references/phase-finish.md`
 - "corrections nécessaires" → présenter le rapport, demander comment procéder
 - "re-planification requise" → retour en phase planning
 

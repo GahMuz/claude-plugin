@@ -12,7 +12,7 @@ All output in French.
 
 ## Process
 
-1. Read `.sdd/local/active.json`. If absent: fail — "Aucun spec actif. Lancez `/spec open <titre>` pour en ouvrir un."
+1. Read `.sdd/local/active.json`. If absent or `type != "spec"`: fail — "Aucun spec actif. Lancez `/spec open <titre>` pour en ouvrir un."
 2. Read `state.json` from the active spec to get `currentPhase` and `worktreePath`.
 3. Dispatch the spec-reviewer agent in report-only mode (fix: false always for initial dispatch):
 
