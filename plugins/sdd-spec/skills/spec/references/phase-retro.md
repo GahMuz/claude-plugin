@@ -68,20 +68,18 @@ Appliquer ? (oui / non / modifier)
 - **non** → ignorée, passer à la suivante
 - **modifier** → demander la version corrigée, passer à la suivante
 
-### Step 5: Apply Approved Rules on Separate Branch
+### Step 5: Apply Approved Rules on Spec Branch
 
 Si au moins une règle est approuvée :
-1. Créer la branche `claude/learn-<spec-id>` depuis la branche de base
+1. S'assurer que le worktree de la spec est actif (branche `spec/<username>/<spec-id>`)
 2. Créer/mettre à jour les fichiers `rules-*.md` dans `.claude/skills/rules-references/references/`
 3. Si nouveau fichier `rules-*.md` créé : mettre à jour l'index dans `.claude/skills/rules-references/SKILL.md`
    (ajouter ligne : fichier, domaine, "Charger quand")
 4. Vérification de granularité (comme `/evolve audit`) :
    - Fichier `rules-*.md` > 200 lignes → signaler
    - Règles domain-specific dans `rules.md` → proposer d'extraire dans `rules-*.md`
-5. Commiter : `chore(claude): apprentissages du spec <titre>`
-6. Pousser : `git push -u origin claude/learn-<spec-id>`
-7. "Branche `claude/learn-<spec-id>` poussée. Créez la PR via Bitbucket."
-8. Append log.md : "Rétrospective : X règles ajoutées dans Y fichiers."
+5. Commiter sur la branche spec : `chore(claude): apprentissages du spec <titre>`
+6. Append log.md : "Rétrospective : X règles ajoutées dans Y fichiers."
 
 Si aucune règle approuvée : skip.
 

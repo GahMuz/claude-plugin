@@ -16,7 +16,7 @@ If any check fails, report and ask how to proceed.
 
 ```
 Résumé du spec : <titre>
-Branche : spec/<spec-id>
+Branche : spec/<username>/<spec-id>
 Tâches : X/X terminées
 Sous-tâches : Y/Y terminées
 Tests : Z passent
@@ -41,9 +41,9 @@ If breaking changes exist, list them with test name and reason.
    Si oui : commiter avant de continuer.
 2. Pousser la branche :
 ```bash
-git push -u origin spec/<spec-id>
+git push -u origin spec/<username>/<spec-id>
 ```
-3. "Branche `spec/<spec-id>` poussée. Créez votre PR via Bitbucket quand vous êtes prêt."
+3. "Branche `spec/<username>/<spec-id>` poussée. Créez votre PR via Bitbucket quand vous êtes prêt."
 4. Mettre à jour state.json : currentPhase → `"retrospective"`.
 5. Mettre à jour registry.md : statut → `retrospective`.
 6. Suivre `references/phase-retro.md`.
@@ -57,7 +57,7 @@ git push -u origin spec/<spec-id>
 Si des modifications non commitées existent : "Des modifications non commitées existent. Les abandonner aussi ?"
 ```bash
 git worktree remove --force .worktrees/<spec-id>
-git branch -D spec/<spec-id>
+git branch -D spec/<username>/<spec-id>
 ```
 - Mettre à jour registry.md : statut → `abandoned`.
 - Supprimer `.sdd/local/active.json`.

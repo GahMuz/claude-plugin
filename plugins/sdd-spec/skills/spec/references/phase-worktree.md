@@ -5,8 +5,13 @@ Automatic phase — no user interaction needed. Report progress in French.
 ## Process
 
 ### Step 1: Create Branch
+Derive a sanitized username from git config:
 ```bash
-git branch spec/<spec-id>
+GIT_USER=$(git config user.name | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr -cd 'a-z0-9-')
+```
+Create the branch:
+```bash
+git branch spec/${GIT_USER}/<spec-id>
 ```
 If branch exists from a previous attempt, report and ask user (in French).
 
@@ -19,7 +24,7 @@ If NOT ignored: add `.worktrees/` to `.gitignore` and commit the change before p
 
 ```bash
 mkdir -p .worktrees
-git worktree add .worktrees/<spec-id> spec/<spec-id>
+git worktree add .worktrees/<spec-id> spec/${GIT_USER}/<spec-id>
 ```
 
 ### Step 3: Project Setup
@@ -40,14 +45,14 @@ Run project test suite and save results:
 ### Step 5: Update State
 ```json
 {
-  "branch": "spec/<spec-id>",
+  "branch": "spec/<username>/<spec-id>",
   "worktreePath": ".worktrees/<spec-id>",
   "phases.worktree.status": "completed"
 }
 ```
 
 ### Step 6: Report and Transition
-"Worktree créé dans `.worktrees/<spec-id>` sur la branche `spec/<spec-id>`. Baseline : X tests passent. Passage à la phase de planification."
+"Worktree créé dans `.worktrees/<spec-id>` sur la branche `spec/<username>/<spec-id>`. Baseline : X tests passent. Passage à la phase de planification."
 
 Auto-transition to planning phase.
 
