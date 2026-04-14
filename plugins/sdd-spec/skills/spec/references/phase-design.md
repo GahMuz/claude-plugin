@@ -35,7 +35,7 @@ Search for `.claude/skills/rules-references/SKILL.md`:
 Le contexte codebase fourni par la phase requirements couvre les modules déjà identifiés.
 Dispatcher `spec-deep-dive` uniquement si une question spécifique reste sans réponse après lecture du contexte codebase (ex: impact d'une décision sur un module non encore analysé, contrainte de performance à mesurer) :
 ```
-Agent({ subagent_type: "sdd-spec:spec-deep-dive", prompt: "<question ciblée>" })
+Agent({ description: "Analyse approfondie du codebase", subagent_type: "sdd-spec:spec-deep-dive", model: "opus", prompt: "<question ciblée>" })
 ```
 Optional — ne pas re-dispatcher si le contexte codebase répond déjà aux questions architecturales.
 
@@ -85,13 +85,27 @@ Do NOT silently choose one over the other. Present the conflict to the user in F
 
 ### Step 6a: Auto-revue du design
 
-Avant de dispatcher spec-design-validator, relire design.md avec un regard critique :
-- Chaque DES a un "Contrat de test" ?
-- Les dépendances entre DES sont déclarées ?
-- Pas de décisions sans justification ?
-- La couverture REQ → DES est cohérente ?
+Avant de dispatcher spec-design-validator, relire design.md en 3 passes successives :
 
-Corriger les évidences avant de déléguer la validation formelle.
+**Pass 1 — Complétude**
+- Chaque DES a-t-il un "Contrat de test" ?
+- Les dépendances entre DES sont-elles déclarées ?
+- La table de couverture REQ → DES est-elle présente ?
+- Chaque DES a-t-il un ID, une approche et une justification ?
+
+**Pass 2 — Correction**
+- Pas de décisions sans justification ?
+- Les alternatives ont-elles été genuinement considérées ?
+- Les principes SOLID sont-ils vérifiés pour chaque DES ?
+- Les contrats de test sont-ils dérivés des critères d'acceptation REQ ?
+
+**Pass 3 — Cohérence**
+- Les DES sont-ils cohérents avec les REQs correspondants ?
+- Pas de contradiction avec les designs passés liés chargés en contexte ?
+- La couverture REQ → DES ne laisse aucun REQ avec ❌ inexpliqué ?
+
+Condition d'arrêt : 2 passes consécutives sans nouveau problème, ou 3 passes maximum.
+Si des corrections ont été appliquées : noter le nombre avant de déléguer la validation formelle.
 
 ### Step 6b: Valider le design (spec-design-validator)
 

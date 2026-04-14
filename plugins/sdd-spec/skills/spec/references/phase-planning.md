@@ -72,6 +72,30 @@ Agent({
 - Si **back-pressure vers requirements** : retourner en phase requirements (REQ non couverts)
 - Si corrections mineures appliquées automatiquement : re-lire plan.md avant Step 7
 
+### Step 6c: Auto-relecture de plan.md
+
+Avant de présenter le plan, relire plan.md en 3 passes successives :
+
+**Pass 1 — Complétude**
+- Chaque DES a-t-il >= 1 TASK correspondante ?
+- Chaque TASK impliquant du code a-t-elle des subtasks RED/GREEN (et optionnellement REFACTOR) ?
+- Les dépendances entre subtasks sont-elles déclarées ?
+- Le graphe de dépendances ASCII est-il présent ?
+
+**Pass 2 — Correction**
+- Chaque subtask est-elle atomique (2-5 min) ?
+- Aucune subtask ne regroupe RED et GREEN ?
+- Les commandes de vérification sont-elles présentes sur chaque subtask ?
+- Pas plus de 3 fichiers par subtask (sinon à splitter) ?
+
+**Pass 3 — Cohérence**
+- Les TASKs sont-elles cohérentes avec les approches décrites dans design.md ?
+- Les TASKs hors RED/GREEN (config, doc) sont-elles justifiées comme exceptions ?
+- Les totaux (X tâches, Y sous-tâches) sont-ils corrects ?
+
+Condition d'arrêt : 2 passes consécutives sans nouveau problème, ou 3 passes maximum.
+Si des corrections ont été appliquées : noter le nombre avant de présenter le plan.
+
 ### Step 7: Present Plan (in French)
 Present plan.md:
 - Task list with subtasks, dependencies, status icons

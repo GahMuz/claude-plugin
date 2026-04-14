@@ -36,7 +36,7 @@ Avant de poser les questions de clarification, chercher du contexte dans le code
    - Pour chaque module pertinent : lire `.sdd/docs/modules/<nom>/module-<nom>.md`
 2. Si les docs sont absents ou insuffisants pour les zones concernées : dispatcher `spec-deep-dive`
    ```
-   Agent({ subagent_type: "sdd-spec:spec-deep-dive", prompt: "<question ciblée sur la zone concernée>" })
+   Agent({ subagent_type: "sdd-spec:spec-deep-dive", model: "opus", prompt: "<question ciblée sur la zone concernée>" })
    ```
 3. Synthétiser dans une section **"Contexte codebase"** à inclure dans requirement.md :
    - Modules existants concernés et leur rôle
@@ -135,6 +135,32 @@ Identifier les exigences non fonctionnelles pertinentes :
 Créer des REQ-NF-xxx pour chaque contrainte identifiée.
 Les critères d'acceptation doivent être **mesurables et chiffrés**
 (ex. "DOIT répondre en moins de 200ms au 95e percentile").
+
+### Step 3c: Auto-relecture de requirement.md
+
+Avant de présenter les exigences, relire requirement.md en 3 passes successives :
+
+**Pass 1 — Complétude**
+- Chaque besoin mentionné par l'utilisateur a-t-il un REQ correspondant ?
+- Les cas limites sont-ils couverts ?
+- Les exigences non fonctionnelles pertinentes ont-elles un REQ-NF-xxx ?
+- Le glossaire contient-il tous les termes ambigus ?
+- Les tableaux "Dans le périmètre" et "Hors périmètre" sont-ils remplis ?
+
+**Pass 2 — Correction**
+- Chaque critère d'acceptation est-il testable (observable, mesurable) ?
+- Les mots modaux sont-ils appropriés (DOIT / NE DOIT PAS / DEVRAIT / PEUT) ?
+- Chaque REQ a-t-il un récit utilisateur ("En tant que...") ?
+- Les REQ-NF ont-ils des seuils chiffrés ?
+- Aucun détail d'implémentation technique dans requirement.md ?
+
+**Pass 3 — Cohérence**
+- Les REQs sont-ils cohérents entre eux (pas de contradiction) ?
+- Le périmètre est-il cohérent avec le titre du spec ?
+- Les IDs sont-ils séquentiels sans trou (REQ-001, REQ-002...) ?
+
+Condition d'arrêt : 2 passes consécutives sans nouveau problème, ou 3 passes maximum.
+Si des corrections ont été appliquées : noter le nombre en français avant de présenter.
 
 ### Step 4: Present for Review
 Present complete requirement.md to user (in French):
