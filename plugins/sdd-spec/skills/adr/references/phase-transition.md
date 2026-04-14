@@ -46,12 +46,12 @@ Si des rules sont remises en cause :
 
 Ces règles doivent être mises à jour pour refléter la nouvelle décision.
 Options :
-- `/evolve update` — modifier les rules directement
+- `/sdd-evolve update` — modifier les rules directement
 - `/spec new mise-a-jour-rules-<domaine>` — spec dédié si la mise à jour est complexe
 ```
 
 Demander : "Souhaitez-vous mettre à jour les rules maintenant ?"
-- Si oui → lancer `/evolve update` avec les rules concernées
+- Si oui → lancer `/sdd-evolve update` avec les rules concernées
 - Si non → noter dans `log.md` : "Rules impactées non encore mises à jour : <liste>"
 
 ### Step 4: Lien ADR → Spec

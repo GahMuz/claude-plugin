@@ -1,6 +1,6 @@
 ---
-name: spec-status
-description: "This skill should be used when the user invokes '/spec-status', asks 'liste des specs', 'état des specs', 'quels specs sont en cours', 'voir tous les specs', or wants an overview of all specs and ADRs. Shows the active item (spec or ADR), in-progress specs and ADRs, and completed items."
+name: sdd-status
+description: "This skill should be used when the user invokes '/sdd-status', asks 'liste des specs', 'état des specs', 'quels specs sont en cours', 'voir tous les specs', or wants an overview of all specs and ADRs. Shows the active item (spec or ADR), in-progress specs and ADRs, and completed items."
 argument-hint: ""
 allowed-tools: ["Read", "Glob", "Bash"]
 ---

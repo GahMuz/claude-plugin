@@ -24,7 +24,7 @@ use option "Install for you (user scope)"
 
 ## Workflow
 
-1. `/spec-init` — Initialiser le projet (langages, LSP, modèles, configuration)
+1. `/sdd-init` — Initialiser le projet (langages, LSP, modèles, configuration)
 2. `/spec new <titre>` — Démarrer un nouveau spec
 3. Phases séquentielles : Exigences → Conception → Worktree → Planification → Implémentation → Finalisation
 4. `/spec approve` — Approuver chaque phase et passer à la suivante
@@ -33,7 +33,7 @@ use option "Install for you (user scope)"
 
 | Commande | Description |
 |----------|-------------|
-| `/spec-init` | Configurer le projet pour le SDD |
+| `/sdd-init` | Configurer le projet pour le SDD |
 | `/spec new <titre>` | Démarrer un nouveau spec (ferme automatiquement le spec actif si nécessaire) |
 | `/spec open [titre]` | Ouvrir un spec : restaure le contexte (context.md / memory) puis reprend le workflow |
 | `/spec approve` | Approuver la phase courante et passer à la suivante |
@@ -49,7 +49,7 @@ Un seul spec peut être actif à la fois sur une machine. L'état actif est stoc
 | `/spec recap` | Briefing complet : phase, décisions clés, questions ouvertes, prochaine action |
 | `/spec close` | Sauvegarder le contexte et désactiver le spec |
 | `/spec switch <titre>` | Fermer le spec actif (sauvegarde contexte) et en ouvrir un autre |
-| `/spec-status` | Vue d'ensemble : spec actif, specs en cours, specs terminés |
+| `/sdd-status` | Vue d'ensemble : spec actif, specs en cours, specs terminés |
 
 Le contexte de chaque spec (décisions clés, fichiers identifiés, questions ouvertes) est persisté sur deux niveaux :
 - **`context.md`** dans le répertoire de la spec — commité dans le repo, partagé entre développeurs
@@ -62,8 +62,8 @@ Un autre développeur qui clone le repo et ouvre une spec accède au contexte vi
 | Commande | Description |
 |----------|-------------|
 | `/spec split [<nouveau-titre>]` | Diviser une spec active en deux quand les préoccupations se mélangent — distribue exigences, design, plan et contexte mémoire |
-| `/spec-migrate` | Migrer la structure de données du projet vers la version courante du plugin |
-| `/spec-migrate --dry-run` | Prévisualiser la migration sans rien modifier |
+| `/sdd-update` | Migrer la structure de données du projet vers la version courante du plugin |
+| `/sdd-update --dry-run` | Prévisualiser la migration sans rien modifier |
 
 Lors de la définition des exigences ou du design, le plugin détecte automatiquement les mélanges de préoccupations et propose un split.
 
@@ -75,7 +75,7 @@ Lors de la définition des exigences ou du design, le plugin détecte automatiqu
 | `/continue` | Détecter la prochaine action à effectuer |
 | `/doc <module \| --all \| update \| analyse \| status>` | Documenter et analyser le codebase (économie 80-90% tokens) |
 | `/commit [context]` | Commit structuré avec analyse de risque et ruptures |
-| `/evolve <action>` | Faire évoluer la configuration .claude/ |
+| `/sdd-evolve <action>` | Faire évoluer la configuration .claude/ |
 
 ## Structure de données
 
@@ -99,7 +99,7 @@ Le plugin crée et maintient `.sdd/` à la racine du projet :
 
 ### Versionnage du schéma
 
-`config.json` contient un champ `schemaVersion` qui suit la version du schéma de données. Lors d'une mise à jour du plugin, `/spec-migrate` applique automatiquement les migrations nécessaires. La documentation générée (`/doc`) est automatiquement marquée obsolète après une migration — relancez `/doc update` pour régénérer.
+`config.json` contient un champ `schemaVersion` qui suit la version du schéma de données. Lors d'une mise à jour du plugin, `/sdd-update` applique automatiquement les migrations nécessaires. La documentation générée (`/doc`) est automatiquement marquée obsolète après une migration — relancez `/doc update` pour régénérer.
 
 ## Principes
 
@@ -113,7 +113,7 @@ Le plugin crée et maintient `.sdd/` à la racine du projet :
 
 ## Configuration projet
 
-Après `/spec-init`, personnaliser les règles dans `.claude/skills/rules-references/references/rules.md`.
+Après `/sdd-init`, personnaliser les règles dans `.claude/skills/rules-references/references/rules.md`.
 Les fichiers `rules-*.md` par domaine (controller, service, entity, test...) sont créés automatiquement par la rétrospective à la fin de chaque spec.
 
 ## Développement (contributeurs)

@@ -38,5 +38,5 @@ Agent({
 
 | Skill | Purpose |
 |-------|---------|
-| `/spec-status` | Vue d'ensemble de tous les specs |
+| `/sdd-status` | Vue d'ensemble de tous les specs |
 | `/spec recap` | Briefing complet de la spec active avec contexte |

@@ -37,7 +37,7 @@ Extract subcommand from user input:
 
 ## CHECK_STATE
 
-1. Check `.sdd/config.json` exists. If not: "Lancez `/spec-init` d'abord pour configurer le projet."
+1. Check `.sdd/config.json` exists. If not: "Lancez `/sdd-init` d'abord pour configurer le projet."
 2. Read `.sdd/local/active.json`. If present with `type="adr"`: show that ADR prominently with its current phase. If absent or `type="spec"`: "Aucun ADR actif — lancez `/adr new <titre>` ou `/adr open <titre>`."
 
 ## START_NEW
@@ -172,4 +172,4 @@ Execute OPEN on the requested ADR. OPEN handles closing the current active item 
 | Skill | Purpose |
 |-------|---------|
 | `/spec new <titre>` | Démarrer l'implémentation d'une décision ADR |
-| `/spec-status` | Vue d'ensemble des specs et ADRs |
+| `/sdd-status` | Vue d'ensemble des specs et ADRs |

@@ -51,12 +51,12 @@ echo "Version bumped: $CURRENT → $NEW_VERSION"
 
 # Detect schema-related file changes
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-MIGRATIONS_DIR="$REPO_ROOT/plugins/sdd-spec/skills/spec-migrate/migrations"
+MIGRATIONS_DIR="$REPO_ROOT/plugins/sdd-spec/skills/sdd-update/migrations"
 MIGRATIONS_MD="$MIGRATIONS_DIR/migrations.md"
 MIGRATION_FILE="$MIGRATIONS_DIR/v${NEW_VERSION}.md"
 
 SCHEMA_CHANGED=$(git diff --cached --name-only | grep -E \
-  "plugins/sdd-spec/skills/(spec-format|spec-init)/SKILL\.md|plugins/sdd-spec/skills/doc/SKILL\.md")
+  "plugins/sdd-spec/skills/(spec-format|sdd-init)/SKILL\.md|plugins/sdd-spec/skills/doc/SKILL\.md")
 
 # Update migrations.md index (add new version at top, DESC order)
 if [ -f "$MIGRATIONS_MD" ]; then

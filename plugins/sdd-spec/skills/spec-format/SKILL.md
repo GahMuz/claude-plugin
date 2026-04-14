@@ -13,7 +13,7 @@ Define the structure, file formats, ID system, and conventions for `.sdd/` docum
 
 ```
 .sdd/
-├── config.json                  # Project config (from /spec-init)
+├── config.json                  # Project config (from /sdd-init)
 ├── docs/                        # Generated documentation (from /doc)
 │   ├── manifest.json
 │   ├── index.md

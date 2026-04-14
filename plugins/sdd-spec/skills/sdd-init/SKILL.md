@@ -1,6 +1,6 @@
 ---
-name: spec-init
-description: "This skill should be used when the user invokes '/spec-init' to initialize a project for spec-driven development, set up '.sdd/' directory, configure project languages, check LSP servers, or scaffold rules-references skill."
+name: sdd-init
+description: "This skill should be used when the user invokes '/sdd-init' to initialize a project for spec-driven development, set up '.sdd/' directory, configure project languages, check LSP servers, or scaffold rules-references skill."
 argument-hint: ""
 allowed-tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep"]
 ---
@@ -203,4 +203,4 @@ Prochaine étape : personnalisez les règles dans .claude/skills/rules-reference
 | Skill | Purpose |
 |-------|---------|
 | `/spec new <titre>` | Démarrer le premier spec |
-| `/spec-status` | Vue d'ensemble de tous les specs |
+| `/sdd-status` | Vue d'ensemble de tous les specs |

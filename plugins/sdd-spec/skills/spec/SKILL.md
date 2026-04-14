@@ -40,7 +40,7 @@ Extract subcommand from user input:
 
 ## CHECK_STATE
 
-1. Check `.sdd/config.json` exists. If not: "Lancez `/spec-init` d'abord pour configurer le projet."
+1. Check `.sdd/config.json` exists. If not: "Lancez `/sdd-init` d'abord pour configurer le projet."
 2. Read `.sdd/local/active.json`. If present: show that spec prominently with its current phase. If absent: "Aucun spec actif — lancez `/spec new <titre>` ou `/spec open <titre>`."
 
 ## START_NEW
@@ -148,8 +148,8 @@ Execute OPEN on the requested spec. OPEN handles closing the current active auto
 
 | Skill | Purpose |
 |-------|---------|
-| `/spec-status` | Vue d'ensemble : spec active, specs en cours, specs terminées |
+| `/sdd-status` | Vue d'ensemble : spec active, specs en cours, specs terminées |
 | `/spec-review [--no-fix]` | Revue manuelle spec/code : détecte et corrige les incohérences |
 | `/doc <module \| --all \| update \| analyse \| status>` | Documenter, analyser et maintenir la doc codebase (économie 80-90% tokens) |
-| `/evolve <action>` | Faire évoluer la configuration .claude/ (ajouter, optimiser, auditer) |
+| `/sdd-evolve <action>` | Faire évoluer la configuration .claude/ (ajouter, optimiser, auditer) |
 | `/roi [--from] [--to]` | Rapport ROI : temps gagné, tests ajoutés, efficacité du workflow |

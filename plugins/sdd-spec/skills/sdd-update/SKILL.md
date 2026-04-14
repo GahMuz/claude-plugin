@@ -1,6 +1,6 @@
 ---
-name: spec-migrate
-description: "This skill should be used when the user invokes '/spec-migrate' to migrate an existing project from an older sdd-spec schema version to the current one. Reads schemaVersion from config.json, resolves pending migrations from migrations.md in order, and applies each one. Supports --dry-run for preview."
+name: sdd-update
+description: "This skill should be used when the user invokes '/sdd-update' to migrate an existing project from an older sdd-spec schema version to the current one. Reads schemaVersion from config.json, resolves pending migrations from migrations.md in order, and applies each one. Supports --dry-run for preview."
 argument-hint: "[--dry-run]"
 allowed-tools: ["Read", "Write", "Bash", "Glob", "Grep", "Edit"]
 ---
@@ -16,7 +16,7 @@ Chercher le fichier config dans cet ordre :
 1. `.sdd/config.json` (structure ≥ 0.4.0)
 2. `.specs/config.json` (structure ≤ 0.3.0)
 
-Si aucun n'existe : "Aucun projet sdd-spec détecté. Lancez `/spec-init` d'abord."
+Si aucun n'existe : "Aucun projet sdd-spec détecté. Lancez `/sdd-init` d'abord."
 
 Lire `schemaVersion` dans config.json.
 Si le champ est absent → supposer `"0.1.0"` (avant introduction du versionnage).

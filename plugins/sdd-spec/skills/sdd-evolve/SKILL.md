@@ -1,6 +1,6 @@
 ---
-name: evolve
-description: "This skill should be used when the user invokes '/evolve' to improve the project's .claude/ configuration, add skills, optimize rules, audit configuration quality, or manage the evolution of Claude Code project setup."
+name: sdd-evolve
+description: "This skill should be used when the user invokes '/sdd-evolve' to improve the project's .claude/ configuration, add skills, optimize rules, audit configuration quality, or manage the evolution of Claude Code project setup."
 argument-hint: "<action: add | optimize | audit | import>"
 allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep"]
 ---

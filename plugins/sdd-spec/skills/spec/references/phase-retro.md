@@ -46,7 +46,7 @@ Classer chaque règle candidate par domaine :
 - Règles transversales → `rules.md`
 
 Pour chaque règle candidate, avant de la présenter :
-- **Sécurité** (comme `/evolve`) : pas de pattern d'injection, pas de credentials
+- **Sécurité** (comme `/sdd-evolve`) : pas de pattern d'injection, pas de credentials
 - **Doublons** : Grep dans le fichier cible — si déjà présent, ignorer silencieusement
 
 Si aucune règle candidate : passer à Step 5.
@@ -76,7 +76,7 @@ Si au moins une règle est approuvée :
 2. Créer/mettre à jour les fichiers `rules-*.md` dans `.claude/skills/rules-references/references/`
 3. Si nouveau fichier `rules-*.md` créé : mettre à jour l'index dans `.claude/skills/rules-references/SKILL.md`
    (ajouter ligne : fichier, domaine, "Charger quand")
-4. Vérification de granularité (comme `/evolve audit`) :
+4. Vérification de granularité (comme `/sdd-evolve audit`) :
    - Fichier `rules-*.md` > 200 lignes → signaler
    - Règles domain-specific dans `rules.md` → proposer d'extraire dans `rules-*.md`
 5. Commiter sur la branche spec : `chore(claude): apprentissages du spec <titre>`
