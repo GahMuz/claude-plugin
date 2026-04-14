@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SDD-Spec — Spec Driven Development</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/black.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css">
+  <style>
+    :root {
+      --accent: #38bdf8;
+      --green:  #4ade80;
+      --red:    #f87171;
+      --yellow: #fbbf24;
+      --purple: #a78bfa;
+    }
+    .reveal { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 95%; }
+    .reveal h1 { font-size: 2.8em; text-transform: none; letter-spacing: -0.02em; }
+    .reveal h2 { font-size: 1.6em; text-transform: none; color: var(--accent); margin-bottom: 0.5em; }
+    .reveal .slides section { text-align: left; }
+    .reveal pre { box-shadow: none; border: 1px solid rgba(56,189,248,0.25); border-radius: 6px; width: 100%; margin: 0; }
+    .reveal pre code { font-size: 1.6em; line-height: 1.7; }
+    .reveal code { background: rgba(255,255,255,0.08); padding: 0.1em 0.35em; border-radius: 3px; font-size: 0.85em; }
+    .reveal ul { margin: 0; }
+    .reveal li { margin: 0.35em 0; font-size: 0.88em; line-height: 1.4; }
+
+    .cols   { display: grid; grid-template-columns: 1fr 1fr; gap: 3em; align-items: start; }
+    .cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8em; }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(56,189,248,0.25);
+      border-radius: 8px;
+      padding: 0.7em 0.9em;
+    }
+    .card-title { color: var(--accent); font-weight: 600; font-size: 0.82em; margin-bottom: 0.25em; }
+
+    .tag { display: inline-block; padding: 0.1em 0.45em; border-radius: 3px; font-size: 0.72em; font-weight: 700; letter-spacing: 0.03em; }
+    .tag-red    { background: rgba(248,113,113,0.2); color: var(--red); }
+    .tag-green  { background: rgba(74,222,128,0.2);  color: var(--green); }
+    .tag-blue   { background: rgba(56,189,248,0.2);  color: var(--accent); }
+    .tag-yellow { background: rgba(251,191,36,0.2);  color: var(--yellow); }
+    .tag-purple { background: rgba(167,139,250,0.2); color: var(--purple); }
+
+    .pipeline { display: flex; align-items: center; font-size: 0.72em; gap: 0; }
+    .phase { background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); border-radius: 5px; padding: 0.45em 0.6em; text-align: center; flex: 1; }
+    .phase.done { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.35); color: var(--green); }
+    .arrow { color: var(--accent); margin: 0 0.15em; flex-shrink: 0; }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.8em; }
+    .stat-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(56,189,248,0.25); border-radius: 8px; padding: 0.9em; text-align: center; }
+    .stat-number { font-size: 2.4em; font-weight: 700; color: var(--accent); line-height: 1; }
+    .stat-label  { font-size: 0.62em; color: rgba(255,255,255,0.55); margin-top: 0.3em; line-height: 1.3; }
+
+    .compare { width: 100%; border-collapse: collapse; font-size: 0.8em; }
+    .compare th { background: rgba(56,189,248,0.12); color: var(--accent); padding: 0.4em 0.7em; text-align: left; border-bottom: 1px solid rgba(56,189,248,0.25); }
+    .compare td { padding: 0.35em 0.7em; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .bad  { color: var(--red); }
+    .good { color: var(--green); }
+
+    hr { border: none; border-top: 1px solid rgba(56,189,248,0.2); margin: 0.7em 0; }
+    .muted { color: rgba(255,255,255,0.5); font-size: 0.78em; }
+    .reveal .progress { color: var(--accent); }
+    .reveal .slide-number { color: rgba(255,255,255,0.3); }
+  </style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITRE -->
+<section>
+  <p style="color:var(--accent); font-size:0.85em; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.3em;">Claude Code Plugin</p>
+  <h1>SDD-Spec</h1>
+  <p style="font-size:1.1em; color:rgba(255,255,255,0.7);">Spec Driven Development</p>
+  <hr>
+  <p style="font-size:0.85em; color:rgba(255,255,255,0.5);">De l'idée au code testé, revu et documenté — sans perdre le fil.</p>
+  <div class="cols" style="margin-top:0.8em; font-size:0.8em;">
+    <div><span style="color:var(--accent);">Workflow</span><br><code>/spec</code> · <code>/adr</code> · <code>/doc</code> · <code>/commit</code></div>
+    <div><span style="color:var(--accent);">Langages</span><br>Java · Node/TS · PHP</div>
+  </div>
+</section>
+
+<!-- 2. LE PROBLÈME -->
+<section>
+  <h2>Le problème quotidien</h2>
+  <style>
+    .p4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5em; }
+    .p4 .card { padding: 0.5em 0.7em; }
+    .p4 .card-title { font-size: 0.75em; margin-bottom: 0.15em; }
+    .p4 .muted { font-size: 0.7em; margin: 0; line-height: 1.3; }
+    .row-label { font-size: 0.62em; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin: 0.5em 0 0.25em; }
+  </style>
+
+  <div class="row-label">Processus</div>
+  <div class="p4">
+    <div class="card"><div class="card-title">Contexte perdu</div><p class="muted">Re-briefing à chaque session.</p></div>
+    <div class="card"><div class="card-title">Décisions volatiles</div><p class="muted">"Pourquoi ce choix ?" — personne ne sait.</p></div>
+    <div class="card"><div class="card-title">IA qui improvise</div><p class="muted">Sans structure, Claude comble les blancs.</p></div>
+    <div class="card"><div class="card-title">Scope creep</div><p class="muted">Le périmètre dérive sans qu'on s'en rende compte.</p></div>
+  </div>
+
+  <div class="row-label">Qualité</div>
+  <div class="p4">
+    <div class="card"><div class="card-title">TDD : bonne intention</div><p class="muted">Tests écrits "plus tard". C'est-à-dire jamais.</p></div>
+    <div class="card"><div class="card-title">SOLID ignoré</div><p class="muted">Architecture dégradée, dette croissante.</p></div>
+    <div class="card"><div class="card-title">Side effects surprises</div><p class="muted">Régressions découvertes en prod.</p></div>
+    <div class="card"><div class="card-title">Debugging aléatoire</div><p class="muted">Empiler des fixes jusqu'à ce que ça marche.</p></div>
+  </div>
+
+  <div class="row-label">Conformité &amp; connaissance</div>
+  <div class="p4">
+    <div class="card"><div class="card-title">Guidelines réinventées</div><p class="muted">Conventions du sprint précédent perdues.</p></div>
+    <div class="card"><div class="card-title">Sécurité tardive</div><p class="muted">Vulnérabilités découvertes après le merge.</p></div>
+    <div class="card"><div class="card-title">Onboarding difficile</div><p class="muted">Nouveau dev : semaines avant d'être autonome.</p></div>
+    <div class="card"><div class="card-title">Dette technique</div><p class="muted">S'accumule, jamais priorisée, jamais traitée.</p></div>
+  </div>
+</section>
+
+<!-- 3. LE WORKFLOW -->
+<section>
+  <h2>Un workflow piloté par les specs</h2>
+  <div class="pipeline" style="margin-bottom:1em;">
+    <div class="phase">Exigences<br><span class="muted">REQ-xxx</span></div><div class="arrow">→</div>
+    <div class="phase">Conception<br><span class="muted">DES-xxx</span></div><div class="arrow">→</div>
+    <div class="phase">Worktree<br><span class="muted">git isolé</span></div><div class="arrow">→</div>
+    <div class="phase">Planification<br><span class="muted">TASK-xxx</span></div><div class="arrow">→</div>
+    <div class="phase">Implémentation<br><span class="muted">orchestrateur</span></div><div class="arrow">→</div>
+    <div class="phase">Finishing<br><span class="muted">revue + push</span></div><div class="arrow">→</div>
+    <div class="phase done">Rétro<br><span class="muted">règles</span></div>
+  </div>
+  <div class="cols">
+    <ul>
+      <li><strong>Traçabilité</strong> — REQ → DES → TASK → code</li>
+      <li><strong>Approbation explicite</strong> — <code>/spec approve</code> à chaque phase</li>
+      <li><strong>Isolation git</strong> — worktree dédié par spec</li>
+    </ul>
+    <ul>
+      <li><strong>Auto-relecture 3 passes</strong> avant chaque présentation</li>
+      <li><strong>Couverture obligatoire</strong> — tout ❌ bloque l'approbation</li>
+      <li><strong>Un spec actif à la fois</strong> — contrainte partagée</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 4. JAMAIS DE PAGE BLANCHE -->
+<section>
+  <h2>Jamais de page blanche</h2>
+  <div class="cols">
+    <div>
+      <p style="font-size:0.85em;">Avant la première question, <code>/spec new</code> analyse le codebase :</p>
+      <ul>
+        <li>Modules concernés et leur rôle</li>
+        <li>Patterns et conventions en place</li>
+        <li>Specs passés liés chargés comme contexte</li>
+      </ul>
+      <div class="card" style="margin-top:0.8em;">
+        <div class="card-title">Auto-relecture 3 passes</div>
+        <span class="muted">Chaque artefact relu avant présentation : <span style="color:var(--accent);">Complétude</span> · <span style="color:var(--yellow);">Correction</span> · <span style="color:var(--green);">Cohérence</span></span>
+      </div>
+    </div>
+    <pre><code class="language-bash">/spec new "Authentification OAuth2"
+
+# Claude identifie automatiquement :
+# ✦ Modules : auth/, users/
+# ✦ Pattern existant : JwtService
+# ✦ Spec lié : "Sessions" (2026-02)
+#
+# "Quels providers OAuth2 ?"
+# "Session ou stateless ?"</code></pre>
+  </div>
+</section>
+
+<!-- 5. TDD -->
+<section>
+  <h2>TDD structurel — pas optionnel</h2>
+  <div class="cols">
+    <div>
+      <p style="font-size:0.85em;">Chaque tâche code → décomposée automatiquement :</p>
+      <div class="card" style="margin-bottom:0.5em; border-color:rgba(248,113,113,0.4);">
+        <span class="tag tag-red">RED</span> &nbsp; Tests en échec dérivés des critères d'acceptation REQ
+      </div>
+      <div class="card" style="margin-bottom:0.5em; border-color:rgba(74,222,128,0.4);">
+        <span class="tag tag-green">GREEN</span> &nbsp; Code minimal pour faire passer les tests
+      </div>
+      <div class="card" style="border-color:rgba(56,189,248,0.4);">
+        <span class="tag tag-blue">REFACTOR</span> &nbsp; Nettoyage (optionnel si déjà propre)
+      </div>
+    </div>
+    <div>
+      <p style="font-size:0.82em; color:rgba(255,255,255,0.7);">Anti-patterns détectés :</p>
+      <ul style="font-size:0.82em;">
+        <li>Tester le mock plutôt que le code réel</li>
+        <li>Méthodes <code>reset()</code> test-only dans les classes prod</li>
+        <li>Déclarer "tests pass" sans les avoir exécutés</li>
+      </ul>
+      <hr>
+      <p class="muted">Jest · Vitest · JUnit · PHPUnit · Pest</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6. SOLID + REVUE -->
+<section>
+  <h2>SOLID validé · Revue automatique</h2>
+  <div class="cols">
+    <div>
+      <p style="font-size:0.85em;">Chaque DES-xxx vérifié en phase conception :</p>
+      <p style="font-size:0.85em; line-height:1.9;">
+        <strong style="color:var(--accent);">S</strong> Single Responsibility &nbsp;
+        <strong style="color:var(--accent);">O</strong> Open/Closed<br>
+        <strong style="color:var(--accent);">L</strong> Liskov &nbsp;
+        <strong style="color:var(--accent);">I</strong> Interface Segregation<br>
+        <strong style="color:var(--accent);">D</strong> Dependency Inversion
+      </p>
+      <p class="muted">Conflit SOLID vs règles projet → Claude présente le conflit, vous arbitrez.</p>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:0.5em;">
+        <span class="tag tag-blue">Étape 1</span> &nbsp;<strong>Conformité spec</strong> — court-circuit si CRITIQUE
+      </div>
+      <div class="card" style="margin-bottom:0.5em;">
+        <span class="tag tag-yellow">Étape 2</span> &nbsp;<strong>Qualité code</strong> — SOLID, sécurité, tests
+      </div>
+      <div class="card">
+        <span class="tag tag-purple">Étape 3</span> &nbsp;<strong>Règles projet</strong> — chaque règle <code>rules-*.md</code> vérifiée
+      </div>
+      <p class="muted" style="margin-top:0.5em;">CRITIQUE · AVERTISSEMENT · INFO</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7. DOC -->
+<section>
+  <h2>/doc — 80-90% de tokens en moins</h2>
+  <div class="cols">
+    <div>
+      <ul>
+        <li>Documentation structurée par module</li>
+        <li>Rechargée à la demande — pas tout le codebase</li>
+        <li>Mise à jour incrémentale via <code>git diff</code></li>
+        <li>Chargée automatiquement en phase requirements</li>
+      </ul>
+      <pre style="margin-top:0.7em;"><code class="language-bash">/doc auth        # documenter un module
+/doc --all       # tous les modules
+/doc update      # mise à jour incrémentale
+/doc analyse X   # qualité + règles manquantes
+/doc status      # fraîcheur</code></pre>
+    </div>
+    <pre><code class="language-text">.sdd/docs/
+├── index.md
+└── modules/
+    └── auth/
+        ├── module-auth.md
+        ├── feature-login.md
+        ├── analyse-auth.md
+        └── missing-rules-auth.md</code></pre>
+  </div>
+</section>
+
+<!-- 8. DEBUGGING -->
+<section>
+  <h2>Debugging systématique</h2>
+  <p style="font-size:0.85em; color:var(--red);">Règle de fer : jamais de correctif sans cause racine identifiée.</p>
+  <div class="cols">
+    <div>
+      <div class="card" style="margin-bottom:0.45em;">
+        <span class="tag tag-blue">Phase 1</span> &nbsp;<strong>Investigation</strong> — lire l'erreur, tracer la call chain
+      </div>
+      <div class="card" style="margin-bottom:0.45em;">
+        <span class="tag tag-yellow">Phase 2</span> &nbsp;<strong>Pattern analysis</strong> — comparer avec un cas qui fonctionne
+      </div>
+      <div class="card" style="margin-bottom:0.45em;">
+        <span class="tag tag-purple">Phase 3</span> &nbsp;<strong>Hypothèse unique</strong> — un changement minimal à la fois
+      </div>
+      <div class="card">
+        <span class="tag tag-green">Phase 4</span> &nbsp;<strong>Fix & Verify</strong> — cause, pas symptôme + suite complète
+      </div>
+    </div>
+    <div>
+      <div class="card" style="border-color:rgba(248,113,113,0.4);">
+        <div class="card-title" style="color:var(--red);">Seuil d'escalade</div>
+        Après <strong>3 tentatives échouées</strong> : stop.<br>
+        <span class="muted">La tâche est marquée <code>[!]</code>, l'orchestrateur dispatche <code>spec-deep-dive</code>.</span>
+      </div>
+      <div class="card" style="margin-top:0.5em;">
+        <div class="card-title">Defense in depth</div>
+        <span class="muted">Après la fix : validation ajoutée aux 4 couches pour rendre le bug structurellement impossible.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. COMMIT -->
+<section>
+  <h2>/commit — Commits structurés</h2>
+  <div class="cols">
+    <pre><code class="language-text">feat(auth): ajouter l'authentification OAuth2
+
+Permettre la connexion via Google sans gérer
+de mot de passe côté application.
+
+Changements :
+- GoogleOAuthService avec PKCE flow
+- Endpoint /auth/google/callback
+
+Ruptures : Aucune
+
+Risque : MEDIUM — endpoint public non authentifié</code></pre>
+    <div>
+      <p style="font-size:0.85em;">Analyse automatique du stack :</p>
+      <div class="card" style="margin-bottom:0.4em;"><span class="tag tag-green">LOW</span> &nbsp; Tests, config, docs</div>
+      <div class="card" style="margin-bottom:0.4em;"><span class="tag tag-yellow">MEDIUM</span> &nbsp; Nouveau code, pas de schéma</div>
+      <div class="card"><span class="tag tag-red">HIGH</span> &nbsp; Entités, migrations, sécurité</div>
+      <p class="muted" style="margin-top:0.6em;">Java · PHP · Node/TS détectés automatiquement. Exclusion build, <code>.env</code>, node_modules.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10. CONTEXTE PERSISTANT -->
+<section>
+  <h2>Contexte persistant — zéro re-briefing</h2>
+  <div class="cols">
+    <div>
+      <div class="card" style="margin-bottom:0.6em;">
+        <div class="card-title">context.md — Repo (commité)</div>
+        <span class="muted">Décisions, fichiers, questions ouvertes. Partagé entre devs.</span>
+      </div>
+      <div class="card">
+        <div class="card-title">Memory Claude Code — Local</div>
+        <span class="muted">Cache machine, rechargé en priorité si présent.</span>
+      </div>
+      <p class="muted" style="margin-top:0.6em;">Un collègue clone le repo → <code>/spec open</code> → contexte complet instantané.</p>
+    </div>
+    <pre><code class="language-bash">/spec recap    # phase + décisions + prochaine action
+/spec close    # sauvegarder et désactiver
+/spec open X   # restaurer le contexte complet
+/spec switch X # fermer + ouvrir en une commande</code></pre>
+  </div>
+</section>
+
+<!-- 11. RULE LEARNING -->
+<section>
+  <h2>Le projet apprend de lui-même</h2>
+  <div class="cols">
+    <div>
+      <p style="font-size:0.85em;">Agents capturent les décisions techniques en temps réel :</p>
+      <pre><code class="language-markdown">## [task-implementer] @Transactional Spring
+- **Domaine** : service
+- **Contexte** : TASK-003 — Jakarta vs Spring
+- **Décision** : Spring @Transactional ici</code></pre>
+      <p class="muted" style="margin-top:0.5em;">Stockées dans <code>rule-candidates.md</code>, proposées en rétrospective.</p>
+    </div>
+    <div>
+      <p style="font-size:0.85em;">Classement automatique :</p>
+      <p style="font-size:0.78em; line-height:1.8;">
+        <code>rules-controller.md</code> &nbsp; <code>rules-service.md</code><br>
+        <code>rules-entity.md</code> &nbsp; <code>rules-test.md</code><br>
+        <code>rules-api.md</code> &nbsp; <code>rules-security.md</code>
+      </p>
+      <hr>
+      <p class="muted">Approuvées → commitées sur la branche spec → actives dans tous les prochains specs.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12. ADR -->
+<section>
+  <h2>/adr — Architecture Decision Records</h2>
+  <div class="pipeline" style="margin-bottom:0.9em;">
+    <div class="phase">Cadrage</div><div class="arrow">→</div>
+    <div class="phase">Exploration</div><div class="arrow">→</div>
+    <div class="phase">Discussion</div><div class="arrow">→</div>
+    <div class="phase">Décision<br><span class="muted">adr.md</span></div><div class="arrow">→</div>
+    <div class="phase done">Rétro<br><span class="muted">règles</span></div>
+  </div>
+  <div class="cols">
+    <ul>
+      <li>Options analysées avec trade-offs complets</li>
+      <li>Décision justifiée + conséquences documentées</li>
+      <li>Règles impactées identifiées et mises à jour</li>
+      <li>Lié aux specs d'implémentation suivants</li>
+    </ul>
+    <div class="card">
+      <div class="card-title">Les règles sont indicatives</div>
+      <span class="muted">Un ADR peut remettre en cause une règle existante — c'est documenté, validé, et mis à jour dans <code>rules-*.md</code>.</span>
+    </div>
+  </div>
+</section>
+
+<!-- 13. ROI + EVOLVE -->
+<section>
+  <h2>/roi · /sdd-evolve</h2>
+  <div class="cols">
+    <div>
+      <p style="font-size:0.9em; color:var(--accent);">/roi — Mesure du retour sur investissement</p>
+      <pre><code class="language-bash">/roi                   # 30 derniers jours
+/roi --from 2026-01-01 # depuis une date</code></pre>
+      <ul style="margin-top:0.5em;">
+        <li>Specs complétés, durée moyenne</li>
+        <li>Tests ajoutés vs baseline</li>
+        <li>Règles capitalisées, modules documentés</li>
+      </ul>
+    </div>
+    <div>
+      <p style="font-size:0.9em; color:var(--accent);">/sdd-evolve — Config comme living artifact</p>
+      <pre><code class="language-bash">/sdd-evolve add      # ajouter un skill ou règle
+/sdd-evolve optimize # réduire tokens, doublons
+/sdd-evolve audit    # sécurité + cohérence</code></pre>
+      <p class="muted" style="margin-top:0.4em;">Scan sécurité · détection doublons · granularité · jamais d'auto-modification.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 14. AVANT / APRÈS -->
+<section>
+  <h2>Avant / Après</h2>
+  <table class="compare">
+    <tr><th>Sans sdd-spec</th><th>Avec sdd-spec</th></tr>
+    <tr><td class="bad">Re-briefing à chaque session</td><td class="good">Contexte restauré automatiquement</td></tr>
+    <tr><td class="bad">Tests écrits après (si le temps)</td><td class="good">TDD RED/GREEN dérivé des critères REQ</td></tr>
+    <tr><td class="bad">Décisions architecturales dans la tête</td><td class="good">ADRs versionnés et consultables</td></tr>
+    <tr><td class="bad">Conventions réinventées à chaque sprint</td><td class="good">Règles capitalisées en <code>rules-*.md</code></td></tr>
+    <tr><td class="bad">Debugging : empiler jusqu'à ce que ça marche</td><td class="good">4 phases systématiques + escalade</td></tr>
+    <tr><td class="bad">Commits "fix", "wip", "update"</td><td class="good">Structurés avec scope, pourquoi, risque</td></tr>
+    <tr><td class="bad">Codebase entier = tokens × 10</td><td class="good">/doc réduit la consommation de 80-90%</td></tr>
+  </table>
+</section>
+
+<!-- 15. À VENIR -->
+<section>
+  <h2>Roadmap — À venir</h2>
+  <style>
+    .soon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7em; }
+    .soon-card {
+      background: rgba(167,139,250,0.06);
+      border: 1px solid rgba(167,139,250,0.3);
+      border-radius: 8px;
+      padding: 0.7em 0.9em;
+    }
+    .soon-title { color: var(--purple); font-weight: 600; font-size: 0.82em; margin-bottom: 0.25em; }
+    .soon-badge {
+      display: inline-block; background: rgba(167,139,250,0.15); color: var(--purple);
+      font-size: 0.6em; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.1em 0.4em; border-radius: 3px; margin-bottom: 0.4em;
+    }
+  </style>
+  <div class="soon-grid">
+    <div class="soon-card">
+      <div class="soon-badge">Bientôt</div>
+      <div class="soon-title">Automatisation des Pull Requests</div>
+      <p class="muted">Génération automatique de PR à la fin du finishing — titre, description, checklist de review — et attribution aux reviewers selon les modules touchés.</p>
+    </div>
+    <div class="soon-card">
+      <div class="soon-badge">Bientôt</div>
+      <div class="soon-title">Analyse RGPD</div>
+      <p class="muted">Détection automatique des données personnelles dans les REQ et DES, évaluation des risques, génération du registre de traitements et recommandations de conformité dès la phase conception.</p>
+    </div>
+    <div class="soon-card">
+      <div class="soon-badge">Bientôt</div>
+      <div class="soon-title">Analyse DORA</div>
+      <p class="muted">Mesure des 4 métriques DORA (fréquence de déploiement, lead time, taux d'échec, MTTR) et recommandations ciblées pour améliorer la performance de livraison.</p>
+    </div>
+    <div class="soon-card">
+      <div class="soon-badge">Bientôt</div>
+      <div class="soon-title">Automatisation SonarQube → Zéro dette</div>
+      <p class="muted">
+        Lecture des issues SonarQube → extraction de règles →
+        traitement par batch → génération de PR correctives →
+        attribution automatique aux devs concernés →
+        merge après review.
+        <strong style="color:var(--purple);">Élimination systématique de la dette technique.</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 16. INSTALLATION -->
+<section>
+  <h2>Démarrer en 2 minutes</h2>
+  <div class="cols">
+    <pre><code class="language-bash"># 1. Ajouter le marketplace (une fois)
+/plugin marketplace add \
+  https://github.com/GahMuz/claude-plugin.git
+
+# 2. Installer les plugins
+/plugin install sdd-spec@sdd-marketplace
+/plugin install sdd-roi@sdd-marketplace
+# → "Install for you (user scope)"
+
+# 3. Initialiser
+/sdd-init
+
+# 4. Premier spec
+/spec new "Ma première fonctionnalité"</code></pre>
+    <div>
+      <p style="font-size:0.82em; color:var(--accent);">Toutes les commandes</p>
+      <p style="font-size:0.75em; line-height:2;">
+        <code>/spec new · open · approve · recap · close</code><br>
+        <code>/adr new · open · approve · close</code><br>
+        <code>/doc · /commit · /roi</code><br>
+        <code>/sdd-init · /sdd-status · /sdd-update</code><br>
+        <code>/sdd-evolve</code>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 16. FIN -->
+<section style="text-align:center;">
+  <h2 style="color:white; font-size:1.9em; margin-bottom:0.3em;">De l'idée au code testé.</h2>
+  <p style="color:rgba(255,255,255,0.5); margin-bottom:1em;">Structured · Traceable · Self-improving</p>
+  <div class="stat-grid">
+    <div class="stat-box"><div class="stat-number">80%</div><div class="stat-label">réduction tokens (/doc)</div></div>
+    <div class="stat-box"><div class="stat-number">100%</div><div class="stat-label">traçabilité REQ → code</div></div>
+    <div class="stat-box"><div class="stat-number">0</div><div class="stat-label">re-briefing entre sessions</div></div>
+    <div class="stat-box"><div class="stat-number">∞</div><div class="stat-label">règles capitalisées</div></div>
+  </div>
+  <p style="margin-top:1em; font-size:0.75em; color:rgba(255,255,255,0.3);">github.com/GahMuz/claude-plugin · sdd-spec</p>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    plugins: [RevealHighlight],
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    progress: true,
+    slideNumber: 'c/t',
+    center: true,
+    width: 1200,
+    height: 680,
+    margin: 0.05
+  });
+</script>
+</body>
+</html>
