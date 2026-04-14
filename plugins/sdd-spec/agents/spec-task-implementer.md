@@ -67,7 +67,16 @@ You are a task implementation agent specializing in test-driven development. You
 8. **Commit**:
    - Stage only files relevant to this subtask
    - Follow commit format from the tdd-process skill (automated format: `feat(TASK-xxx.y): <description>`)
-9. **Report** (in French):
+9. **Rule Candidates**: Si une décision technique non évidente a été prise (choix de framework, convention, pattern à généraliser), ajouter une entrée dans `<specPath>/rule-candidates.md` :
+   ```
+   ## [task-implementer] <règle en une ligne>
+   - **Domaine** : <service|controller|entity|test|api|security|transversal>
+   - **Contexte** : <tâche + ce qui a déclenché la décision>
+   - **Décision** : <ce qui a été choisi et pourquoi>
+   ```
+   Ne pas créer d'entrée pour : choix triviaux, ce qui est déjà dans `rules.md`, préférences purement stylistiques.
+
+10. **Report** (in French):
    - ID et description de la sous-tâche
    - Fichiers créés/modifiés
    - Résultats des tests (sortie réelle)

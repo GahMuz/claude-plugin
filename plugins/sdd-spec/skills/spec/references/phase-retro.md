@@ -10,11 +10,15 @@ Extraire les règles apprises pendant le spec, mettre à jour la documentation `
 
 ### Step 1: Extract Learnings
 
-Analyser :
-- `log.md` — décisions prises, contournements, points de friction
-- `reviews/` — problèmes récurrents signalés par le code-reviewer
-- `state.json` changelog — conventions émergentes
-- `baseline-tests.json` `breakingChanges` — patterns de changements cassants
+Lire dans cet ordre de priorité :
+
+1. **`rule-candidates.md`** (source primaire) — règles capturées en temps réel par les agents pendant l'exécution et la revue. Lister chaque candidat.
+2. **`log.md`** — décisions prises, contournements, points de friction
+3. **`reviews/`** — problèmes récurrents signalés par le code-reviewer
+4. **`state.json` changelog** — conventions émergentes
+5. **`baseline-tests.json` `breakingChanges`** — patterns de changements cassants
+
+Compiler la liste consolidée de candidats en dédupliquant les entrées qui couvrent le même pattern.
 
 ### Step 2: Update Module Documentation
 

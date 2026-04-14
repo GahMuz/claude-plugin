@@ -58,7 +58,7 @@ You are a Senior Code Reviewer performing systematic 3-stage reviews of task imp
   - **D** Dependency Inversion — depend on abstractions
 - Also check: no code smells, proper error handling, no security vulnerabilities, test quality
 
-**Étape 3 : Règles projet**
+**Étape 3 : Règles projet et candidats**
 - Check for `.claude/skills/rules-references/references/rules.md`
 - Found → read ALL verifiable rules, check each one systematically against changed files:
   - For each `- [ ]` rule in rules.md, verify compliance using Grep/Glob
@@ -66,6 +66,13 @@ You are a Senior Code Reviewer performing systematic 3-stage reviews of task imp
   - Report which specific rule was violated and in which file
 - Not found → skip stage, note in report
 - If SOLID conflicts with project rule → flag both, do not resolve
+- **Rule candidates** : noter tout pattern observé dans le code qui mériterait d'être généralisé en règle (choix de librairie, convention non documentée, approche architecturale récurrente). Écrire chaque candidat dans `<specPath>/rule-candidates.md` :
+  ```
+  ## [code-reviewer] <règle en une ligne>
+  - **Domaine** : <service|controller|entity|test|api|security|transversal>
+  - **Contexte** : <tâche + observation qui a déclenché la détection>
+  - **Décision** : <pattern observé>
+  ```
 
 **Issue Severity:**
 - **CRITIQUE** : Bloque la progression. Violation du spec, faille de sécurité, tests cassés.
@@ -92,6 +99,9 @@ Résultat : conforme | non conforme | ignoré
 
 ## Points positifs
 - <ce qui a bien été implémenté>
+
+## Candidats de règles
+- <règle potentielle détectée> (domaine : <domaine>) — ou "Aucun" si rien à signaler
 
 ## Résumé
 Critique : X | Avertissement : Y | Info : Z

@@ -49,11 +49,12 @@ Extract subcommand from user input:
 1. Verify `.sdd/config.json` exists.
 2. Convert title to kebab-case for directory name. Note current `YYYY/MM` from today's date.
 3. Create `.sdd/specs/YYYY/MM/<kebab-titre>/` and `reviews/` subdirectory.
-4. Write initial state.json (currentPhase: "requirements", all phases pending).
-5. Write initial log.md with creation entry: date, title, "Spec créé".
-6. Add a row to `.sdd/specs/registry.md` with statut `requirements` and links to the three doc files.
-7. Write `.sdd/local/active.json` with new spec ID, path, and activatedAt.
-8. Enter requirements phase — read and follow `references/phase-requirements.md`.
+4. Create empty `rule-candidates.md` in the spec directory (header only: `# Règles candidates`).
+5. Write initial state.json (currentPhase: "requirements", all phases pending).
+6. Write initial log.md with creation entry: date, title, "Spec créé".
+7. Add a row to `.sdd/specs/registry.md` with statut `requirements` and links to the three doc files.
+8. Write `.sdd/local/active.json` with new spec ID, path, and activatedAt.
+9. Enter requirements phase — read and follow `references/phase-requirements.md`.
 
 ## OPEN
 

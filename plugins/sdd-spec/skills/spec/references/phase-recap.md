@@ -64,7 +64,7 @@ Insérer dans "Commandes disponibles" les lignes correspondant à la phase coura
 - `/spec-review` — audit manuel de cohérence spec/code
 
 **execution (100% `[x]`) :**
-- `/spec approve` — passer à la phase finishing
+- `/spec approve` — passer à la phase finishing (push de la branche, pas de merge)
 - `/spec-review` — relancer un audit avant de finaliser
 
 **finishing :**
