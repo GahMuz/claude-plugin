@@ -143,7 +143,7 @@ Read and follow `references/protocol-context.md` section **CLOSE**.
 
 ## SWITCH
 
-Execute OPEN on the requested ADR. OPEN handles closing the current active item automatically.
+Execute OPEN on the requested ADR, skipping OPEN step 0 (the /clear warning is not appropriate when switching within the same session). OPEN handles closing the current active item automatically.
 
 ## Key Principles
 

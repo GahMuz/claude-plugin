@@ -113,5 +113,8 @@ Contexte sauvegardé :
 - context.md mis à jour (partageable via git)
 - Memory local mis à jour (session suivante sur cette machine)
 
-ADR fermé — rouvrez avec `/adr open <adr-id>`.
+ADR fermé.
+
+⚠ Lancez `/clear` maintenant pour purger le contexte de cette session.
+  Rouvrez ensuite avec `/adr open <adr-id>` dans la session propre.
 ```

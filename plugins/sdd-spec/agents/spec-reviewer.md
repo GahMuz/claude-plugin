@@ -51,8 +51,17 @@ For each subtask marked `[x]`: any specified file path does NOT exist or is empt
 - If fix=true: revert `[x]` → `[ ]` in plan.md.
 
 **2c — Complétions non marquées ⚠️**
-For each subtask marked `[ ]`: all specified file paths exist → likely done but not marked.
-- If fix=true: mark `[ ]` → `[x]` in plan.md.
+Two complementary checks (both can trigger independently):
+
+1. **Via git log** (authoritative): For each subtask marked `[ ]` or `[~]`, run:
+   ```bash
+   git log --oneline --grep="<subtask-id>" -- <worktreePath>
+   ```
+   If at least one commit exists mentioning this subtask ID → the work was committed, subtask is done but not marked.
+
+2. **Via file existence** (for CREATE subtasks only): For each subtask marked `[ ]` whose Fichiers section contains `(créer)`, if all those file paths exist in the worktree → likely done but not marked.
+
+If fix=true: mark matching subtasks `[ ]` → `[x]` in plan.md.
 
 **2d — Implémentations manquantes ❌**
 For each REQ-xxx: trace REQ → DES → TASK chain. If any REQ has no TASK implementing it → gap.
@@ -69,7 +78,7 @@ Glob `**/sdd-rules/SKILL.md` → lire et exécuter le protocole de chargement (p
 ### Step 3: Apply Fixes
 If fix=true:
 - Apply all checkbox corrections in plan.md
-- Update state.json `progress.completedSubtasks` to match corrected plan
+- Update state.json `progress.completedSubtasks` to the count of `[x]` subtasks in the corrected plan
 - Append to `<specPath>/log.md`: "Revue spec effectuée : X corrections appliquées."
 
 ### Step 4: Report

@@ -115,7 +115,7 @@ Read and follow `references/protocol-context.md` section **CLOSE**.
 
 ## SWITCH
 
-Execute OPEN on the requested spec. OPEN handles closing the current active automatically.
+Execute OPEN on the requested spec, skipping OPEN step 0 (the /clear warning is not appropriate when switching within the same session). OPEN handles closing the current active automatically.
 
 ## Key Principles
 

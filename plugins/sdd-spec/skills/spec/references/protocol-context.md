@@ -124,7 +124,7 @@ Contexte sauvegardé :
 Spec fermée.
 
 ⚠ Lancez `/clear` maintenant pour purger le contexte de cette session.
-  Rouvrez ensuite avec `/spec open <spec-id>` dans la session propre.
+  Rouvrez ensuite avec `/spec open <spec-id>` (ou `/adr open <adr-id>`) dans la session propre.
 ```
 
 ## SWITCH
