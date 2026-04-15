@@ -63,7 +63,7 @@ Si aucun problème → continuer immédiatement.
 - Read `.sdd/specs/<spec-path>/design.md` — for agent context
 - Read `.sdd/specs/<spec-path>/requirement.md` — for agent context
 - Read `.sdd/config.json` — for parallelTaskLimit, pipelineReviews, models
-- Check `.claude/skills/rules-references/SKILL.md` exists — rules are loaded per-subtask in Step 3, not upfront
+- Glob `**/sdd-rules/SKILL.md` → exécuter le protocole de chargement (plugin + projet + priorité) — résultat gardé en mémoire pour injection per-subtask en Step 3
 
 ### Step 2: Build Waves (with resume awareness)
 Read all subtask statuses from plan.md:
@@ -98,11 +98,11 @@ Agent({
 
 1. **Module docs**: Check `.sdd/docs/modules/<name>/module-<name>.md` — if cached doc exists for the target module, include it instead of raw file exploration. Also check for feature docs in the same directory for more targeted context injection.
 2. **Project skills**: Scan `.claude/skills/*/SKILL.md` descriptions. Include only skills matching the subtask content (e.g., form-related subtask → include form skill, API subtask → include API skill)
-3. **Rules**: Read the index table in `.claude/skills/rules-references/SKILL.md` to determine which `rules-*.md` files exist and when to load each. Then for each subtask:
-   - Always include `rules.md` (cross-cutting)
-   - Match subtask domain against the index's "Charger quand" column
-   - Load only matching `rules-*.md` files (e.g., controller subtask → `rules-controller.md`)
-4. **Never load all rules upfront** — the index enables targeted loading per subtask
+3. **Rules**: Utiliser les règles chargées en Step 1 via sdd-rules. Pour chaque sous-tâche :
+   - Toujours injecter les règles plugin (SOLID ; RGPD si DCP ; DORA si contexte financier)
+   - Faire correspondre le domaine de la sous-tâche avec la colonne "Charger quand" des règles projet
+   - Injecter uniquement les règles projet correspondantes (ex: sous-tâche controller → `rules-controller.md`)
+4. **Ne jamais tout injecter upfront** — le ciblage par domaine limite la taille du prompt
 
 Update plan.md: `[ ]` → `[~]` for all dispatched subtasks.
 

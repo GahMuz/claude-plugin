@@ -399,9 +399,9 @@ After implementation, `breakingChanges` is populated with tests that newly fail:
 **Constats :**
 - <constat ou "Aucun problème">
 
-## Étape 3 : Règles projet
+## Étape 3 : Règles plugin et projet
 
-**Résultat :** conforme | non conforme | ignoré (pas de skill rules-references)
+**Résultat :** conforme | non conforme | ignoré (sdd-rules introuvable)
 
 **Constats :**
 - <constat ou "Aucun problème">

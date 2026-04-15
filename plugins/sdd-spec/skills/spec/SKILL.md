@@ -152,4 +152,3 @@ Execute OPEN on the requested spec. OPEN handles closing the current active auto
 | `/spec-review [--no-fix]` | Revue manuelle spec/code : détecte et corrige les incohérences |
 | `/doc <module \| --all \| update \| analyse \| status>` | Documenter, analyser et maintenir la doc codebase (économie 80-90% tokens) |
 | `/sdd-evolve <action>` | Faire évoluer la configuration .claude/ (ajouter, optimiser, auditer) |
-| `/roi [--from] [--to]` | Rapport ROI : temps gagné, tests ajoutés, efficacité du workflow |

@@ -62,8 +62,8 @@ For each REQ-xxx: trace REQ → DES → TASK chain. If any REQ has no TASK imple
 For each subtask marked `[x]`: code exists but doesn't match all acceptance criteria from the corresponding REQ.
 - If fix=true: revert `[x]` → `[!]` in plan.md.
 
-**2f — Violations des règles projet ❌**
-Read `.claude/skills/rules-references/references/rules.md` if it exists. For each verifiable rule, grep for violations in worktree.
+**2f — Violations des règles ❌**
+Glob `**/sdd-rules/SKILL.md` → lire et exécuter le protocole de chargement (plugin + projet + priorité). Pour chaque règle chargée, grep des violations dans le worktree.
 - Cannot auto-fix code. Record as action items with file:line.
 
 ### Step 3: Apply Fixes

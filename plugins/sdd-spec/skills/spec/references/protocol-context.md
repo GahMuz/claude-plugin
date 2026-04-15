@@ -64,7 +64,7 @@ type: project
 
 Appelé par `/spec open` après identification de la spec. Établit la spec comme active sur cette machine puis présente le contexte avant de reprendre le workflow.
 
-### Step 3 : Charger le contexte (priorité décroissante)
+### Charger le contexte (priorité décroissante)
 
 **1. Memory Claude Code local** (`spec_<spec-id>.md`) — si présent, utiliser en priorité (session précédente sur cette machine).
 

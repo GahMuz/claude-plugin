@@ -8,12 +8,9 @@ Procédure pour la sous-commande ANALYSE.
 - Aucun argument → demander : "Quel module analyser ?"
 - Vérifier que le module existe via la détection de SKILL.md
 
-## Step 2 : Charger les règles projet
+## Step 2 : Charger les règles
 
-1. Vérifier si `.claude/skills/rules-references/SKILL.md` existe
-2. Si oui : lire la table d'index pour identifier les fichiers de règles disponibles
-3. Charger `rules.md` (transversal) + les règles spécifiques au domaine du module
-4. Si non : noter "Aucune règle projet configurée" — continuer sans vérification de règles
+Glob `**/sdd-rules/SKILL.md` → exécuter le protocole de chargement (plugin + projet + priorité).
 
 ## Step 3 : Dispatcher l'agent d'analyse
 
@@ -28,7 +25,7 @@ Agent({
     Répertoire de sortie : .sdd/docs/modules/<nom>/
     
     Règles projet :
-    <contenu de rules.md et règles spécifiques, ou 'Aucune règle projet configurée'>
+    <règles chargées via sdd-rules (plugin + projet), ou 'Aucune règle configurée'>
     
     Générer :
     1. analyse-<nom>.md

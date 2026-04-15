@@ -26,10 +26,8 @@ Inclure dans le contexte de conception :
 ```
 Si aucun spec lié : continuer sans mention.
 
-### Step 2: Check Project Rules
-Search for `.claude/skills/rules-references/SKILL.md`:
-- Found → read and apply project rules during design
-- Not found → proceed without project-specific constraints
+### Step 2: Charger les règles (sdd-rules)
+Glob `**/sdd-rules/SKILL.md` → lire le fichier, exécuter le protocole de chargement (Étapes 1, 2, 3).
 
 ### Step 2b: Deep Investigation (if needed)
 Le contexte codebase fourni par la phase requirements couvre les modules déjà identifiés.
@@ -69,13 +67,13 @@ Every design section must be checked against SOLID:
 
 For each DES section, verify the approach respects these principles. If a violation is found, revise the design or document the justified exception.
 
-### Step 6: Validate Against Project Rules
-If rules-references skill is available:
+### Step 6: Validate Against Rules
+Apply the rules loaded in Step 2 against each DES section:
 - Check design against project conventions
 - Verify technology choices align with project stack
 - Confirm architectural patterns match
 
-**If SOLID conflicts with a project rule:**
+**If a plugin rule conflicts with a project rule:**
 Do NOT silently choose one over the other. Present the conflict to the user in French:
 - "Conflit détecté entre les principes SOLID et les règles projet :"
 - Explain the SOLID principle at stake

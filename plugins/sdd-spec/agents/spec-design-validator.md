@@ -31,7 +31,7 @@ Tu es un agent de validation de design. Tu vérifies qu'un document design.md re
 
 - Lire `.sdd/specs/<spec-path>/design.md`
 - Lire `.sdd/specs/<spec-path>/requirement.md`
-- Chercher `.claude/skills/rules-references/SKILL.md` — si présent : lire l'index et charger les règles pertinentes
+- Glob `**/sdd-rules/SKILL.md` → lire et exécuter le protocole de chargement des règles (plugin + projet + priorité)
 
 ### 2. Détecter les violations (RED)
 

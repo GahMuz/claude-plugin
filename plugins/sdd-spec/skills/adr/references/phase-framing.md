@@ -22,7 +22,7 @@ Poser les questions suivantes **une par une**, attendre la réponse avant la sui
 Avant de cadrer, charger silencieusement le contexte disponible :
 
 - **Docs modules** : lire les fichiers pertinents dans `.sdd/docs/modules/` selon le domaine du problème (ex: si problème de sécurité, chercher `modules/auth/` ou `modules/security/`)
-- **Rules projet** : lire `.claude/skills/rules-references/SKILL.md` pour identifier les fichiers de règles pertinents, puis les charger
+- **Règles** : Glob `**/sdd-rules/SKILL.md` → exécuter le protocole de chargement (plugin + projet + priorité)
 
 ⚠ **Les rules sont indicatives dans un ADR.** Elles informent l'analyse mais ne bloquent aucune option. Une décision ADR peut remettre en cause une rule existante — ce sera documenté et validé explicitement en phase decision.
 

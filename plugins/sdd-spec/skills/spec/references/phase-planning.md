@@ -43,9 +43,9 @@ Build dependency graph:
 - Circular dependencies = error, restructure
 - Draw ASCII dependency graph
 
-### Step 5: Embed Project Rules
-Read `.claude/skills/rules-references/references/rules.md` if it exists.
-Include a "Règles projet" checklist section at the top of plan.md with all verifiable rules from rules.md. These checkboxes are verified post-implementation.
+### Step 5: Embed Rules
+Glob `**/sdd-rules/SKILL.md` → exécuter le protocole de chargement (plugin + projet + priorité).
+Include a "Règles" checklist section at the top of plan.md with all verifiable rules loaded (plugin + projet). These checkboxes are verified post-implementation.
 
 Verify plan doesn't violate any rules (e.g., a task modifying a generated file when rules say "pas de modification de fichiers générés"). Report conflicts in French.
 

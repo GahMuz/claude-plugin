@@ -30,7 +30,7 @@ Agent({
     Requirements: .sdd/specs/<spec-path>/requirement.md
     Config: .sdd/config.json
     Worktree: .worktrees/<spec-id>
-    Rules: .claude/skills/rules-references/references/rules.md (if exists)
+    Rules: charger via sdd-rules protocol (Glob **/sdd-rules/SKILL.md)
     Execute all waves, update checkboxes, run phantom checks, dispatch reviews."
 })
 ```
