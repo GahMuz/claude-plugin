@@ -77,7 +77,7 @@
   <hr>
   <p style="font-size:0.85em; color:rgba(255,255,255,0.5);">De l'idée au code testé, revu et documenté — sans perdre le fil.</p>
   <div class="cols" style="margin-top:0.8em; font-size:0.8em;">
-    <div><span style="color:var(--accent);">Workflow</span><br><code>/spec</code> · <code>/adr</code> · <code>/doc</code> · <code>/commit</code></div>
+    <div><span style="color:var(--accent);">Workflow</span><br><code>/spec</code> · <code>/adr</code> · <code>/doc</code> · <code>/analyse</code> · <code>/commit</code></div>
     <div><span style="color:var(--accent);">Langages</span><br>Java · Node/TS · PHP</div>
   </div>
 </section>
@@ -250,7 +250,6 @@
       <pre style="margin-top:0.7em;"><code class="language-bash">/doc auth        # documenter un module
 /doc --all       # tous les modules
 /doc update      # mise à jour incrémentale
-/doc analyse X   # qualité + règles manquantes
 /doc status      # fraîcheur</code></pre>
     </div>
     <pre><code class="language-text">.sdd/docs/
@@ -258,13 +257,45 @@
 └── modules/
     └── auth/
         ├── module-auth.md
-        ├── feature-login.md
-        ├── analyse-auth.md
-        └── missing-rules-auth.md</code></pre>
+        └── feature-login.md</code></pre>
   </div>
 </section>
 
-<!-- 8. DEBUGGING -->
+<!-- 8. ANALYSE -->
+<section>
+  <h2>/analyse — qualité · architecture · conformité</h2>
+  <div class="cols">
+    <div>
+      <ul>
+        <li><strong>Qualité</strong> — anti-patterns, dépréciés, violations de règles</li>
+        <li><strong>Architecture</strong> — couplage, SRP, abstractions manquantes</li>
+        <li><strong>RGPD</strong> — DCP dans les logs, hash faibles, droits des personnes</li>
+        <li><strong>DORA</strong> — timeouts, circuit breakers, logs structurés</li>
+      </ul>
+      <pre style="margin-top:0.7em;"><code class="language-bash">/analyse auth    # analyser un module
+/analyse --all   # tous les modules en parallèle</code></pre>
+    </div>
+    <div>
+      <pre><code class="language-text">.sdd/analyses/auth/
+├── summary.md
+├── quality.md
+├── architecture.md
+├── rgpd.md
+└── dora.md</code></pre>
+      <div class="card" style="margin-top:0.6em; font-size:0.78em;">
+        <table style="width:100%; border-collapse:collapse;">
+          <tr><td>Qualité</td><td style="text-align:right; color:var(--green);">85/100</td></tr>
+          <tr><td>Architecture</td><td style="text-align:right; color:var(--yellow);">72/100</td></tr>
+          <tr><td>RGPD</td><td style="text-align:right; color:var(--green);">90/100</td></tr>
+          <tr><td>DORA</td><td style="text-align:right; color:var(--red);">58/100</td></tr>
+          <tr style="border-top:1px solid rgba(255,255,255,0.15);"><td><strong>Global</strong></td><td style="text-align:right;"><strong>76/100</strong></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. DEBUGGING -->
 <section>
   <h2>Debugging systématique</h2>
   <p style="font-size:0.85em; color:var(--red);">Règle de fer : jamais de correctif sans cause racine identifiée.</p>
@@ -494,7 +525,7 @@ Risque : MEDIUM — endpoint public non authentifié</code></pre>
       <p style="font-size:0.75em; line-height:2;">
         <code>/spec new · open · approve · recap · close</code><br>
         <code>/adr new · open · approve · close</code><br>
-        <code>/doc · /commit · /roi</code><br>
+        <code>/doc · /analyse · /commit · /roi</code><br>
         <code>/sdd-init · /sdd-status · /sdd-update</code><br>
         <code>/sdd-evolve</code>
       </p>

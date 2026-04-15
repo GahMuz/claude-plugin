@@ -16,8 +16,7 @@ Pour chaque module et chaque feature dans le manifest, appliquer les règles de 
 3. **Code modifié** : `git log <last_commit>..HEAD -- <path>` retourne des commits
 4. **Commit introuvable** : `last_commit` absent du git (rebase) → obsolète
 
-Vérifier aussi les analyses si elles existent dans le manifest (`analyse-*.md`, `improvement-*.md`).
-Les analyses périmées sont **signalées uniquement** — elles ne sont pas regénérées automatiquement (coût en tokens trop élevé). L'utilisateur doit lancer `/doc analyse <module>` manuellement pour chacune.
+Les analyses de code (qualité, architecture, conformité) sont gérées séparément par `/analyse <module>` — hors du périmètre de `/doc update`.
 
 ## Step 3 : Présenter le rapport
 

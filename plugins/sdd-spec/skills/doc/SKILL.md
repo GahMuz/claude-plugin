@@ -1,7 +1,7 @@
 ---
 name: doc
-description: "This skill should be used when the user invokes '/doc' to generate module documentation, analyse code quality, track doc freshness, or reduce token consumption on large codebases. Supports incremental updates via git diff and parallel generation."
-argument-hint: "<module> | --all | update | analyse <module> | status"
+description: "This skill should be used when the user invokes '/doc' to generate module documentation, track doc freshness, or reduce token consumption on large codebases. Supports incremental updates via git diff and parallel generation."
+argument-hint: "<module> | --all | update | status"
 allowed-tools: ["Read", "Write", "Glob", "Grep", "Bash", "Agent"]
 ---
 
@@ -20,10 +20,7 @@ Générer de la documentation structurée par module et feature pour réduire la
 ├── modules/
 │   ├── <module>/
 │   │   ├── module-<module>.md
-│   │   ├── feature-<feature>.md
-│   │   ├── analyse-<module>.md
-│   │   ├── improvement-<module>.md
-│   │   └── missing-rules-<module>.md
+│   │   └── feature-<feature>.md
 ```
 
 ## Step 0 : Parser les arguments
@@ -32,9 +29,8 @@ Extraire la sous-commande :
 - `<nom-module>` → GENERATE_MODULE
 - `--all` → GENERATE_ALL
 - `update` → UPDATE
-- `analyse <nom-module>` → ANALYSE
 - `status` → STATUS
-- aucun argument → demander : "Quelle commande ? `<module>`, `--all`, `update`, `analyse <module>`, ou `status`."
+- aucun argument → demander : "Quelle commande ? `<module>`, `--all`, `update`, ou `status`."
 
 ## Détection des modules (étape partagée)
 
@@ -76,9 +72,6 @@ Lire et suivre `references/generate-module.md`.
 ### UPDATE
 Lire et suivre `references/update.md`.
 
-### ANALYSE
-Lire et suivre `references/analyse.md`.
-
 ### STATUS
 Lire et suivre `references/status.md`.
 
@@ -89,7 +82,6 @@ Lire et suivre `references/status.md`.
 | `/doc <module>` | Documenter un module (incrémental par défaut) |
 | `/doc --all` | Documenter tous les modules |
 | `/doc update` | Lister et regénérer les docs obsolètes |
-| `/doc analyse <module>` | Analyser anti-patterns, violations, améliorations |
 | `/doc status` | Afficher l'état du manifest |
 
 ## Utilisation par les autres skills

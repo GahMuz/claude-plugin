@@ -26,22 +26,15 @@ Marquer chaque item comme **frais** ou **obsolète** avec la raison.
 |--------|----------|----------|------------|---------|------|
 | <nom> | <count> | <count> | <date> | <version> | Frais / Obsolète (<raison>) |
 
-## Analyses
-
-| Module | Analysée le | Score | Améliorations | État |
-|--------|------------|-------|---------------|------|
-| <nom> | <date ou "—"> | <score ou "—"> | <count ou "—"> | Frais / Obsolète / Absente |
-
 ## Résumé
 
 - Modules documentés : X
 - Features documentées : Y
 - Documents obsolètes : Z
-- Analyses effectuées : W
 
 ## Action suggérée
 
 <Si obsolètes : "Lancez `/doc update` pour regénérer les X documents obsolètes.">
-<Si aucune analyse : "Lancez `/doc analyse <module>` pour analyser un module.">
+<Si analyses absentes : "Lancez `/analyse <module>` pour une analyse qualité/architecture/conformité.">
 <Si tout est frais : "Documentation à jour.">
 ```

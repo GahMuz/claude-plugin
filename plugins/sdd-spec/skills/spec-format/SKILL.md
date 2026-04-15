@@ -15,16 +15,22 @@ Define the structure, file formats, ID system, and conventions for `.sdd/` docum
 ```
 .sdd/
 ├── config.json                  # Project config (from /sdd-init)
+├── analyses/                    # Analyses multi-dimensionnelles (from /analyse)
+│   ├── manifest.json
+│   └── <module>/
+│       ├── summary.md
+│       ├── quality.md
+│       ├── architecture.md
+│       ├── rgpd.md
+│       ├── dora.md
+│       └── candidates.md
 ├── docs/                        # Generated documentation (from /doc)
 │   ├── manifest.json
 │   ├── index.md
 │   └── modules/
 │       └── <module>/
 │           ├── module-<module>.md
-│           ├── feature-<feature>.md
-│           ├── analyse-<module>.md
-│           ├── improvement-<module>.md
-│           └── missing-rules-<module>.md
+│           └── feature-<feature>.md
 └── specs/
     ├── registry.md              # Flat index of all specs (past and active)
     └── YYYY/MM/feature-name/   # One directory per spec (kebab-case, dated)

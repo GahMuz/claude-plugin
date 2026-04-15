@@ -49,14 +49,16 @@ Present default model assignments per agent:
 - Validateur de design (SOLID + contrats) : `sonnet`
 - Auditeur spec/code (cohérence finale) : `sonnet`
 - Générateur de documentation : `haiku`
-- Analyseur de documentation : `sonnet`
+- Analyse qualité du code : `sonnet`
+- Analyse architecturale : `opus`
+- Analyse conformité RGPD/DORA : `sonnet`
 
 "Garder les valeurs par défaut ? (oui/non)"
 If non, let user customize each.
 
 ### Step 6: Create .sdd/
 ```bash
-mkdir -p .sdd/specs .sdd/docs .sdd/local .sdd/decisions
+mkdir -p .sdd/specs .sdd/docs .sdd/analyses .sdd/local .sdd/decisions
 ```
 
 Initialize `.sdd/specs/registry.md`:
@@ -91,7 +93,9 @@ Write `.sdd/config.json`:
     "design-validator": "sonnet",
     "spec-reviewer": "sonnet",
     "doc-generator": "haiku",
-    "doc-analyser": "sonnet"
+    "analyse-quality": "sonnet",
+    "analyse-architecture": "opus",
+    "analyse-compliance": "sonnet"
   },
   "createdAt": "<ISO-8601>"
 }

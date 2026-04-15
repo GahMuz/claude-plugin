@@ -82,88 +82,6 @@ Tous les templates de sortie pour le skill `/doc`. Toute sortie en **Francais**.
 - <design patterns utilisés, event flows, conventions locales>
 ```
 
-## Template : Analyse (`analyse-<module>.md`)
-
-```markdown
-# Analyse : <module>
-
-> Version skill : <skill_version>
-> Générée le : <ISO-8601>
-> Commit : <hash>
-
-## Anti-patterns (X trouvés)
-
-### <Type> (N occurrences)
-
-| Fichier:ligne | Problème | Correction |
-|---------------|----------|------------|
-| <path>:<line> | <description concise> | <fix concis> |
-
-## Approches dépréciées (X trouvées)
-
-### <Approche> (N occurrences)
-
-| Fichier:ligne | Problème | Correction |
-|---------------|----------|------------|
-| <path>:<line> | <description concise> | <fix concis> |
-
-## Violations de règles (X trouvées)
-
-### [<fichier règle>] <Nom règle> (N occurrences)
-
-| Fichier:ligne | Problème | Correction |
-|---------------|----------|------------|
-| <path>:<line> | <description concise> | <fix concis> |
-
-## Résumé
-
-Anti-patterns : X | Dépréciés : Y | Violations : Z | Score : N/100
-```
-
-## Template : Améliorations (`improvement-<module>.md`)
-
-```markdown
-# Améliorations architecturales : <module>
-
-> Version skill : <skill_version>
-> Générée le : <ISO-8601>
-> Commit : <hash>
-
-## Maintenabilité
-
-| Priorité | Suggestion | Fichiers concernés | Bénéfice attendu |
-|----------|------------|-------------------|------------------|
-| <haute/moyenne/basse> | <description concise> | <paths> | <bénéfice> |
-
-## Sécurité
-
-| Priorité | Suggestion | Fichiers concernés | Bénéfice attendu |
-|----------|------------|-------------------|------------------|
-| <haute/moyenne/basse> | <description concise> | <paths> | <bénéfice> |
-
-## Structure
-
-| Priorité | Suggestion | Fichiers concernés | Bénéfice attendu |
-|----------|------------|-------------------|------------------|
-| <haute/moyenne/basse> | <description concise> | <paths> | <bénéfice> |
-
-## Résumé
-
-Haute priorité : X | Moyenne : Y | Basse : Z
-```
-
-## Template : Règles manquantes (`missing-rules-<module>.md`)
-
-```markdown
-# Règles manquantes suggérées : <module>
-
-> Générée le : <ISO-8601>
-
-| Pattern détecté | Règle suggérée | Justification |
-|----------------|----------------|---------------|
-| <pattern observé> | <règle proposée> | <pourquoi — pattern deprecated, etc.> |
-```
-
 ## Template : Index (`index.md`)
 
 ```markdown
@@ -181,12 +99,6 @@ Haute priorité : X | Moyenne : Y | Basse : Z
 ## Graphe de dépendances
 
 <diagramme ASCII des dépendances inter-modules>
-
-## Analyses disponibles
-
-| Module | Dernière analyse | Score | Améliorations |
-|--------|-----------------|-------|---------------|
-| <nom> | <date ou "—"> | <score ou "—"> | <count ou "—"> |
 ```
 
 ## Schema : manifest.json

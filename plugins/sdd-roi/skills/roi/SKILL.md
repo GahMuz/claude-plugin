@@ -3,7 +3,7 @@ name: roi
 description: "This skill should be used when the user invokes '/roi' to measure time saved with Claude Code, generate a report of completed specs, count tests added, documentation generated, and estimate cost efficiency of the spec-driven workflow over a period."
 argument-hint: "[--from YYYY-MM-DD] [--to YYYY-MM-DD]"
 context: fork
-allowed-tools: ["Read", "Glob", "Grep", "Bash"]
+allowed-tools: ["Read", "Write", "Glob", "Grep", "Bash"]
 ---
 
 # Rapport ROI — Retour sur investissement du workflow spec-driven
@@ -19,11 +19,15 @@ Read-only reporting. All output in French. Focus on workflow efficiency, not peo
 ## Process
 
 ### Step 1: Scan Completed Specs
-Scan `.specs/*/state.json`. Filter specs where:
-- `currentPhase` = `"completed"`
-- `phases.finishing.completedAt` falls within the requested period
+
+Lire `.sdd/specs/registry.md` — récupérer toutes les lignes avec statut `completed`.
+
+Pour chaque spec trouvée, charger `.sdd/specs/<YYYY>/<MM>/<spec-id>/state.json`.
+
+Filtrer : conserver uniquement les specs où `phases.finishing.completedAt` tombe dans la période demandée.
 
 ### Step 2: Extract Metrics Per Spec
+
 For each completed spec:
 
 **From state.json:**
@@ -31,26 +35,40 @@ For each completed spec:
 - `createdAt` → start date
 - `phases.finishing.completedAt` → end date
 - Duration = end - start
-- `progress.totalSubtasks`, `progress.completedSubtasks`, `progress.failedSubtasks`
+- `progress.totalTasks`, `progress.totalSubtasks`, `progress.completedSubtasks`
+- `progress.failedSubtasks` → array, count = `failedSubtasks.length`
+- `branch` → branch name for git diff
 
 **From plan.md:**
 - Count parent tasks and subtasks
 - Read each subtask definition (description, files, complexity)
 
 **From baseline-tests.json:**
-- Tests before (baseline)
-- Tests added = final count - baseline count
+- `total` → baseline test count (before implementation)
+- `breakingChanges` array → count of documented breaking changes
+
+**Tests ajoutés** (via git, sur la plage de commits du spec) :
+```bash
+git log --oneline <baseBranch>..<branch> --name-only -- "*test*" "*spec*" "*Test*" "*__tests__*" | grep -c "^\."
+```
+Utiliser cette estimation pour les nouveaux fichiers de test dans la plage de commits du spec. Si la branche n'existe plus (déjà supprimée), indiquer "N/D".
 
 **From reviews/:**
-- Count review reports
+- Count review report files (`reviews/*.md`)
 
-**From git:**
+**Règles projet ajoutées** (depuis log.md) :
+- Lire `.sdd/specs/<YYYY>/<MM>/<spec-id>/log.md`
+- Chercher dans l'entrée de phase retrospective la mention "X règles ajoutées"
+- Si absent : indiquer "N/D"
+
+**From git** (using `branch` field from state.json):
 ```bash
-git diff --stat <baseBranch>...spec/<spec-id> | tail -1
+git diff --stat <baseBranch>...<branch> | tail -1
 ```
 → Files changed, insertions, deletions
 
 ### Step 3: Estimate Time Without Claude Per Subtask
+
 For each completed subtask, read its definition from plan.md and estimate how long the same work would take manually without Claude Code. Consider:
 
 - **Scope**: number of files to create/modify
@@ -70,6 +88,7 @@ Example calibration:
 - Comprehensive test suite: ~25-40 min
 
 ### Step 4: Calculate Efficiency and Profitability
+
 Per spec:
 - `tempsEstiméSansClaude` = sum of per-subtask estimates
 - `tempsRéel` = elapsed duration from state.json
@@ -95,11 +114,13 @@ Global profitability (prorated to the analyzed period):
 | Métrique | Valeur |
 |----------|--------|
 | Specs complétés | X |
+| Tâches réalisées | T |
 | Sous-tâches réalisées | Y |
 | Tests ajoutés | +Z |
 | Revues de code effectuées | W |
-| Fichiers modifiés | N |
+| Fichiers modifiés | F |
 | Lignes ajoutées | L |
+| Changements cassants documentés | K |
 
 ## Efficacité du workflow
 
@@ -123,10 +144,12 @@ Global profitability (prorated to the analyzed period):
 
 ### <titre du spec>
 - **Durée** : <durée>
+- **Tâches** : X terminées
 - **Sous-tâches** : X terminées, Y échouées
 - **Tests ajoutés** : +Z
 - **Fichiers modifiés** : N (L lignes)
 - **Revues** : W rapports
+- **Changements cassants** : K documentés
 
 **Estimation par sous-tâche :**
 
@@ -143,9 +166,9 @@ Global profitability (prorated to the analyzed period):
 | Métrique | Total période |
 |----------|---------------|
 | Tests ajoutés | +Z |
-| Revues de code | W (X critiques corrigées) |
+| Revues de code | W |
+| Changements cassants documentés | K |
 | Règles projet ajoutées (rétrospectives) | R |
-| Complétions fantômes détectées et corrigées | P |
 
 ## Observations
 - <types de tâches les plus accélérées par le workflow>
@@ -154,5 +177,5 @@ Global profitability (prorated to the analyzed period):
 ```
 
 ### Step 6: Save Report (optional)
-"Sauvegarder le rapport dans `.specs/reports/roi-<date>.md` ?"
-If yes, create `.specs/reports/` and save.
+"Sauvegarder le rapport dans `.sdd/reports/roi-<date>.md` ?"
+If yes, create `.sdd/reports/` if needed and save.
