@@ -58,6 +58,7 @@ Extract subcommand from user input:
 
 ## OPEN
 
+0. Prévenir : "Pour un contexte propre, cette commande fonctionne mieux après un `/clear`. Si la session contient du contexte accumulé d'un travail précédent, les réponses futures pourraient être influencées par cet historique."
 1. Read `.sdd/specs/registry.md`. Title given → find matching row. No title → list non-completed rows, ask user (in French).
 2. Read `.sdd/local/active.json`. If present with `type="adr"`: execute ADR CLOSE. If `type="spec"` with different id: execute spec CLOSE. If same id: skip to step 4.
 3. Write `.sdd/local/active.json` with this spec's ID, path, and activatedAt.

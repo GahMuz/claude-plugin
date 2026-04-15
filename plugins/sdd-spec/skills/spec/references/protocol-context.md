@@ -121,7 +121,10 @@ Contexte sauvegardé :
 - context.md mis à jour (partageable via git)
 - Memory local mis à jour (session suivante sur cette machine)
 
-Spec fermée — rouvrez avec `/spec open <spec-id>`.
+Spec fermée.
+
+⚠ Lancez `/clear` maintenant pour purger le contexte de cette session.
+  Rouvrez ensuite avec `/spec open <spec-id>` dans la session propre.
 ```
 
 ## SWITCH
