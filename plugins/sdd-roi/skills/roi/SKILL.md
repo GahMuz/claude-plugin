@@ -39,8 +39,14 @@ For each completed spec:
 - `progress.failedSubtasks` → array, count = `failedSubtasks.length`
 - `branch` → branch name for git diff
 
+**From requirement.md:**
+- Count REQ items (`nbREQ`)
+
+**From design.md:**
+- Count DES items (`nbDES`)
+
 **From plan.md:**
-- Count parent tasks and subtasks
+- Count parent TASK items (`nbTASK`) and total subtasks (`nbSubtask`)
 - Read each subtask definition (description, files, complexity)
 
 **From baseline-tests.json:**
@@ -67,31 +73,44 @@ git diff --stat <baseBranch>...<branch> | tail -1
 ```
 → Files changed, insertions, deletions
 
-### Step 3: Estimate Time Without Claude Per Subtask
+### Step 3: Estimate Time Without Claude Per Phase
 
-For each completed subtask, read its definition from plan.md and estimate how long the same work would take manually without Claude Code. Consider:
+Estimate how long each phase would take for an **efficient developer working manually** (optimistic baseline — no onboarding, familiar with the codebase).
 
+**Phase Requirements** : `15 + (nbREQ × 8)` minutes
+- Gathering, writing acceptance criteria, stakeholder validation
+
+**Phase Design** : `10 + (nbDES × 10)` minutes
+- Architecture decisions, component breakdown, API contracts
+
+**Phase Planning** : `10 + (nbTASK × 5) + (nbSubtask × 2)` minutes
+- Task breakdown, sequencing, estimating
+
+**Phase Implementation** — estimate per completed subtask from plan.md:
 - **Scope**: number of files to create/modify
 - **Complexity**: business logic, API integration, simple CRUD
 - **Tests**: writing tests from scratch adds significant time
 - **Domain knowledge**: codebase exploration time
-- **Review**: self-review, manual testing
 
-Provide estimate in minutes per subtask. Be realistic — include thinking, not just typing.
+  Calibration (optimistic):
+  - Simple entity/model: ~10 min
+  - Service with business logic + tests: ~30-45 min
+  - Controller/route with validation: ~20 min
+  - Config change or rename: ~5 min
+  - Complex integration with multiple deps: ~45-60 min
+  - Comprehensive test suite: ~25-40 min
 
-Example calibration:
-- Simple entity/model: ~10 min
-- Service with business logic + tests: ~30-45 min
-- Controller/route with validation: ~20 min
-- Config change or rename: ~5 min
-- Complex integration with multiple deps: ~45-60 min
-- Comprehensive test suite: ~25-40 min
+**Phase Finishing/Review** : `20 + (nbSubtask × 3)` minutes
+- Manual testing, PR description, code review
+
+**Phase Rétrospective** : 15 minutes (fixed)
+- Post-mortem, documenting learnings (often skipped manually — conservative estimate)
 
 ### Step 4: Calculate Efficiency and Profitability
 
 Per spec:
-- `tempsEstiméSansClaude` = sum of per-subtask estimates
-- `tempsRéel` = elapsed duration from state.json
+- `tempsEstiméSansClaude` = sum of all phase estimates (requirements + design + planning + implementation + finishing + retrospective)
+- `tempsRéel` = elapsed duration from state.json (createdAt → finishing.completedAt)
 - `gainTemps` = tempsEstiméSansClaude - tempsRéel
 - `gainPourcentage` = gainTemps / tempsEstiméSansClaude × 100
 
@@ -122,11 +141,25 @@ Global profitability (prorated to the analyzed period):
 | Lignes ajoutées | L |
 | Changements cassants documentés | K |
 
-## Efficacité du workflow
+## Économies estimées par phase
+
+> Baseline : dev efficace, familier avec le codebase (estimation optimiste)
+
+| Phase | Estimation sans Claude | Durée avec Claude | Gain |
+|-------|----------------------|-------------------|------|
+| Requirements (X REQ) | ~XX min | inclus durée totale | ~XX min |
+| Design (Y DES) | ~XX min | inclus durée totale | ~XX min |
+| Planning (Z tâches) | ~XX min | inclus durée totale | ~XX min |
+| Implémentation (N sous-tâches) | ~XX min | inclus durée totale | ~XX min |
+| Finishing/Review | ~XX min | inclus durée totale | ~XX min |
+| Rétrospective | ~15 min | inclus durée totale | ~XX min |
+| **Total** | **~Xh XXmin** | **~Yh YYmin** | **~ZZ%** |
+
+## Efficacité globale
 
 | Métrique | Valeur |
 |----------|--------|
-| Temps estimé sans Claude | Xh XXmin |
+| Temps estimé sans Claude (toutes phases) | Xh XXmin |
 | Temps réel avec Claude | Yh YYmin |
 | Gain de temps estimé | ~ZZ% |
 
@@ -151,15 +184,26 @@ Global profitability (prorated to the analyzed period):
 - **Revues** : W rapports
 - **Changements cassants** : K documentés
 
-**Estimation par sous-tâche :**
+**Estimation par phase :**
+
+| Phase | Estimation sans Claude |
+|-------|----------------------|
+| Requirements (X REQ) | ~XX min |
+| Design (Y DES) | ~XX min |
+| Planning (Z tâches / N sous-tâches) | ~XX min |
+| Implémentation | ~XX min |
+| Finishing/Review | ~XX min |
+| Rétrospective | ~15 min |
+| **Total estimé sans Claude** | **~XXX min** |
+| **Temps réel avec Claude** | **~XX min** |
+| **Gain** | **~XX%** |
+
+**Détail implémentation :**
 
 | Sous-tâche | Estimation sans Claude | Complexité |
 |------------|----------------------|------------|
 | TASK-001.1 : Créer l'entité | ~10 min | Simple |
 | TASK-001.2 : Service + tests | ~35 min | Moyen |
-| **Total estimé sans Claude** | **~65 min** | |
-| **Temps réel** | **~25 min** | |
-| **Gain** | **~62%** | |
 
 ## Qualité produite
 
