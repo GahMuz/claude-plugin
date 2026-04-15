@@ -201,20 +201,25 @@
   </div>
 </section>
 
-<!-- 6. SOLID + REVUE -->
+<!-- 6. RÈGLES UNIVERSELLES + REVUE -->
 <section>
-  <h2>SOLID validé · Revue automatique</h2>
+  <h2>Règles universelles · Revue automatique</h2>
   <div class="cols">
     <div>
-      <p style="font-size:0.85em;">Chaque DES-xxx vérifié en phase conception :</p>
-      <p style="font-size:0.85em; line-height:1.9;">
-        <strong style="color:var(--accent);">S</strong> Single Responsibility &nbsp;
-        <strong style="color:var(--accent);">O</strong> Open/Closed<br>
-        <strong style="color:var(--accent);">L</strong> Liskov &nbsp;
-        <strong style="color:var(--accent);">I</strong> Interface Segregation<br>
-        <strong style="color:var(--accent);">D</strong> Dependency Inversion
-      </p>
-      <p class="muted">Conflit SOLID vs règles projet → Claude présente le conflit, vous arbitrez.</p>
+      <p style="font-size:0.85em;">Deux niveaux de règles composés automatiquement :</p>
+      <div class="card" style="margin-bottom:0.5em; border-color:rgba(56,189,248,0.45);">
+        <div class="card-title">Plugin — universel (impact dev)</div>
+        <span class="muted">
+          <strong style="color:var(--accent);">SOLID</strong> — architecture &nbsp;·&nbsp;
+          <strong style="color:var(--accent);">RGPD</strong> — si DCP dans le code &nbsp;·&nbsp;
+          <strong style="color:var(--accent);">DORA</strong> — résilience &amp; livraison
+        </span>
+      </div>
+      <div class="card">
+        <div class="card-title">Projet — spécifique</div>
+        <span class="muted">Règles capitalisées en rétro — <code>rules-controller.md</code>, <code>rules-api.md</code>...</span>
+      </div>
+      <p class="muted" style="margin-top:0.5em;">Conflit plugin vs projet → Claude présente, vous arbitrez.</p>
     </div>
     <div>
       <div class="card" style="margin-bottom:0.5em;">
@@ -224,7 +229,7 @@
         <span class="tag tag-yellow">Étape 2</span> &nbsp;<strong>Qualité code</strong> — SOLID, sécurité, tests
       </div>
       <div class="card">
-        <span class="tag tag-purple">Étape 3</span> &nbsp;<strong>Règles projet</strong> — chaque règle <code>rules-*.md</code> vérifiée
+        <span class="tag tag-purple">Étape 3</span> &nbsp;<strong>Règles plugin + projet</strong> — chaque règle vérifiée
       </div>
       <p class="muted" style="margin-top:0.5em;">CRITIQUE · AVERTISSEMENT · INFO</p>
     </div>
@@ -446,21 +451,11 @@ Risque : MEDIUM — endpoint public non authentifié</code></pre>
       padding: 0.1em 0.4em; border-radius: 3px; margin-bottom: 0.4em;
     }
   </style>
-  <div class="soon-grid">
+  <div class="cols" style="gap:1.2em;">
     <div class="soon-card">
       <div class="soon-badge">Bientôt</div>
       <div class="soon-title">Automatisation des Pull Requests</div>
       <p class="muted">Génération automatique de PR à la fin du finishing — titre, description, checklist de review — et attribution aux reviewers selon les modules touchés.</p>
-    </div>
-    <div class="soon-card">
-      <div class="soon-badge">Bientôt</div>
-      <div class="soon-title">Analyse RGPD</div>
-      <p class="muted">Détection automatique des données personnelles dans les REQ et DES, évaluation des risques, génération du registre de traitements et recommandations de conformité dès la phase conception.</p>
-    </div>
-    <div class="soon-card">
-      <div class="soon-badge">Bientôt</div>
-      <div class="soon-title">Analyse DORA</div>
-      <p class="muted">Mesure des 4 métriques DORA (fréquence de déploiement, lead time, taux d'échec, MTTR) et recommandations ciblées pour améliorer la performance de livraison.</p>
     </div>
     <div class="soon-card">
       <div class="soon-badge">Bientôt</div>

@@ -1,6 +1,7 @@
 ---
-name: Spec Format
+name: spec-format
 description: This skill should be used when working with ".sdd/" directory, "spec documents", "requirement.md", "design.md", "plan.md", "state.json", "spec IDs" (REQ-xxx, DES-xxx, TASK-xxx), "registry.md", or when creating, reading, or amending spec files. Provides canonical structure and conventions for spec-driven development documents.
+allowed-tools: ["Read"]
 ---
 
 # Spec Format

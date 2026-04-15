@@ -1,6 +1,7 @@
 ---
-name: TDD Process
+name: tdd-process
 description: This skill should be used when "writing tests first", "test-driven development", "TDD", "RED-GREEN-REFACTOR", "TDD cycle", "test file placement", or when implementing subtasks during spec-driven development. Primarily invoked by the task-implementer agent. Covers test-first workflow, commit granularity, and language-agnostic test discovery.
+allowed-tools: ["Read", "Bash"]
 ---
 
 # TDD Process

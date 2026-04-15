@@ -1,6 +1,7 @@
 ---
-name: Debugging Process
+name: debugging-process
 description: This skill should be used when tests fail after implementation, a bug appears during spec execution, or unexpected behavior is encountered. Covers systematic root cause investigation, hypothesis testing, and escalation threshold. Invoked by spec-task-implementer on failure; injectable by spec-orchestrator when retrying failed subtasks.
+allowed-tools: ["Read", "Glob", "Grep", "Bash"]
 ---
 
 # Debugging Process
