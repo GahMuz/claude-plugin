@@ -23,7 +23,8 @@ Agent({
   prompt: "specId: <spec-id>
     specPath: <spec-path>
     worktreePath: <worktreePath or null if not yet in implementation>
-    fix: false"
+    fix: false
+    interactive: true"
 })
 ```
 
@@ -31,7 +32,7 @@ Agent({
 
 5. If the report contains proposed corrections AND `--no-fix` was NOT passed:
    Ask: "Appliquer ces corrections ? (oui/non)"
-   - If oui: dispatch the agent again with `fix: true` and confirm the corrections applied.
+   - If oui: dispatch the agent again with `fix: true` and `interactive: true`, and confirm the corrections applied.
    - If non: done — report presented, no changes made.
 
 ## Related Skills

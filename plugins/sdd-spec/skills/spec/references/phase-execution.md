@@ -59,19 +59,20 @@ Agent({
   prompt: "specId: <spec-id>
     specPath: <spec-path>
     worktreePath: .worktrees/<spec-id>
-    fix: false"
+    fix: false
+    interactive: false"
 })
 ```
 
 Présenter le rapport à l'utilisateur.
 Si le rapport contient des corrections proposées : demander "Appliquer ces corrections ? (oui/non)"
-- Si oui : redispatcher avec `fix: true` et le même modèle (`config.models.spec-reviewer`, default "sonnet")
+- Si oui : redispatcher avec `fix: true`, `interactive: false` et le même modèle (`config.models.spec-reviewer`, default "sonnet")
 - Si non : continuer sans appliquer
 
 Selon la recommandation finale :
 - "prêt pour finishing" → follow `references/phase-finish.md`
-- "corrections nécessaires" → présenter le rapport, demander comment procéder
-- "re-planification requise" → retour en phase planning
+- "nouvelles tâches à implémenter" → reprendre l'implémentation avec les nouveaux TASKs ajoutés
+- "violations à corriger manuellement" → présenter le rapport, demander comment procéder
 
 ### Error Handling
 - Orchestrator reports critical review issues → present to user in French, ask how to proceed
