@@ -95,11 +95,21 @@ Write `.sdd/config.json`:
     "doc-generator": "haiku",
     "analyse-quality": "sonnet",
     "analyse-architecture": "opus",
-    "analyse-compliance": "sonnet"
+    "analyse-compliance": "sonnet",
+    "graph-builder": "haiku",
+    "graph-query": "haiku"
+  },
+  "graph": {
+    "enabled": false,
+    "stacks": [],
+    "sourcePaths": {},
+    "stalenessThresholdDays": 7
   },
   "createdAt": "<ISO-8601>"
 }
 ```
+
+Note : `graph.enabled` reste `false` jusqu'à ce que le plugin sdd-graph soit installé et configuré (voir Step 11).
 
 ### Step 7: Update .gitignore
 Add to `.gitignore` if not present:
@@ -189,13 +199,46 @@ Le réviseur de code les invoquera automatiquement lors des revues."
 
 Ask: "Voulez-vous créer un guard skill maintenant ? (non par défaut)"
 
-### Step 10: Report
+### Step 10: Proposer sdd-graph (si Java détecté)
+
+Si `java` est dans les langages sélectionnés ET si le plugin `sdd-graph` est installé (vérifier avec `Glob("**/.claude-plugin/plugin.json")` → chercher `"name": "sdd-graph"`) :
+
+Proposer la configuration du graphe :
+```
+🔍 Le plugin sdd-graph est disponible.
+Il pré-calcule les graphes de dépendances Java (endpoints, entités, services, modules)
+pour réduire la consommation de tokens et activer l'analyse d'impact dans les specs.
+
+Configurer maintenant ? (recommandé pour les projets Spring Boot)
+```
+
+Si oui :
+- Demander le chemin des sources Java (détecter automatiquement `src/main/java` si présent, sinon demander)
+- Mettre à jour `config.json` :
+  ```json
+  "graph": {
+    "enabled": true,
+    "stacks": ["java"],
+    "sourcePaths": { "java": "<chemin détecté>" },
+    "stalenessThresholdDays": 7
+  }
+  ```
+- Proposer de construire les graphes immédiatement :
+  ```
+  Lancer /graph-build --java maintenant pour indexer le codebase ?
+  (Recommandé avant le premier /spec new — réduit les tokens de 60-80% sur les specs Java)
+  ```
+
+Si non ou si plugin absent : laisser `graph.enabled: false`, ne pas insister.
+
+### Step 11: Report
 
 ```
 Projet initialisé pour le développement spec-driven :
 - Langages : <liste>
 - Statut LSP : <statut par langage>
 - Modèles : orchestrateur=<model>, implémenteur=<model>, réviseur=<model>, investigation=<model>
+- Graphe sdd-graph : <activé avec sourcePath | non configuré>
 - Configuration : .sdd/config.json
 - Règles projet : .claude/skills/rules-references/
 

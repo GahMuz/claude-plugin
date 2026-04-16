@@ -102,7 +102,28 @@ Agent({
    - Toujours injecter les règles plugin (SOLID ; RGPD si DCP ; DORA si contexte financier)
    - Faire correspondre le domaine de la sous-tâche avec la colonne "Charger quand" des règles projet
    - Injecter uniquement les règles projet correspondantes (ex: sous-tâche controller → `rules-controller.md`)
-4. **Ne jamais tout injecter upfront** — le ciblage par domaine limite la taille du prompt
+4. **Graph slices** (sdd-graph, si disponible) : Si `.sdd/graph/manifest.json` existe, dispatcher en parallèle des requêtes ciblées selon le type de sous-tâche — puis injecter la réponse (10-20 lignes) dans le prompt task-implementer :
+   - Sous-tâche **controller/endpoint** (mots-clés : `@RestController`, `@GetMapping`, `@PostMapping`, route, endpoint) :
+     ```
+     Agent({ subagent_type: "sdd-graph:graph-query", model: "haiku",
+       prompt: "Flux complet de <METHOD> <path>" })
+     ```
+     → injecte la chaîne endpoint→service→repo→entité→table
+   - Sous-tâche **service** (mots-clés : `@Service`, service, logique métier) :
+     ```
+     Agent({ subagent_type: "sdd-graph:graph-query", model: "haiku",
+       prompt: "Qui dépend de <ServiceName> ?" })
+     ```
+     → injecte les callers directs (pour préserver la non-régression)
+   - Sous-tâche **entité/domaine** (mots-clés : `@Entity`, entité, table, JPA, migration) :
+     ```
+     Agent({ subagent_type: "sdd-graph:graph-query", model: "haiku",
+       prompt: "Entité <EntityName>" })
+     ```
+     → injecte la définition complète champs+relations
+   - Si graphe absent, stale ou sous-tâche hors catégorie → ignorer silencieusement
+   - Ces requêtes sont dispatchées en parallèle avec les autres injections — ne pas bloquer la vague si le graphe ne répond pas
+5. **Ne jamais tout injecter upfront** — le ciblage par domaine limite la taille du prompt
 
 Update plan.md: `[ ]` → `[~]` for all dispatched subtasks.
 

@@ -29,13 +29,38 @@ Si aucun spec lié : continuer sans mention.
 ### Step 2: Charger les règles (sdd-rules)
 Glob `**/sdd-rules/SKILL.md` → lire le fichier, exécuter le protocole de chargement (Étapes 1, 2, 3).
 
-### Step 2b: Deep Investigation (if needed)
-Le contexte codebase fourni par la phase requirements couvre les modules déjà identifiés.
-Dispatcher `spec-deep-dive` uniquement si une question spécifique reste sans réponse après lecture du contexte codebase (ex: impact d'une décision sur un module non encore analysé, contrainte de performance à mesurer) :
+### Step 2b: Impact analysis graphe (sdd-graph) — AVANT rédaction des DES
+
+C'est le moment le plus important pour l'impact cross-module : le design n'est pas encore validé, on peut encore changer l'approche.
+
+Si `.sdd/graph/manifest.json` existe avec des graphes frais :
+
+Pour chaque service ou entité évoqué dans les REQ, dispatcher en parallèle :
+```
+Agent({
+  description: "Impact graphe : <service ou entité>",
+  subagent_type: "sdd-graph:graph-query",
+  model: "haiku",
+  prompt: "Blast radius : <service ou entité>. Lister callers directs, modules dépendants, couplage afférent/efférent."
+})
+```
+
+Intégrer les résultats dans la rédaction de chaque DES concerné :
+- Blast radius élevé (>3 modules ou >5 callers) → le DES DOIT mentionner l'impact cross-module et proposer une stratégie (interface partagée, anti-corruption layer, ou découpage)
+- Service injecté dans plusieurs modules → le DES DOIT spécifier la stratégie de non-régression des callers existants
+- Entité avec relations `CASCADE` → le DES DOIT couvrir l'impact sur les entités associées
+
+Résultat : les DES reflètent dès leur rédaction les contraintes structurelles réelles du codebase.
+
+Si graphe absent ou stale → passer directement à Step 2c.
+
+### Step 2c: Deep Investigation (if needed)
+Le contexte codebase fourni par la phase requirements et le graphe (Step 2b) couvrent les zones déjà identifiées.
+Dispatcher `spec-deep-dive` uniquement si une question spécifique reste sans réponse après ces deux sources (ex: impact sur un module non encore analysé, contrainte de performance à mesurer) :
 ```
 Agent({ description: "Analyse approfondie du codebase", subagent_type: "sdd-spec:spec-deep-dive", model: "opus", prompt: "<question ciblée>" })
 ```
-Optional — ne pas re-dispatcher si le contexte codebase répond déjà aux questions architecturales.
+Optional — ne pas dispatcher si le contexte codebase + graphe répondent déjà aux questions architecturales.
 
 ### Step 3: Design Each Requirement Group
 For each logical group of related requirements:

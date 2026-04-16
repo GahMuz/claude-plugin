@@ -43,6 +43,27 @@ Build dependency graph:
 - Circular dependencies = error, restructure
 - Draw ASCII dependency graph
 
+### Step 4b: Validation impact graphe (sdd-graph)
+
+Si `.sdd/graph/manifest.json` existe avec `service-call` ou `module-dep` frais :
+
+Pour chaque DES mentionnant un service ou une entité modifiée, dispatcher :
+```
+Agent({
+  description: "Impact graphe : <service ou entité>",
+  subagent_type: "sdd-graph:graph-query",
+  model: "haiku",
+  prompt: "Impact : <service ou entité>. Liste complète des callers et modules dépendants."
+})
+```
+
+Vérifier que chaque caller identifié par le graphe est traité dans le plan :
+- Caller dans un module différent → ajouter une sous-tâche `[VERIFY] Non-régression <module>` ou noter explicitement "hors périmètre" avec justification
+- Module dépendant avec fort couplage (>5 imports) → annoter la TASK parente avec "⚠ Impact cross-module : <modules>"
+- Aucune TASK ne doit ignorer silencieusement un caller identifié
+
+Si graphe absent ou stale → continuer sans cette étape.
+
 ### Step 5: Embed Rules
 Glob `**/sdd-rules/SKILL.md` → exécuter le protocole de chargement (plugin + projet + priorité).
 Include a "Règles" checklist section at the top of plan.md with all verifiable rules loaded (plugin + projet). These checkboxes are verified post-implementation.

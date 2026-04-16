@@ -32,6 +32,20 @@ Les lister pour les inclure dans le glossaire du document final.
 
 Avant de poser les questions de clarification, chercher du contexte dans le code existant :
 
+0. **Graphe structurel (sdd-graph) — consulter en premier si disponible**
+
+   Si `.sdd/graph/manifest.json` existe :
+   - Si `module-dep.json` est `"fresh"` : lire le fichier, identifier les modules dont le nom correspond au domaine du spec (ex: "commande", "paiement", "user")
+   - Si `entity-model.json` est `"fresh"` ET que la spec semble toucher des données : lire les entités des modules concernés
+   - Si `service-call.json` est `"fresh"` : identifier les services du domaine et leurs dépendances directes
+
+   Enrichir la section "Contexte codebase" avec :
+   - Modules impactés + couplage afférent/efférent (depuis `module-dep.json`)
+   - Entités JPA concernées + leurs relations (depuis `entity-model.json`)
+   - Services identifiés + dépendances injectées (depuis `service-call.json`)
+
+   Si le graphe est absent ou stale : passer directement au point 1 ci-dessous.
+
 1. Vérifier si `.sdd/docs/index.md` existe — si oui, identifier les modules potentiellement concernés par le titre et la description de la spec
    - Pour chaque module pertinent : lire `.sdd/docs/modules/<nom>/module-<nom>.md`
 2. Si les docs sont absents ou insuffisants pour les zones concernées : dispatcher `spec-deep-dive`
