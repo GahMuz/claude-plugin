@@ -5,6 +5,7 @@
 MARKETPLACE="$(git rev-parse --show-toplevel)/.claude-plugin/marketplace.json"
 SDD_SPEC="$(git rev-parse --show-toplevel)/plugins/sdd-spec/.claude-plugin/plugin.json"
 SDD_ROI="$(git rev-parse --show-toplevel)/plugins/sdd-roi/.claude-plugin/plugin.json"
+SDD_GRAPH="$(git rev-parse --show-toplevel)/plugins/sdd-graph/.claude-plugin/plugin.json"
 
 # Read current version from sdd-spec plugin.json
 CURRENT=$(grep -oP '"version": "\K[0-9]+\.[0-9]+\.[0-9]+' "$SDD_SPEC" | head -1)
@@ -22,7 +23,7 @@ NEW_MINOR=$((MINOR + 1))
 NEW_VERSION="$MAJOR.$NEW_MINOR.$PATCH"
 
 # Update plugin.json files — each reads its own current version
-for FILE in "$SDD_SPEC" "$SDD_ROI"; do
+for FILE in "$SDD_SPEC" "$SDD_ROI" "$SDD_GRAPH"; do
   if [ -f "$FILE" ]; then
     FILE_VER=$(grep -oP '"version": "\K[0-9]+\.[0-9]+\.[0-9]+' "$FILE" | head -1)
     if [ -n "$FILE_VER" ]; then
@@ -36,8 +37,9 @@ done
 # (avoids breakage when plugin versions have drifted out of sync)
 if [ -f "$MARKETPLACE" ]; then
   awk -v ver="$NEW_VERSION" '
-    /"name": "sdd-spec"/ { in_plugin=1 }
-    /"name": "sdd-roi"/  { in_plugin=1 }
+    /"name": "sdd-spec"/  { in_plugin=1 }
+    /"name": "sdd-roi"/   { in_plugin=1 }
+    /"name": "sdd-graph"/ { in_plugin=1 }
     in_plugin && /"version"/ {
       sub(/"version": "[^"]*"/, "\"version\": \"" ver "\"")
       in_plugin=0
