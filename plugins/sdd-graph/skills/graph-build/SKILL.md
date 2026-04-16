@@ -1,7 +1,7 @@
 ---
 name: graph-build
-description: "This skill should be used when the user invokes '/graph-build' to build or refresh structural code graphs (endpoint flows, entity models, service call graph, module dependencies). Supports Java Spring Boot. Produces JSON artifacts in .sdd/graph/ for use by sdd-spec agents and /graph-query."
-argument-hint: "[--java] [--all] [--incremental] [--graphs endpoint-flow,entity-model,service-call,module-dep,type-hierarchy,config-env]"
+description: "This skill should be used when the user invokes '/graph-build' to build or refresh structural code graphs (endpoint flows, entity models, service call graph, module dependencies). Supports Java Spring Boot. Dispatches one agent per module in parallel. Produces JSON artifacts in .sdd/graph/."
+argument-hint: "[--java] [--all] [--incremental] [--module <nom>] [--graphs endpoint-flow,entity-model,service-call,module-dep,type-hierarchy,config-env]"
 allowed-tools: ["Read", "Write", "Glob", "Grep", "Bash", "Agent"]
 ---
 
@@ -9,7 +9,7 @@ allowed-tools: ["Read", "Write", "Glob", "Grep", "Bash", "Agent"]
 
 > Plugin : sdd-graph v1.0.0
 
-Pré-calculer les graphes du codebase Java Spring Boot et les stocker sous `.sdd/graph/`. Ces artifacts réduisent la consommation de tokens et activent l'analyse d'impact dans sdd-spec.
+Pré-calculer les graphes du codebase Java Spring Boot. Pour les codebases volumineux, dispatch **un agent par module en parallèle** — chaque agent écrit ses partiels dans `.sdd/graph/partial/<module>/`, le skill assemble les JSON finaux.
 
 ## Répertoire de sortie
 
@@ -17,125 +17,197 @@ Pré-calculer les graphes du codebase Java Spring Boot et les stocker sous `.sdd
 .sdd/graph/
 ├── manifest.json
 ├── index.md
-├── endpoint-flow.json
-├── entity-model.json
-├── service-call.json
-└── module-dep.json
+├── endpoint-flow.json       ← assemblé depuis les partiels
+├── entity-model.json        ← assemblé depuis les partiels
+├── service-call.json        ← assemblé depuis les partiels
+├── module-dep.json          ← assemblé depuis les partiels
+└── partial/
+    ├── <module-a>/
+    │   ├── endpoints.json
+    │   ├── entities.json
+    │   ├── service-nodes.json
+    │   ├── service-edges.json
+    │   └── module-imports.json
+    └── <module-b>/
+        └── ...
 ```
 
 ## Step 0 : Parser les arguments
 
-- `--java` → BUILD_JAVA (graphes P1 par défaut : endpoint-flow, entity-model, service-call, module-dep)
-- `--all` → BUILD_JAVA (actuellement seul stack supporté)
-- `--incremental` → BUILD_INCREMENTAL (rebuild uniquement les graphes stale)
-- `--graphs <liste>` → limiter aux graphes spécifiés (ex: `--graphs type-hierarchy,config-env` pour les graphes P2)
-- aucun argument → détecter les stacks disponibles, proposer la commande appropriée
+- `--java` → BUILD_JAVA (modules : tous)
+- `--all` → BUILD_JAVA
+- `--module <nom>` → BUILD_MODULE (un seul module ciblé)
+- `--incremental` → BUILD_INCREMENTAL (uniquement les modules stale)
+- `--graphs <liste>` → limiter aux graphes spécifiés (P2 : `type-hierarchy`, `config-env`)
+- aucun argument → détecter les stacks, afficher les modules disponibles, demander confirmation
 
-**Graphes P1** (construits par défaut avec `--java`) : `endpoint-flow`, `entity-model`, `service-call`, `module-dep`
+**Graphes P1** (construits par défaut) : `endpoint-flow`, `entity-model`, `service-call`, `module-dep`
 **Graphes P2** (opt-in via `--graphs`) : `type-hierarchy`, `config-env`
 
-## Step 1 : Détecter le stack Java
+## Step 1 : Détecter le stack Java et les modules
+
+### 1a. Confirmer la présence Java
 
 ```bash
 find . -maxdepth 4 -name "pom.xml" | head -10
 find . -maxdepth 4 -name "build.gradle" -o -name "build.gradle.kts" | head -10
 ```
 
-Si aucun fichier trouvé : "Aucun projet Java (Maven/Gradle) détecté dans ce répertoire."
+Si rien trouvé : "Aucun projet Java détecté."
 
-Identifier la structure :
-- **Multi-module Maven** : `pom.xml` racine avec `<modules>` ET des `pom.xml` dans les sous-dossiers
-- **Mono-module Maven** : un seul `pom.xml`
-- **Gradle** : `build.gradle` ou `build.gradle.kts` avec `settings.gradle`
+Identifier `sourcePath` :
+- Maven mono/multi : `src/main/java`
+- Gradle : vérifier `sourceSets`, sinon supposer `src/main/java`
 
-Identifier `sourcePaths.java` :
-- Maven standard : `src/main/java`
-- Multi-module : noter les chemins par sous-module
-- Gradle : vérifier `sourceSets` dans `build.gradle`, sinon supposer `src/main/java`
+### 1b. Détecter le package racine
+
+```bash
+grep -rn "^package " --include="*.java" <sourcePath> | head -50
+```
+
+Identifier le préfixe commun (ex: `com.acme`). Ce sera `rootPackage`.
+
+### 1c. Détecter les modules
+
+```bash
+find <sourcePath> -mindepth 3 -maxdepth 3 -type d | sort
+```
+
+Les répertoires de premier niveau sous le package racine = modules.
+Convertir le chemin en nom de module (dernier segment du répertoire).
+
+Exemple : `src/main/java/com/acme/user` → module `user`, package `com.acme.user`
+
+Si `--module <nom>` : filtrer pour ne garder que ce module. Erreur si non trouvé.
+
+Afficher : "Modules détectés : user, order, payment, notification, shared (<N> total)"
+
+### 1d. Évaluer la fraîcheur (mode --incremental)
+
+Pour chaque module, vérifier si ses partiels sont à jour :
+
+```bash
+git log <lastCommit>..HEAD -- <modulePath> --oneline
+```
+
+Si output non vide → module stale → à reconstruire.
+En mode `--java` ou `--module` : ignorer la fraîcheur, toujours reconstruire.
 
 ## Step 2 : Lire le manifest existant
 
-- Lire `.sdd/graph/manifest.json` si existant
-- Sinon : manifest vide (tous les graphes à `null`)
+Lire `.sdd/graph/manifest.json` si existant, sinon créer un manifest vide.
 
-## Step 3 : Évaluer la fraîcheur (mode --incremental)
+## Step 3 : Dispatch parallèle — un agent par module
 
-Pour chaque graphe existant dans le manifest :
-
-```bash
-git log <lastCommit>..HEAD -- <sourcePaths.java> --oneline
-```
-
-Si output non vide → graphe stale.
-
-Règles d'invalidation ciblée :
-- Changements `*.java` avec `@Entity` détectés → invalider `entity-model`, `endpoint-flow`
-- Changements `*.java` avec `@Service` → invalider `service-call`, `module-dep`
-- Changements `*.java` avec `@RestController`/`@Controller` → invalider `endpoint-flow`
-- Si `pluginVersion` du manifest != version actuelle → invalider tous les graphes
-
-En mode `--java` ou `--all` : ignorer la fraîcheur, tout reconstruire.
-
-## Step 4 : Dispatcher graph-builder-java
-
-Construire la liste `graphs` à transmettre selon les arguments :
-- Mode `--java` ou `--all` sans `--graphs` → `["endpoint-flow", "entity-model", "service-call", "module-dep"]`
-- Mode `--graphs <liste>` → utiliser la liste fournie
-- Mode `--incremental` → uniquement les graphes stale identifiés en Step 3
+Pour chaque module à construire, dispatcher en parallèle :
 
 ```
 Agent({
-  description: "Construire les graphes Java",
+  description: "Graphe module <nom>",
   subagent_type: "sdd-graph:graph-builder-java",
-  model: <config.models.graph-builder ou "haiku" par défaut>,
+  model: <config.models.graph-builder ou "haiku">,
   prompt: "
-    rootPath: <répertoire courant>
-    sourcePath: <sourcePaths.java>
-    outputPath: .sdd/graph/
+    module: <nom>
+    modulePath: <sourcePath>/<chemin/vers/module>
+    rootPackage: <com.acme>
+    outputPath: .sdd/graph/partial/<nom>/
     graphs: <liste des graphes à construire>
 
     Lire references/scan-java.md pour le protocole de scanning.
-    Lire references/templates.md pour les schémas JSON cibles.
+    Lire references/templates.md pour les schémas JSON des partiels.
   "
 })
 ```
 
-Attendre le résultat avant de passer à Step 5.
+Attendre que **tous** les agents soient terminés avant de passer à Step 4.
+
+Afficher la progression : "Scanning <N> modules en parallèle : user, order, payment..."
+
+## Step 4 : Assembler les JSON finaux depuis les partiels
+
+Lire tous les fichiers partiels générés et assembler les JSON finaux.
+
+### 4a. `endpoint-flow.json`
+
+Pour chaque module, lire `.sdd/graph/partial/<module>/endpoints.json`.
+Concaténer tous les tableaux `endpoints[]`.
+Renuméroter les `id` : `ep_001`, `ep_002`, ... (séquentiel global).
+Écrire `.sdd/graph/endpoint-flow.json`.
+
+### 4b. `entity-model.json`
+
+Pour chaque module, lire `.sdd/graph/partial/<module>/entities.json`.
+Concaténer tous les tableaux `entities[]`.
+Écrire `.sdd/graph/entity-model.json`.
+
+### 4c. `service-call.json`
+
+Pour chaque module :
+- Lire `partial/<module>/service-nodes.json` → ajouter à `nodes[]`
+- Lire `partial/<module>/service-edges.json` → ajouter à `edges[]`
+
+Dédupliquer les nœuds par `id` (un service référencé par plusieurs modules n'apparaît qu'une fois).
+Écrire `.sdd/graph/service-call.json`.
+
+### 4d. `module-dep.json`
+
+Pour chaque module, lire `.sdd/graph/partial/<module>/module-imports.json`.
+Structure partielle :
+```json
+{ "module": "user", "importsFrom": { "notification": 3, "shared": 12 } }
+```
+
+Assembler :
+- `modules[]` : un objet par module avec `id`, `name`, `path`, `package`
+- `couplingMatrix` : agréger tous les `importsFrom`
+- Calculer `dependsOn` : modules où le poids > 0
+- Calculer `usedBy` : inverser les `dependsOn` de tous les modules
+
+Écrire `.sdd/graph/module-dep.json`.
+
+### 4e. Graphes P2 (si demandés)
+
+Même logique pour `type-hierarchy` et `config-env` :
+- `partial/<module>/type-nodes.json` → assembler `type-hierarchy.json`
+- `partial/<module>/config-usages.json` → assembler `config-env.json` (dédupliquer par clé)
 
 ## Step 5 : Mettre à jour le manifest
 
-Après réception du résultat de l'agent :
+Récupérer le lastCommit global :
+```bash
+git log -1 --format=%H -- <sourcePath>
+```
 
-1. Mettre à jour chaque graphe construit dans `manifest.graphs` :
-   - `builtAt` : timestamp ISO-8601 courant
-   - `lastCommit` : hash retourné par l'agent
-   - `entryCount` : compte retourné par l'agent
-   - `status` : `"fresh"`
-2. Mettre à jour `updatedAt`, `stacks`, `sourcePaths`
-3. Écrire `.sdd/graph/manifest.json`
-4. Générer `.sdd/graph/index.md` (template dans `references/templates.md` section "index.md")
+Mettre à jour `manifest.json` :
+- `updatedAt`, `stacks`, `sourcePaths`
+- Pour chaque graphe assemblé : `builtAt`, `lastCommit`, `entryCount`, `status: "fresh"`
+
+Générer `.sdd/graph/index.md` (template dans `references/templates.md`).
 
 ## Step 6 : Reporter
 
 ```
-Graphes construits :
+Graphes construits — <N> modules scannés en parallèle
+
 - endpoint-flow : <N> endpoints
 - entity-model  : <N> entités
 - service-call  : <N> nœuds, <M> edges
 - module-dep    : <N> modules
 
 Répertoire : .sdd/graph/
+Modules : <liste>
 Utilisation : /graph-query <question> ou injection automatique via sdd-spec.
 ```
 
-Si des warnings ont été retournés par l'agent, les afficher.
+Si des warnings ont été retournés par des agents, les afficher groupés par module.
 
 ## Commandes disponibles
 
 | Commande | Description |
 |----------|-------------|
-| `/graph-build --java` | Construire les 4 graphes P1 Java |
+| `/graph-build --java` | Scanner tous les modules Java en parallèle |
+| `/graph-build --module user` | Scanner uniquement le module `user` |
+| `/graph-build --incremental` | Reconstruire uniquement les modules modifiés |
 | `/graph-build --graphs type-hierarchy,config-env` | Construire les graphes P2 |
-| `/graph-build --incremental` | Reconstruire uniquement les graphes obsolètes |
 | `/graph-status` | Afficher l'état du manifest |
 | `/graph-query <question>` | Interroger les graphes |

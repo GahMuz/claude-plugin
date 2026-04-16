@@ -1,51 +1,37 @@
-# Protocole de scanning Java Spring Boot
+# Protocole de scanning Java Spring Boot — scope module unique
 
-Procédure pour l'agent `graph-builder-java`. Exécuter les 5 passes dans l'ordre. Toutes les sorties en **JSON** dans `.sdd/graph/`.
+Procédure pour l'agent `graph-builder-java`. Un agent = un module. Toutes les sorties en **JSON** dans `outputPath`.
 
 ## Pré-requis
 
 L'agent reçoit :
-- `rootPath` : répertoire racine du projet
-- `sourcePath` : chemin vers les sources Java (ex: `src/main/java`)
-- `outputPath` : `.sdd/graph/`
+- `module` : nom du module (ex: `user`)
+- `modulePath` : chemin vers les sources du module (ex: `src/main/java/com/acme/user`)
+- `rootPackage` : package racine du projet (ex: `com.acme`)
+- `outputPath` : `.sdd/graph/partial/<module>/`
 - `graphs` : liste des graphes à construire
+
+Créer le répertoire de sortie :
+```bash
+mkdir -p <outputPath>
+```
 
 Initialiser les structures de données en mémoire :
 - `endpoints = []`
 - `entities = []`
 - `serviceNodes = []`, `serviceEdges = []`
-- `modules = []`, `couplingMatrix = {}`
+- `moduleImports = {}` (clé = module cible, valeur = poids)
 
 ---
 
-## Pass 0 : Détection du package racine
-
-```bash
-grep -rn "^package " --include="*.java" <sourcePath> | head -50
-```
-
-Identifier le préfixe commun de tous les packages (ex: `com.acme`).
-Ce sera `rootPackage` dans `module-dep.json`.
-
-Identifier les modules : sous-packages directs du rootPackage (ex: `com.acme.user`, `com.acme.order`).
-Ce sont les répertoires de premier niveau sous la racine de packages.
-
-```bash
-find <sourcePath> -mindepth 3 -maxdepth 3 -type d | head -30
-```
-
-Chaque répertoire = un module potentiel. Ignorer les répertoires `config`, `common`, `shared`, `util` comme modules — les traiter comme `shared`.
-
----
-
-## Pass 1 : Extraction des entités JPA (`entity-model.json`)
+## Pass 1 : Extraction des entités JPA
 
 Si `entity-model` absent de la liste `graphs` → sauter cette passe.
 
-### 1a. Lister les fichiers entity
+### 1a. Lister les fichiers entity du module
 
 ```bash
-grep -rn "@Entity" --include="*.java" -l <sourcePath>
+grep -rn "@Entity" --include="*.java" -l <modulePath>
 ```
 
 ### 1b. Pour chaque fichier entity : lire et extraire
@@ -53,377 +39,278 @@ grep -rn "@Entity" --include="*.java" -l <sourcePath>
 Lire le fichier. Extraire :
 
 **Nom de la classe** :
-```
+```bash
 grep "^public class \|^public abstract class \|^class " <fichier>
 ```
 
 **Table** :
-```
+```bash
 grep "@Table" <fichier>
 ```
-→ extraire `name=` si présent. Sinon, convertir le nom de classe en snake_case.
+→ extraire `name=` si présent. Sinon convertir le nom de classe en snake_case.
 
 **Héritage** :
-```
+```bash
 grep "extends " <fichier>
 ```
 → si `extends <NomEntite>`, noter `parentEntity`.
 
 **Stratégie d'héritage** :
-```
+```bash
 grep "@Inheritance" <fichier>
 ```
 → extraire `strategy=`.
 
 **Champs** :
-Pour chaque ligne contenant `@Id`, `@Column`, `@OneToMany`, `@ManyToOne`, `@ManyToMany`, `@OneToOne`, `@JoinColumn` :
-- Lire la ligne suivante pour obtenir le nom et type du champ
-- Extraire l'annotation complète (avec paramètres)
-- Pour les relations : extraire `mappedBy`, `fetch`, `cascade` si présents
+Lire le fichier et identifier les lignes avec `@Id`, `@Column`, `@OneToMany`, `@ManyToOne`, `@ManyToMany`, `@OneToOne`, `@JoinColumn`.
+Pour chaque annotation : lire la ligne suivante pour obtenir le nom et type du champ.
+Extraire l'annotation complète (avec paramètres).
+Pour les relations : extraire `mappedBy`, `fetch`, `cascade` si présents.
 
 ### 1c. Construire l'objet entity
 
-Suivre le schéma `entity-model.json` de `references/templates.md`.
-Déduire `module` depuis le package du fichier (segment après `rootPackage`).
+Suivre le schéma `entities[]` de `references/templates.md` section `entity-model.json`.
+Champ `module` = `<module>` reçu en paramètre.
 
 Ajouter à `entities[]`.
 
 ---
 
-## Pass 2 : Extraction des endpoints (`endpoint-flow.json`)
+## Pass 2 : Extraction des endpoints
 
 Si `endpoint-flow` absent de la liste `graphs` → sauter cette passe.
 
-### 2a. Lister les fichiers controller
+### 2a. Lister les fichiers controller du module
 
 ```bash
-grep -rn "@RestController\|@Controller" --include="*.java" -l <sourcePath>
+grep -rn "@RestController\|@Controller" --include="*.java" -l <modulePath>
 ```
 
 ### 2b. Pour chaque fichier controller : extraire
 
 **Path de base** :
-```
+```bash
 grep "@RequestMapping" <fichier>
 ```
-→ extraire la valeur (ex: `/api/v1/users`). Peut être absent.
+→ extraire la valeur. Peut être absent.
 
 **Pour chaque méthode avec mapping HTTP** :
-```
+```bash
 grep -n "@GetMapping\|@PostMapping\|@PutMapping\|@DeleteMapping\|@PatchMapping" <fichier>
 ```
 Pour chaque occurrence :
-- Extraire le path de l'annotation (ex: `"/{id}"`)
+- Extraire le path de l'annotation
 - Construire le path complet : `basePath + methodPath`
-- Lire les lignes suivantes pour trouver la signature de la méthode (nom, type de retour, paramètres)
+- Lire les lignes suivantes pour la signature de la méthode
 - Extraire `@RequestBody` param → `requestDto`
 - Extraire le type de retour → `responseDto`
-- Extraire `@PreAuthorize` ou `@Secured` si présents → `security`
+- Extraire `@PreAuthorize` ou `@Secured` → `security`
 
-**Services injectés dans ce controller** :
-```
-grep -n "private final \|@Autowired" <fichier>
-```
-→ Identifier les services (classes dont le nom finit par `Service`)
+**Services injectés dans le controller** (voir Stratégies A et B en Pass 3) :
+→ Identifier les types `*Service` injectés
 
 **Pour chaque service injecté** :
-- Lire le fichier du service correspondant (localiser via Glob `**/<ServiceName>.java`)
-- Extraire ses repositories injectés (classes finissant par `Repository`)
-- Pour chaque repository : en déduire l'entité (ex: `UserRepository` → `User`)
+- Glob `**/<ServiceName>.java` pour localiser le fichier
+- Extraire les repositories injectés dans ce service (types `*Repository`)
+- Pour chaque repository : déduire l'entité (ex: `UserRepository` → `User`)
 
 ### 2c. Construire l'objet endpoint
 
-```json
-{
-  "id": "ep_<index 3 chiffres>",
-  "method": "<HTTP_METHOD>",
-  "path": "<path complet>",
-  "module": "<module du controller>",
-  "controller": { ... },
-  "services": [ ... ],
-  "repositories": [ ... ],
-  "entities": [ ... ],
-  "tables": [ ... ],
-  "requestDto": "<nom ou null>",
-  "responseDto": "<nom>",
-  "security": [ ... ]
-}
-```
-
-Pour les `tables` : croiser les entités avec les données extraites en Pass 1.
+Suivre le schéma `endpoints[]` de `references/templates.md`.
+Champ `module` = `<module>`.
+Ne pas attribuer d'`id` global — l'`id` sera `"<module>_ep_<index>"` (ex: `user_ep_001`).
+Le skill réassignera les IDs globaux lors de l'assemblage.
 
 Ajouter à `endpoints[]`.
 
 ---
 
-## Pass 3 : Extraction du graphe de services (`service-call.json`)
+## Pass 3 : Extraction du graphe de services
 
 Si `service-call` absent de la liste `graphs` → sauter cette passe.
 
-### 3a. Lister les fichiers service
+### 3a. Lister les fichiers service et repository du module
 
+Services :
 ```bash
-grep -rn "@Service" --include="*.java" -l <sourcePath>
+grep -rn "@Service" --include="*.java" -l <modulePath>
 ```
 
-Également inclure les repositories :
+Repositories :
 ```bash
-grep -rn "@Repository\|extends JpaRepository\|extends CrudRepository\|extends PagingAndSortingRepository" --include="*.java" -l <sourcePath>
+grep -rn "@Repository\|extends JpaRepository\|extends CrudRepository\|extends PagingAndSortingRepository" --include="*.java" -l <modulePath>
 ```
 
 ### 3b. Pour chaque service : extraire les dépendances injectées
 
-Lire le fichier. Appliquer **les deux stratégies** — un même projet peut mélanger les deux styles.
+Lire le fichier. Appliquer **les deux stratégies** :
 
 ---
 
 **Stratégie A — Injection par champ (`@Autowired` field)**
 
-```java
-@Autowired
-private UserRepository userRepository;
-
-@Autowired
-private EmailService emailService;
-```
-
-Grep :
 ```bash
 grep -n "@Autowired" <fichier>
 ```
 Pour chaque occurrence :
-1. Lire la ligne suivante (ou les lignes suivantes si @Autowired est sur une ligne seule)
-2. Si la ligne contient `private <Type> <nom>` → extraire `Type` comme dépendance injectée
-3. Filtrer : ne garder que les types finissant par `Service`, `Repository`, `Component`, `Manager`, ou `Client`
-4. `injectionType: "field"`
+1. Lire la ligne suivante : `private <Type> <nom>`
+2. Si `Type` finit par `Service`, `Repository`, `Component`, `Manager` ou `Client` → dépendance détectée
+3. `injectionType: "field"`
 
 ---
 
 **Stratégie B — Injection par constructeur**
 
-```java
-// Forme 1 : constructeur unique (Spring détecte automatiquement)
-@Service
-public class UserService {
-    private final EmailService emailService;
-    private final UserRepository userRepository;
-
-    public UserService(EmailService emailService, UserRepository userRepository) { ... }
-}
-
-// Forme 2 : constructeur annoté @Autowired
-@Service
-public class OrderService {
-    @Autowired
-    public OrderService(UserService userService, PaymentService paymentService) { ... }
-}
-```
-
-Grep — trouver le constructeur de la classe (nom de classe extrait en 3a) :
 ```bash
 grep -n "public <NomClasse>(" <fichier>
 ```
 Pour chaque occurrence :
-1. Lire les lignes de la signature du constructeur (peut s'étendre sur plusieurs lignes jusqu'au `{`)
-2. Extraire chaque paramètre de type `<Type> <nom>` — plusieurs par ligne possible
-3. Filtrer : ne garder que les types finissant par `Service`, `Repository`, `Component`, `Manager`, ou `Client`
+1. Lire les lignes de la signature jusqu'au `)` ou `{`
+2. Extraire chaque paramètre de type `<Type> <nom>`
+3. Si `Type` finit par `Service`, `Repository`, `Component`, `Manager` ou `Client` → dépendance détectée
 4. `injectionType: "constructor"`
-
-**Priorité :** si un type est détecté par les deux stratégies sur le même fichier, ne créer qu'un seul edge avec `injectionType: "constructor"` (la déclaration `private final` + constructeur est la forme canonique).
 
 ---
 
-**Résultat attendu :** pour un service qui mélange les deux styles :
-```java
-@Service
-public class MixedService {
-    private final UserRepository userRepository;  // constructeur
-    @Autowired
-    private EmailService emailService;            // field
-
-    public MixedService(UserRepository userRepository) { ... }
-}
-```
-→ 2 edges : `MixedService → UserRepository (constructor)`, `MixedService → EmailService (field)`
+**Priorité en cas de doublon** : même type détecté par A et B → un seul edge, `injectionType: "constructor"`.
 
 ### 3c. Construire les nœuds et edges
 
-**Nœud** : un nœud par service/repository unique.
+**Nœud** : un nœud par service/repository unique du module.
 ```json
 {
-  "id": "svc_<NomClasse>",
-  "name": "<NomClasse>",
-  "file": "<chemin relatif>",
+  "id": "svc_UserService",
+  "name": "UserService",
+  "file": "<chemin relatif depuis racine>",
   "module": "<module>",
   "type": "service"
 }
 ```
-Pour les repositories : `"id": "repo_<NomClasse>"`, `"type": "repository"`.
+Pour les repositories : `"id": "repo_UserRepository"`, `"type": "repository"`.
 
 **Edge** : une edge par dépendance injectée.
 ```json
 {
-  "from": "svc_<ClasseAppelante>",
-  "to": "svc_<ClasseAppelee>",
-  "callSite": "<fichier>:<ligne de l'injection>",
+  "from": "svc_UserService",
+  "to": "svc_EmailService",
+  "callSite": "<fichier>:<ligne>",
   "injectionType": "constructor"
 }
 ```
+
+Note : si le type injecté appartient à un **autre module** (son fichier est hors `modulePath`), créer quand même l'edge — l'ID du nœud cible sera `svc_<NomType>` et le skill le résoudra lors de l'assemblage cross-module.
 
 Ajouter nœuds à `serviceNodes[]` et edges à `serviceEdges[]`.
 
 ---
 
-## Pass 4 : Extraction des dépendances inter-modules (`module-dep.json`)
+## Pass 4 : Extraction des dépendances inter-modules
 
 Si `module-dep` absent de la liste `graphs` → sauter cette passe.
 
-### 4a. Pour chaque module identifié en Pass 0
-
-Lister les imports cross-module dans les fichiers du module :
+### 4a. Lister les imports cross-module du module courant
 
 ```bash
-grep -rhn "^import <rootPackage>\." --include="*.java" <sourcePath>/<module>/
+grep -rhn "^import <rootPackage>\." --include="*.java" <modulePath>
 ```
 
 Pour chaque import :
 - Extraire le sous-package cible (segment après `rootPackage`)
-- Si ce sous-package est un autre module → incrémenter `couplingMatrix[mod_<source>][mod_<cible>]`
+- Si ce sous-package est différent du module courant → c'est un import cross-module
+- Incrémenter `moduleImports[<sous-package-cible>]`
 
-### 4b. Construire les modules
+Exemple : `import com.acme.notification.EmailService` dans le module `user` → `moduleImports["notification"]++`
 
-```json
-{
-  "id": "mod_<nom>",
-  "name": "<nom>",
-  "path": "<sourcePath>/<nom>",
-  "package": "<rootPackage>.<nom>",
-  "dependsOn": [],
-  "usedBy": []
-}
-```
-
-Remplir `dependsOn` depuis `couplingMatrix` (modules où le poids > 0).
-Calculer `usedBy` en inversant les `dependsOn` de tous les modules.
+Ignorer les imports vers des packages qui ne commencent pas par `rootPackage` (libs externes).
 
 ---
 
-## Pass 5 : Extraction de la hiérarchie de types (`type-hierarchy.json`)
+## Pass 5 : Extraction de la hiérarchie de types
 
 Si `type-hierarchy` absent de la liste `graphs` → sauter cette passe.
 
-### 5a. Lister les interfaces du projet
+### 5a. Interfaces du module
 
 ```bash
-grep -rn "^public interface \|^interface " --include="*.java" -l <sourcePath>
+grep -rn "^public interface \|^interface " --include="*.java" -l <modulePath>
 ```
 
-Pour chaque fichier interface :
-- Extraire le nom de l'interface
-- Extraire les interfaces parentes (`extends <Interface1>, <Interface2>`) — filtrer pour ne garder que celles du projet (contenant `rootPackage`)
+Pour chaque interface : extraire nom, interfaces parentes (filtrer au `rootPackage`).
 
-### 5b. Trouver les implémenteurs
-
-Pour chaque interface :
+Trouver les implémenteurs dans le **projet entier** (pas seulement le module) :
 ```bash
 grep -rn "implements.*<NomInterface>" --include="*.java" <sourcePath>
 ```
-→ Lister les fichiers qui implémentent cette interface (filtrer les classes abstraites — `abstract class`)
+où `<sourcePath>` = parent de `modulePath` au niveau du package racine.
 
-### 5c. Lister les classes abstraites du projet
+### 5b. Classes abstraites du module
 
 ```bash
-grep -rn "^public abstract class \|^abstract class " --include="*.java" -l <sourcePath>
+grep -rn "^public abstract class \|^abstract class " --include="*.java" -l <modulePath>
 ```
 
-Pour chaque classe abstraite :
+Pour chaque classe abstraite : trouver les sous-classes dans le projet entier :
 ```bash
 grep -rn "extends <NomClasseAbstraite>" --include="*.java" <sourcePath>
 ```
-→ Lister les sous-classes concrètes du projet
-
-### 5d. Construire le graphe
-
-Suivre le schéma `type-hierarchy.json` de `references/templates.md`.
-Ne garder que les interfaces/classes abstraites ayant au moins un implémenteur/sous-classe dans le projet.
-Ignorer les interfaces purement techniques sans implémenteur (ex: `Serializable`, `Comparable`).
 
 ---
 
-## Pass 6 : Extraction de la configuration (`config-env.json`)
+## Pass 6 : Extraction de la configuration
 
 Si `config-env` absent de la liste `graphs` → sauter cette passe.
 
-### 6a. Trouver les usages @Value dans les sources Java
+### 6a. @Value dans le module
 
 ```bash
-grep -rn "@Value" --include="*.java" <sourcePath>
+grep -rn "@Value" --include="*.java" <modulePath>
 ```
 
-Pour chaque occurrence :
-- Extraire la clé de propriété depuis `@Value("${<clé>}")` ou `@Value("${<clé>:<défaut>}")`
-- Extraire le nom de la classe et du champ
-- Déduire le module depuis le package
+Pour chaque occurrence : extraire la clé `${...}` et le contexte (classe, champ).
 
-### 6b. Trouver les fichiers de configuration
+### 6b. Fichiers de configuration (une seule fois, module partagé)
 
+Si ce module est le premier à être scanné pour `config-env`, lire les fichiers de config :
 ```bash
-find . -name "application.yml" -o -name "application.properties" -o -name "application-*.yml" -o -name "application-*.properties" | head -10
+find . -maxdepth 4 -name "application.yml" -o -name "application.properties" | head -5
 ```
+Extraire toutes les clés définies.
 
-Pour chaque fichier trouvé :
-- Lire le fichier
-- Extraire les clés définies (ex: `app.security.jwt.secret: ...`)
-- Pour les `.yml` : clés hiérarchiques → reconstituer en notation pointée (ex: `app.security.jwt.secret`)
-- Pour les `.properties` : déjà en notation pointée
-
-### 6c. Croiser usages et définitions
-
-Pour chaque clé extraite des `@Value` :
-- Vérifier si elle est définie dans l'un des fichiers de config → noter `source`
-- Si non trouvée dans les configs → noter `source: "non-définie"` et ajouter un warning
-
-Construire le tableau `properties[]` selon le schéma `config-env.json` de `references/templates.md`.
+Note : cette passe est légère — les configs sont généralement petites. Le skill dédupliquera les clés lors de l'assemblage.
 
 ---
 
-## Pass 7 : Écriture des artifacts
+## Pass 7 : Écriture des partiels
 
-### Récupérer le lastCommit global
+Créer le répertoire de sortie si nécessaire.
 
-```bash
-git log -1 --format=%H -- <sourcePath>
-```
+Écrire les fichiers partiels selon les graphes construits :
 
-### Écrire les fichiers JSON
+| Fichier | Contenu | Graphe |
+|---------|---------|--------|
+| `<outputPath>/endpoints.json` | `{ "module": "<nom>", "endpoints": [...] }` | endpoint-flow |
+| `<outputPath>/entities.json` | `{ "module": "<nom>", "entities": [...] }` | entity-model |
+| `<outputPath>/service-nodes.json` | `{ "module": "<nom>", "nodes": [...] }` | service-call |
+| `<outputPath>/service-edges.json` | `{ "module": "<nom>", "edges": [...] }` | service-call |
+| `<outputPath>/module-imports.json` | `{ "module": "<nom>", "importsFrom": {...} }` | module-dep |
+| `<outputPath>/type-nodes.json` | `{ "module": "<nom>", "interfaces": [...], "abstractClasses": [...] }` | type-hierarchy |
+| `<outputPath>/config-usages.json` | `{ "module": "<nom>", "usages": [...] }` | config-env |
 
-Pour chaque graphe demandé, suivre le schéma dans `references/templates.md` et écrire :
-
-- `.sdd/graph/endpoint-flow.json` (si `endpoint-flow` dans `graphs`)
-- `.sdd/graph/entity-model.json` (si `entity-model` dans `graphs`)
-- `.sdd/graph/service-call.json` (si `service-call` dans `graphs`)
-- `.sdd/graph/module-dep.json` (si `module-dep` dans `graphs`)
-- `.sdd/graph/type-hierarchy.json` (si `type-hierarchy` dans `graphs`)
-- `.sdd/graph/config-env.json` (si `config-env` dans `graphs`)
-
-Créer le répertoire `.sdd/graph/` si nécessaire :
-```bash
-mkdir -p .sdd/graph
-```
+Ne créer que les fichiers pour les graphes présents dans la liste `graphs`.
 
 ### Retourner les métadonnées
 
 ```
-lastCommit: <hash>
-graphs:
-  endpoint-flow: <N> endpoints
-  entity-model: <N> entités
-  service-call: <N> nœuds, <M> edges
-  module-dep: <N> modules
-  type-hierarchy: <N> interfaces, <M> classes abstraites
-  config-env: <N> propriétés
+module: <nom>
+lastCommit: <git log -1 --format=%H -- <modulePath>>
+counts:
+  endpoints: <N>
+  entities: <N>
+  serviceNodes: <N>
+  serviceEdges: <N>
+  moduleImports: <N clés>
 warnings:
-  - <tout cas ambigu ou non résolu>
+  - <cas ambigus>
 ```
 
 ---
@@ -434,12 +321,12 @@ warnings:
 |-----------|-------------|
 | Classe `@Service` sans constructeur public ni `@Autowired` | Nœud créé, aucun edge |
 | Même type détecté par @Autowired ET constructeur | Un seul edge, `injectionType: "constructor"` |
-| Constructeur avec @Autowired ET paramètres multi-lignes | Lire jusqu'au `)` ou `{` pour obtenir tous les params |
-| Interface avec un seul implémenteur | Inclure dans type-hierarchy (valeur élevée pour DI) |
-| Clé @Value non définie dans application.yml | Inclure avec `source: "non-définie"`, ajouter warning |
+| Constructeur avec paramètres sur plusieurs lignes | Lire jusqu'au `)` ou `{` pour obtenir tous les params |
+| Service injecté depuis un autre module | Edge créé avec `id` cible hypothétique — le skill résout lors du merge |
 | Path `@RequestMapping` avec variable (`${app.base-path}`) | Conserver la valeur littérale, noter en warning |
 | Entité sans `@Table` | Utiliser le nom de classe en snake_case comme table |
-| Repository générique sans entité détectable | Créer le nœud repository sans entité associée |
-| Import vers une lib externe (non-`rootPackage`) | Ignorer pour `module-dep` |
-| Plusieurs `@RestController` dans un même package | Agréger sous le même module |
-| `@RequestMapping` au niveau classe + méthode | Concaténer les paths (ex: `/api/v1` + `/{id}`) |
+| Repository sans entité détectable | Nœud créé sans entité associée |
+| Import vers lib externe (non-`rootPackage`) | Ignorer pour `module-dep` |
+| Interface sans implémenteur dans le projet | Ne pas inclure dans `type-nodes.json` |
+| Clé `@Value` non définie dans `application.yml` | Inclure avec `source: "non-définie"`, ajouter warning |
+| Module > 200 fichiers Java | Traiter quand même — l'agent scanne un seul module à la fois |
