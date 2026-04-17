@@ -1,6 +1,14 @@
 # Protocole de scanning Java Spring Boot — scope module unique
 
-Procédure pour l'agent `graph-builder-java`. Un agent = un module. Toutes les sorties en **JSON** dans `outputPath`.
+> **Note** : Ce fichier est de la documentation de référence. Le protocole exécutable est embarqué directement dans `agents/graph-builder-java.md`.
+
+Procédure pour l'agent `graph-builder-java`. Un agent = une unité de scan. Toutes les sorties en **JSON** dans `outputPath`.
+
+## Règles d'extraction — non négociables
+
+- **Exhaustivité** : si grep détecte N fichiers, le tableau JSON doit contenir N objets (minimum). Jamais de troncature.
+- **Pas de `_note`** : aucun champ hors schéma (`_note`, `_summary`, `_count`…). Tout est dans les tableaux définis.
+- **Pas d'invention** : extraire uniquement ce qui est dans le code. Champ absent → `null` ou `[]`.
 
 ## Pré-requis
 
