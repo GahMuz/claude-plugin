@@ -1,6 +1,6 @@
 {
   "name": "sdd-graph",
-  "version": "0.44.0",
+  "version": "0.45.0",
   "description": "SDD Graph — Structural code intelligence for Claude Code. Pre-computes dependency graphs, endpoint flows, and entity models to reduce token consumption and enable impact analysis.",
   "author": {
     "name": "vincent-bailly"
