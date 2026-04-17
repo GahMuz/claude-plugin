@@ -103,7 +103,9 @@ Write `.sdd/config.json`:
     "enabled": false,
     "stacks": [],
     "sourcePaths": {},
-    "stalenessThresholdDays": 7
+    "stalenessThresholdDays": 7,
+    "moduleThreshold": 25,
+    "serviceThreshold": 30
   },
   "createdAt": "<ISO-8601>"
 }

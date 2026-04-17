@@ -40,9 +40,14 @@ module: <moduleName>        ← nom du module logique (ex: "user")
 scanName: <scanName>        ← nom de l'unité de scan (ex: "user" ou "core-domain")
 modulePath: <scanPath>      ← chemin vers les sources à scanner
 rootPackage: <rootPackage>  ← package racine du projet (ex: "com.acme")
-outputPath: <outputPath>    ← .sdd/graph/partial/<scanName>/
+outputPath: <outputPath>    ← .sdd/graph/partial/<scanName>/ ou .sdd/graph/partial/<scanName>/services-batch-N/
 graphs: <liste>             ← graphes à construire parmi endpoint-flow, entity-model, service-call, module-dep
+serviceFiles: (optionnel)   ← liste explicite de fichiers .java à traiter pour Pass 3 uniquement (mode batch)
+  - chemin/vers/ServiceA.java
+  - chemin/vers/ServiceB.java
 ```
+
+**Mode batch (serviceFiles fourni)** : `graphs` contient uniquement `service-call`. Sauter les passes 1, 2, 4. Pour Pass 3, ignorer le grep et traiter uniquement les fichiers de `serviceFiles`.
 
 Commencer par créer le répertoire de sortie :
 ```bash
@@ -114,17 +119,18 @@ Extraire les types `*Repository` injectés dans chaque service.
 
 Sauter si `service-call` absent de `graphs`.
 
-**3a.** Lister les services :
+**3a.** Obtenir la liste des fichiers à traiter :
+
+**Mode normal** (pas de `serviceFiles` dans les paramètres) :
 ```bash
 grep -rn "@Service" --include="*.java" -l <modulePath>
-```
-
-Lister les repositories :
-```bash
 grep -rn "@Repository\|extends JpaRepository\|extends CrudRepository\|extends PagingAndSortingRepository" --include="*.java" -l <modulePath>
 ```
 
-**3b.** Pour CHAQUE fichier service : lire et détecter les dépendances injectées — appliquer les deux stratégies :
+**Mode batch** (`serviceFiles` fourni dans les paramètres) :
+Utiliser directement la liste `serviceFiles` — ne pas exécuter de grep. Traiter uniquement ces fichiers.
+
+**3b.** Pour CHAQUE fichier de la liste (aucune exception) : lire et détecter les dépendances injectées — appliquer les deux stratégies :
 
 **Stratégie A — `@Autowired` field** :
 - Chercher `@Autowired` dans le fichier
