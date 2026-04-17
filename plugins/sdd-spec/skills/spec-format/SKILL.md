@@ -109,7 +109,7 @@ Audit trail per spec (in French). Dated entries tracking: actions taken, decisio
 Test baseline captured before implementation begins. Records: total tests, passed, failed, test names. Used to detect breaking changes — if previously passing tests fail after implementation, it's either a bug or a documented breaking change.
 
 ### state.json
-Workflow state. Keys in English. See `references/templates.md` for schema.
+Workflow state. Keys in English. See `references/templates.md` for schema. Contient `schemaVersion` pour détecter les migrations lors des mises à jour du plugin (même rôle que `schemaVersion` dans config.json).
 
 ### config.json (project-level)
 At `.sdd/config.json`. Champs : `schemaVersion` (version du schéma de données, utilisée pour les migrations et la fraîcheur de la doc), `parallelTaskLimit` (0=unlimited), `pipelineReviews` (bool).

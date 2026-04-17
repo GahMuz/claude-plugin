@@ -244,6 +244,7 @@ Cette matrice permet de repérer les exigences non couvertes d'un coup d'œil.
 
 ```json
 {
+  "schemaVersion": "1.0.0",
   "specId": "feature-name",
   "title": "Titre lisible",
   "currentPhase": "requirements",

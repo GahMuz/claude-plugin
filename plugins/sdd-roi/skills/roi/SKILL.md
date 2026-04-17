@@ -92,13 +92,15 @@ Estimate how long each phase would take for an **efficient developer working man
 - **Tests**: writing tests from scratch adds significant time
 - **Domain knowledge**: codebase exploration time
 
-  Calibration (optimistic):
+  Calibration (optimiste — développeur expérimenté, familier du codebase) :
   - Simple entity/model: ~10 min
   - Service with business logic + tests: ~30-45 min
   - Controller/route with validation: ~20 min
   - Config change or rename: ~5 min
   - Complex integration with multiple deps: ~45-60 min
   - Comprehensive test suite: ~25-40 min
+
+  > **Note :** Ces estimations sont spéculatives — elles représentent un cas favorable et varient fortement selon la complexité du domaine, la dette technique, et la familiarité avec le codebase. Le `tempsEstiméSansClaude` est une borne basse, pas une valeur absolue.
 
 **Phase Finishing/Review** : `20 + (nbSubtask × 3)` minutes
 - Manual testing, PR description, code review

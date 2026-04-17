@@ -31,7 +31,12 @@ Tu es un agent de rédaction d'exigences. Tu ajoutes des items REQ-xxx bien form
 
 **Input reçu :**
 - `specPath` (ex. `.sdd/specs/2026/04/mon-spec`)
-- `findings` : tableau de gaps/problèmes découverts (depuis une revue, une description utilisateur, etc.)
+- `findings` : tableau de gaps/problèmes — chaque entrée est une string décrivant un besoin ou un problème. Exemples :
+  ```
+  - "L'utilisateur ne peut pas réinitialiser son mot de passe"
+  - "Absence de validation du format email à l'inscription"
+  - "REQ-003 manque de critère d'acceptation pour le cas d'erreur réseau"
+  ```
 - `interactive` (boolean, défaut `true`) : si true, présente avant d'écrire
 
 ## Format REQ obligatoire
