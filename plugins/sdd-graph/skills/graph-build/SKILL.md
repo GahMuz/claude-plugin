@@ -119,6 +119,42 @@ git log <lastCommit>..HEAD -- <scanPath> --oneline
 Si output non vide → unité stale → à reconstruire.
 En mode `--java` ou `--module` : ignorer la fraîcheur, toujours reconstruire.
 
+### 1f. Vérifier l'intégrité des partiels existants
+
+Appliquer à toutes les unités **non déjà marquées stale** (fraîcheur OK mais données potentiellement incomplètes).
+Sauter en mode `--java` ou `--module` (rebuild total de toute façon).
+
+Pour chaque unité avec des partiels existants, comparer le nombre d'objets JSON vs le nombre de fichiers annotés dans le code :
+
+**Entités** (si `entity-model` dans `graphs`) :
+```bash
+grep -rn "@Entity" --include="*.java" -l <scanPath> | wc -l
+```
+Lire `.sdd/graph/partial/<scanName>/entities.json` → compter `entities[]`.
+Si `entities[].length < annotatedFileCount` → marquer stale, raison : `"entities incomplètes (<N> JSON / <M> fichiers)"`
+
+**Services + Repositories** (si `service-call` dans `graphs`) :
+```bash
+grep -rn "@Service\|@Repository\|extends JpaRepository\|extends CrudRepository" --include="*.java" -l <scanPath> | wc -l
+```
+Lire `.sdd/graph/partial/<scanName>/service-nodes.json` → compter `nodes[]`.
+Si `nodes[].length < annotatedFileCount` → marquer stale, raison : `"service-nodes incomplets (<N> JSON / <M> fichiers)"`
+
+**Controllers** (si `endpoint-flow` dans `graphs`) :
+```bash
+grep -rn "@RestController\|@Controller" --include="*.java" -l <scanPath> | wc -l
+```
+Lire `.sdd/graph/partial/<scanName>/endpoints.json` → compter les `module` distincts (proxy de fichiers traités).
+Si le fichier endpoints.json est vide (`endpoints: []`) alors que des controllers existent → marquer stale.
+
+Afficher un résumé des unités détectées incomplètes :
+```
+Intégrité vérifiée — 2 unités incomplètes détectées :
+  core-domain : entities incomplètes (1 JSON / 14 fichiers)
+  user        : service-nodes incomplets (0 JSON / 8 fichiers)
+→ Ces unités seront reconstruites même sans changement git.
+```
+
 ## Step 2 : Lire le manifest existant
 
 Lire `.sdd/graph/manifest.json` si existant, sinon créer un manifest vide.
@@ -139,9 +175,6 @@ Agent({
     rootPackage: <rootPackage>
     outputPath: .sdd/graph/partial/<scanName>/
     graphs: <liste des graphes à construire>
-
-    Lire references/scan-java.md pour le protocole de scanning.
-    Lire references/templates.md pour les schémas JSON des partiels.
   "
 })
 ```
