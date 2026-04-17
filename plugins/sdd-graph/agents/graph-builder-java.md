@@ -73,10 +73,31 @@ grep -rn "@Entity" --include="*.java" -l <modulePath>
 - `fields` : tous les champs avec `@Id`, `@Column`, `@OneToMany`, `@ManyToOne`, `@ManyToMany`, `@OneToOne`, `@JoinColumn` — lire la ligne de l'annotation + la ligne suivante pour type et nom
 - `relations` : extraire `mappedBy`, `fetch`, `cascade` des annotations de relation
 
-**1c.** Écrire :
+**1c.** Écrire — schéma obligatoire par objet :
 ```json
-{ "module": "<module>", "entities": [ ...UN OBJET PAR FICHIER... ] }
+{
+  "module": "<module>",
+  "entities": [
+    {
+      "name": "User",
+      "file": "src/main/java/com/acme/user/domain/User.java",
+      "table": "users",
+      "module": "<module>",
+      "parentEntity": null,
+      "inheritanceStrategy": null,
+      "fields": [
+        { "name": "id", "type": "Long", "column": "id", "annotations": ["@Id"] },
+        { "name": "orders", "type": "List<Order>", "column": null, "annotations": ["@OneToMany(mappedBy='user')"],
+          "relation": { "type": "ONE_TO_MANY", "target": "Order", "mappedBy": "user", "fetch": "LAZY", "cascade": null } }
+      ],
+      "relations": [
+        { "type": "ONE_TO_MANY", "target": "Order", "mappedBy": "user", "fetch": "LAZY", "cascade": null }
+      ]
+    }
+  ]
+}
 ```
+Chaque `fields[]` entry : `name`, `type`, `column` (null si relation), `annotations[]`. Champs sans annotation JPA : ignorer.
 
 ---
 
@@ -108,9 +129,27 @@ Extraire les types `*Repository` injectés dans chaque service.
 
 **2c.** `id` des endpoints : `<module>_ep_<index 3 chiffres>` (ex: `user_ep_001`).
 
-**2d.** Écrire :
+**2d.** Écrire — schéma obligatoire par objet :
 ```json
-{ "module": "<module>", "endpoints": [ ...UN OBJET PAR MAPPING HTTP... ] }
+{
+  "module": "<module>",
+  "endpoints": [
+    {
+      "id": "user_ep_001",
+      "method": "POST",
+      "path": "/api/v1/users",
+      "module": "<module>",
+      "controller": { "class": "UserController", "file": "src/.../UserController.java", "method": "createUser", "line": 45 },
+      "services": [{ "class": "UserService", "file": "src/.../UserService.java", "method": null, "line": null }],
+      "repositories": [{ "class": "UserRepository", "file": "src/.../UserRepository.java" }],
+      "entities": ["User"],
+      "tables": ["users"],
+      "requestDto": "CreateUserRequest",
+      "responseDto": "UserResponse",
+      "security": []
+    }
+  ]
+}
 ```
 
 ---
@@ -155,11 +194,19 @@ Construire les edges :
 
 Si le type injecté appartient à un autre module → créer l'edge quand même (le skill résoudra lors de l'assemblage).
 
-**3d.** Écrire :
+**3d.** Écrire — schémas obligatoires :
 ```json
-{ "module": "<module>", "nodes": [ ...UN NŒUD PAR SERVICE/REPOSITORY... ] }
-{ "module": "<module>", "edges": [ ...UN EDGE PAR INJECTION DÉTECTÉE... ] }
+{ "module": "<module>", "nodes": [
+    { "id": "svc_UserService", "name": "UserService", "file": "src/.../UserService.java", "module": "<module>", "type": "service" },
+    { "id": "repo_UserRepository", "name": "UserRepository", "file": "src/.../UserRepository.java", "module": "<module>", "type": "repository" }
+] }
 ```
+```json
+{ "module": "<module>", "edges": [
+    { "from": "svc_UserService", "to": "repo_UserRepository", "callSite": "src/.../UserService.java:15", "injectionType": "constructor" }
+] }
+```
+`type` : `"service"` ou `"repository"`. `injectionType` : `"constructor"` ou `"field"`.
 
 ---
 
@@ -181,8 +228,9 @@ Ignorer les imports vers libs externes (ne commençant pas par `rootPackage`).
 
 **4b.** Écrire :
 ```json
-{ "module": "<module>", "importsFrom": { "<module-cible>": <poids>, ... } }
+{ "module": "<module>", "importsFrom": { "notification": 3, "shared": 12 } }
 ```
+Si aucun import cross-module : `"importsFrom": {}`.
 
 ---
 

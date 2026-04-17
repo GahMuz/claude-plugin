@@ -96,7 +96,7 @@ Write `.sdd/config.json`:
     "analyse-quality": "sonnet",
     "analyse-architecture": "opus",
     "analyse-compliance": "sonnet",
-    "graph-builder": "haiku",
+    "graph-builder-java": "haiku",
     "graph-query": "haiku"
   },
   "graph": {

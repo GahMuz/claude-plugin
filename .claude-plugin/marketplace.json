@@ -15,7 +15,7 @@
       "name": "sdd-spec",
       "source": "./plugins/sdd-spec",
       "description": "Spec-driven development workflow — structured phases from requirements to tested, reviewed code",
-      "version": "0.48.0",
+      "version": "0.49.0",
       "author": { "name": "vincent-bailly" },
       "keywords": ["spec", "tdd", "workflow", "requirements", "design", "code-review", "agents"],
       "category": "development"
@@ -24,7 +24,7 @@
       "name": "sdd-roi",
       "source": "./plugins/sdd-roi",
       "description": "ROI measurement — track time saved, cost efficiency, and profitability of spec-driven development",
-      "version": "0.48.0",
+      "version": "0.49.0",
       "author": { "name": "vincent-bailly" },
       "keywords": ["roi", "metrics", "efficiency", "reporting"],
       "category": "productivity"
@@ -33,7 +33,7 @@
       "name": "sdd-graph",
       "source": "./plugins/sdd-graph",
       "description": "Structural code intelligence — pre-computes dependency graphs, endpoint flows, entity models, and service call graphs to reduce token consumption and enable impact analysis",
-      "version": "0.48.0",
+      "version": "0.49.0",
       "author": { "name": "vincent-bailly" },
       "keywords": ["graph", "dependency", "impact-analysis", "code-intelligence", "spring-boot", "java"],
       "category": "development"

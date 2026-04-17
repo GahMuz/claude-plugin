@@ -121,7 +121,9 @@ Agent({
        prompt: "Entité <EntityName>" })
      ```
      → injecte la définition complète champs+relations
-   - Si graphe absent, stale ou sous-tâche hors catégorie → ignorer silencieusement
+   - Si graphe **absent** → afficher une fois : "⚠ sdd-graph non disponible — injection structurelle désactivée. Lancer `/graph-build --java` pour activer." puis ignorer pour le reste de la vague
+   - Si graphe **stale** → afficher une fois : "⚠ Graphe obsolète — résultats potentiellement inexacts. Lancer `/graph-build --incremental`." puis continuer
+   - Si sous-tâche hors catégorie → ignorer silencieusement
    - Ces requêtes sont dispatchées en parallèle avec les autres injections — ne pas bloquer la vague si le graphe ne répond pas
 5. **Ne jamais tout injecter upfront** — le ciblage par domaine limite la taille du prompt
 
